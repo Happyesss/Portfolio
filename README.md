@@ -7,8 +7,7 @@ Explore a world where code meets conservation, and every section is designed to 
 
 ## 🌲 Live Demo
 
-[View the Portfolio](https://your-live-demo-link.com)  
-*(Replace with your actual deployment link)*
+[View the Portfolio](https://my-portfolio-forest.netlify.app/)
 
 ---
 
@@ -57,8 +56,8 @@ Explore a world where code meets conservation, and every section is designed to 
 
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/yourusername/forest-guardians-portfolio.git
-   cd forest-guardians-portfolio
+   git clone https://github.com/Happyesss/portfolio.git
+   cd portfolio
    ```
 
 2. **Open `Index.html` in your browser:**  
