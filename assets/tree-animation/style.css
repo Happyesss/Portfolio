@@ -1,0 +1,65 @@
+body, html{
+  background-color: white;
+  background-color: #52598f;
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  width: 100vw;
+	overflow: hidden;
+}
+#previewHack{
+  position: absolute;
+  height: 100vh; 
+  width: 100vw;
+  top: 0;
+  left: 0;
+  transform: none;
+  background-image: url("https://raw.githubusercontent.com/ceramicSoda/treeshader/main/assets/preview.png");
+  background-size: cover;
+  background-position: center;
+  z-index: 1;
+}
+.day-gradient {
+  background: linear-gradient(#a0d0ff, #ffffff);
+  transition: background 1s;
+}
+.night-gradient {
+  background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
+  transition: background 1s;
+}
+
+/* Make canvas fill viewport and responsive */
+canvas {
+  display: block;
+  position: absolute;
+  top: 0; left: 0;
+  width: 100vw !important;
+  height: 100vh !important;
+  max-width: 100vw;
+  max-height: 100vh;
+  z-index: 2;
+  touch-action: none;
+}
+
+/* Responsive tweaks for mobile */
+@media (max-width: 600px) {
+  html, body {
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    font-size: 16px;
+  }
+  #previewHack {
+    width: 100vw;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    transform: none;
+  }
+  canvas {
+    width: 100vw !important;
+    height: 100vh !important;
+    max-width: 100vw;
+    max-height: 100vh;
+  }
+}
