@@ -288,9 +288,9 @@ img {
   box-shadow: 0 16px 40px rgba(46, 125, 50, 0.18), 0 2px 8px rgba(0, 0, 0, 0.04);
   max-width: 320px;
   animation: float 6s ease-in-out infinite;
-  transform-style: preserve-3d;
   transition: box-shadow 0.3s;
   margin-bottom: 30px;
+  overflow: visible;
 }
 
 .hero .hero-character .character-card:hover {
