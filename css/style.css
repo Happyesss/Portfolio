@@ -490,7 +490,7 @@ img {
 }
 
 .about {
-  padding: 100px 0;
+  padding: 100px 0 40px;
 }
 
 .about .about-content {
@@ -796,6 +796,71 @@ img {
     border-radius: 10px;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
     border-left: 5px solid #588157;
+}
+
+/* Responsive adjustments for small screens (reduce vertical gaps and iframe height) */
+@media (max-width: 768px) {
+  .about {
+    /* keep some top spacing but reduce bottom spacing on mobile */
+    padding: 60px 0 16px;
+  }
+
+  .about .about-content {
+    gap: 22px;
+  }
+
+  /* Override inline iframe height on small screens to remove large top/bottom margin */
+  .about .about-image .image-frame iframe {
+    width: 100% !important;
+    height: auto !important;
+    max-height: 320px !important;
+    aspect-ratio: 16 / 9;
+    display: block;
+    border: 0;
+  }
+
+  .about .stats {
+    margin-top: 18px;
+    gap: 12px;
+  }
+}
+
+/* Extra-tight adjustments for very small screens */
+@media (max-width: 480px) {
+  /* Reduce header spacing so the section title doesn't push content down too far */
+  .section-header {
+    margin-bottom: 18px;
+  }
+
+  /* Make the camping section much tighter on phones */
+  .about {
+    padding: 32px 0 8px;
+  }
+
+  /* Shrink the iframe to a smaller max height and reduce the decorative offset */
+  .about .about-image .image-frame {
+    padding: 0;
+  }
+
+  .about .about-image .image-frame:before {
+    top: 8px;
+    left: 8px;
+    right: -8px;
+    bottom: -8px;
+  }
+
+  .about .about-image .image-frame iframe {
+    width: 100% !important;
+    height: auto !important;
+    max-height: 220px !important;
+    display: block;
+    border: 0;
+  }
+
+  /* Reduce large hero/title margins that may cascade on tiny screens */
+  .hero .hero-text h2 {
+    margin-top: 10rem;
+  }
 }
 
 .contact-form span {

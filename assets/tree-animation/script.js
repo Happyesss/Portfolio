@@ -652,7 +652,7 @@ function pointerMove(e) {
 function createWoodenBoards() {
     const boardData = [
         { label: "Projects", position: [5, 1.2, -3], rotationY: -Math.PI / 1, side: "front", link: "../../index.html#projects" },
-        { label: "Resume", position: [-4, 1.2, -4], rotationY: Math.PI / 1, side: "front", link: "https://drive.google.com/file/d/1f9dMRt3bONFLbC_42r_44Bdl3NwlgcBL/view?usp=sharing" },
+        { label: "Resume", position: [-4, 1.2, -4], rotationY: Math.PI / 1, side: "front", link: "https://drive.google.com/file/d/1emp1Yyj2MiHDWHB-LqALzh6rsfP0S3gJ/view?usp=drive_link" },
         { label: "Contact", position: [2, 1.2, 6], rotationY: Math.PI / 2.5, side: "front", link: "../../index.html#contact" },
         { label: "About Me", position: [-6, 1.2, 2], rotationY: -Math.PI / 2.5, side: "front", link: "../../index.html#about-me" }
     ];
