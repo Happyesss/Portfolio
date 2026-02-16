@@ -1,0 +1,347 @@
+/* ═══════════════════════════════════════════════════════
+   TERMINAL.CSS — Terminal lives INSIDE the 3D CRT screen.
+   Position/size is set dynamically by scene.js syncOverlay()
+   ═══════════════════════════════════════════════════════ */
+
+#terminal-container {
+    /* Position & size injected by JS — these are just defaults */
+    position: fixed;
+    left: 15%;
+    top: 10%;
+    width: 50%;
+    height: 55%;
+    /* Semi-transparent so the 3D screen shows behind */
+    background: rgba(0, 8, 0, 0.88);
+    border: none;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    z-index: 50;
+    overflow: hidden;
+    /* CRT inner screen look */
+    box-shadow: inset 0 0 50px rgba(0, 255, 65, 0.08),
+                inset 0 0 120px rgba(0, 0, 0, 0.6);
+}
+
+/* ═══════ TERMINAL HEADER ═══════ */
+.terminal-header {
+    display: flex;
+    align-items: center;
+    padding: 3px 6px;
+    background: rgba(0, 20, 0, 0.7);
+    border-bottom: 1px solid rgba(0, 255, 65, 0.15);
+    min-height: 18px;
+    gap: 5px;
+    flex-shrink: 0;
+}
+
+.terminal-buttons {
+    display: flex;
+    gap: 5px;
+}
+
+.t-btn {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.t-btn:hover {
+    transform: scale(1.3);
+    filter: brightness(1.4);
+}
+
+.t-btn-red    { background: #ff5f57; box-shadow: 0 0 4px #ff5f5744; }
+.t-btn-yellow { background: #ffbd2e; box-shadow: 0 0 4px #ffbd2e44; }
+.t-btn-green  { background: #28c840; box-shadow: 0 0 4px #28c84044; }
+
+.terminal-title {
+    flex: 1;
+    text-align: center;
+    font-family: var(--font-display);
+    font-size: 7px;
+    color: var(--green-dim);
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.terminal-status {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    font-size: 7px;
+    color: var(--green-dim);
+    flex-shrink: 0;
+}
+
+.status-dot {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+}
+
+.status-dot.online {
+    background: var(--green-primary);
+    box-shadow: 0 0 6px var(--green-glow);
+    animation: statusPulse 2s ease-in-out infinite;
+}
+
+.status-dot.offline {
+    background: var(--red);
+    box-shadow: 0 0 6px var(--red-dim);
+}
+
+@keyframes statusPulse {
+    0%, 100% { opacity: 1; }
+    50%      { opacity: 0.4; }
+}
+
+/* ═══════ TERMINAL OUTPUT ═══════ */
+.terminal-output {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 4px 6px;
+    font-family: var(--font-mono);
+    font-size: clamp(7px, 0.72vw, 11px);
+    line-height: 1.4;
+    color: var(--green-primary);
+    word-wrap: break-word;
+    scroll-behavior: smooth;
+}
+
+/* Output line types */
+.terminal-output .output-line {
+    margin-bottom: 1px;
+    animation: lineAppear 0.12s ease;
+}
+
+@keyframes lineAppear {
+    from { opacity: 0; transform: translateX(-2px); }
+    to   { opacity: 1; transform: translateX(0); }
+}
+
+.terminal-output .cmd-line {
+    color: var(--white);
+    margin-top: 4px;
+}
+
+.terminal-output .cmd-line .prompt-text {
+    color: var(--green-primary);
+}
+
+.terminal-output .cmd-line .cmd-text {
+    color: var(--white-bright);
+    font-weight: 500;
+}
+
+.terminal-output .error-line  { color: var(--red); }
+.terminal-output .success-line { color: var(--green-bright); }
+.terminal-output .info-line   { color: var(--cyan); }
+.terminal-output .warn-line   { color: var(--amber); }
+.terminal-output .dim-line    { color: #555; }
+
+.terminal-output .highlight {
+    color: var(--amber);
+    font-weight: 700;
+}
+
+.terminal-output .link {
+    color: var(--cyan);
+    text-decoration: underline;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.terminal-output .link:hover {
+    color: var(--green-primary);
+}
+
+/* ASCII Art */
+.terminal-output .ascii-art {
+    color: var(--green-primary);
+    text-shadow: 0 0 3px var(--green-glow);
+    line-height: 1.05;
+    font-size: clamp(4px, 0.48vw, 8px);
+    white-space: pre;
+    font-family: var(--font-terminal);
+}
+
+/* Table styling */
+.terminal-output .output-table {
+    border-collapse: collapse;
+    margin: 2px 0;
+    font-size: clamp(6px, 0.62vw, 10px);
+    width: 100%;
+}
+
+.terminal-output .output-table th {
+    color: var(--cyan);
+    text-align: left;
+    padding: 2px 10px 2px 0;
+    border-bottom: 1px solid var(--green-dark);
+}
+
+.terminal-output .output-table td {
+    padding: 2px 10px 2px 0;
+    color: var(--green-primary);
+}
+
+/* Skill bar */
+.skill-bar-container {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin: 1px 0;
+    font-size: clamp(6px, 0.62vw, 10px);
+}
+
+.skill-name {
+    min-width: 80px;
+    color: var(--cyan);
+}
+
+.skill-bar {
+    flex: 1;
+    max-width: 140px;
+    height: 7px;
+    background: #1a1a1a;
+    border: 1px solid var(--green-dark);
+    overflow: hidden;
+}
+
+.skill-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--green-dark), var(--green-primary));
+    box-shadow: 0 0 4px var(--green-glow);
+    transition: width 1s ease;
+}
+
+.skill-percent {
+    min-width: 22px;
+    font-size: clamp(5px, 0.55vw, 9px);
+    color: var(--green-dim);
+}
+
+/* Project card in terminal */
+.project-card {
+    border: 1px solid var(--green-dark);
+    padding: 6px 10px;
+    margin: 4px 0;
+    background: rgba(0, 255, 65, 0.02);
+    transition: all 0.3s ease;
+}
+
+.project-card:hover {
+    border-color: var(--green-primary);
+    background: rgba(0, 255, 65, 0.05);
+    box-shadow: 0 0 10px rgba(0, 255, 65, 0.1);
+}
+
+.project-card .project-name {
+    color: var(--green-bright);
+    font-size: clamp(7px, 0.72vw, 11px);
+    font-weight: 700;
+    margin-bottom: 1px;
+}
+
+.project-card .project-desc {
+    color: var(--green-dim);
+    font-size: clamp(6px, 0.58vw, 10px);
+    margin-bottom: 2px;
+}
+
+.project-card .project-tech {
+    display: flex;
+    gap: 4px;
+    flex-wrap: wrap;
+}
+
+.project-card .tech-tag {
+    background: var(--green-dark);
+    color: var(--bg-primary);
+    padding: 1px 3px;
+    font-size: clamp(5px, 0.5vw, 8px);
+    font-weight: 600;
+    letter-spacing: 0.2px;
+}
+
+/* ═══════ TERMINAL INPUT LINE ═══════ */
+.terminal-input-line {
+    display: block;
+    padding: 3px 6px;
+    border-top: 1px solid rgba(0, 255, 65, 0.1);
+    background: rgba(0, 5, 0, 0.6);
+    font-family: var(--font-mono);
+    font-size: clamp(7px, 0.72vw, 11px);
+    flex-shrink: 0;
+}
+
+.terminal-prompt-wrapper {
+    display: block;
+}
+
+.terminal-prompt-line1 {
+    color: var(--green-primary);
+    text-shadow: 0 0 4px var(--green-glow);
+    font-weight: 500;
+}
+
+.terminal-prompt-line2 {
+    display: flex;
+    align-items: baseline;
+}
+
+.terminal-prompt {
+    color: var(--green-primary);
+    white-space: pre;
+    text-shadow: 0 0 4px var(--green-glow);
+    font-weight: 500;
+}
+
+.terminal-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--white-bright);
+    font-family: var(--font-mono);
+    font-size: clamp(7px, 0.72vw, 11px);
+    caret-color: var(--green-primary);
+    text-align: left;
+    padding: 0;
+    margin: 0;
+}
+
+.cursor-block {
+    display: none;
+}
+
+/* ═══════ TYPEWRITER ═══════ */
+.typewriter {
+    overflow: hidden;
+    white-space: pre-wrap;
+}
+
+.typewriter-char {
+    opacity: 0;
+    animation: charAppear 0.02s ease forwards;
+}
+
+@keyframes charAppear {
+    to { opacity: 1; }
+}
+
+/* ═══════ RESPONSIVE ═══════ */
+@media (max-width: 768px) {
+    .terminal-output {
+        padding: 6px 8px;
+    }
+    .terminal-input-line {
+        padding: 5px 8px;
+    }
+}

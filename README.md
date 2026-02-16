@@ -1,117 +1,131 @@
-# 🌳 Forest Guardians Portfolio
+# 🚀 Portfolio Collection
 
-Welcome to **Forest Guardians** — a creative, interactive portfolio that blends technology, nature, and playful storytelling!  
-Explore a world where code meets conservation, and every section is designed to inspire curiosity and connection.
+Welcome to my **Portfolio Collection** — a showcase of four unique and creative portfolio experiences! Each portfolio offers a different interactive way to explore my work, skills, and projects.
 
----
+## 🌐 Live Demo
 
-## 🌲 Live Demo
-
-[View the Portfolio](https://my-portfolio-forest.netlify.app/)
+[View Portfolio Collection](https://happyesss.github.io/potfolio/)
 
 ---
 
-## ✨ Features
+## 📦 Portfolios Included
 
-- **Animated Hero Section:**  
-  Meet the coding ranger and forest animals in a lively, animated introduction.
+### 1. 💼 Simple & Clean
+A modern, minimalist portfolio with a command palette navigation system. Features dark/light theme toggle, keyboard shortcuts, and a professional design.
 
-- **Camping Adventure:**  
-  Fun storytelling about the journey from Wi-Fi addict to wilderness enthusiast, with animated stats and SVG art.
+**Tech:** HTML5, CSS3, JavaScript  
+**Features:** Command Palette (Cmd+J), Theme Toggle, Smooth Animations
 
-- **Key Projects:**  
-  Showcase of major projects, each with a unique "tree" metaphor and interactive cards.
+---
 
-- **About Me:**  
-  Personal details, skills grid, and a talking tree that cycles through fun facts and jokes.
+### 2. 🎮 Game Adventure
+An interactive 2D platformer game where you control a stickman character to explore different zones and discover portfolio content.
 
-- **My Garden (3D Forest):**  
-  Step into a magical, interactive 3D garden built with Three.js — complete with animated trees, grass, benches, and clickable wooden signboards.
+**Tech:** JavaScript, Canvas API, CSS3  
+**Features:** 5 Unique Zones, NPC Dialogues, Collectibles, Achievements
 
-- **Contact & Newsletter:**  
-  Modern contact form, social links, and newsletter subscription.
+---
 
-- **Responsive Design:**  
-  Fully responsive and mobile-friendly.
+### 3. 🌲 Forest Theme
+A nature-inspired portfolio with beautiful tree animations, peaceful forest ambiance, and an interactive 3D garden scene.
+
+**Tech:** HTML5, SCSS, JavaScript, Three.js  
+**Features:** 3D Garden, Animated Trees, Interactive Signboards
+
+---
+
+### 4. 💻 Hacker Terminal
+A cyberpunk-inspired terminal interface with command-line navigation and matrix effects. Navigate the portfolio using terminal commands.
+
+**Tech:** JavaScript, CSS3, Web Audio API  
+**Features:** Terminal Commands, Matrix Effects, Boot Sequence
 
 ---
 
 ## 🛠️ Tech Stack
 
-- **Frontend:**  
-  HTML5, SCSS/CSS3, JavaScript (ES6+), [Three.js](https://threejs.org/)
-
-- **UI/UX:**  
-  [Poppins](https://fonts.google.com/specimen/Poppins), [Playfair Display](https://fonts.google.com/specimen/Playfair+Display), Font Awesome Icons
-
-- **3D Animation:**  
-  Three.js, custom GLSL shaders, GLTF models
-
-- **Forms:**  
-  [Formspree](https://formspree.io/) for contact and newsletter
-
----
-
-## 🚀 Getting Started
-
-1. **Clone the repository:**
-   ```bash
-   git clone https://github.com/Happyesss/portfolio.git
-   cd portfolio
-   ```
-
-2. **Open `Index.html` in your browser:**  
-   No build step required! All assets are included or loaded via CDN.
-
-3. **Explore the 3D Garden:**  
-   Open `assets/tree-animation/tree.html` for the interactive 3D experience.
+- **Frontend:** HTML5, CSS3/SCSS, JavaScript (ES6+)
+- **3D Graphics:** Three.js
+- **Game Engine:** Custom Canvas 2D
+- **Fonts:** Space Grotesk, JetBrains Mono, Inter, Press Start 2P
+- **Icons:** Custom SVG, Font Awesome
 
 ---
 
 ## 📁 Project Structure
 
 ```
-portfolio/
-├── assets/
-│   └── tree-animation/
-│       ├── tree.html
-│       ├── script.js
-│       └── style.css
-├── css/
-│   └── style.css
-├── js/
-│   └── script.js
-├── scss/
-│   └── style.scss
-├── Index.html
-└── README.md
+Portfolio/
+├── index.html              # Landing page with portfolio cards
+├── css/landing.css         # Landing page styles
+├── js/landing.js           # Landing page interactions
+├── Portfolio_Simple/       # Minimal portfolio
+├── Portfolio_Game/         # Game-based portfolio
+├── Portfolio_Forest/       # Nature-themed portfolio
+└── Portfolio_Hacker/       # Terminal-style portfolio
 ```
 
 ---
 
-## 🌱 Customization
+## 🚀 Getting Started
 
-- **Update your name, bio, and project details** in `Index.html`.
-- **Add or replace images** in the `assets/` folder.
-- **Tweak styles** in `scss/style.scss` or `css/style.css`.
-- **Edit 3D garden logic** in `assets/tree-animation/script.js`.
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/Happyesss/potfolio.git
+   cd potfolio
+   ```
 
----
+2. Open `index.html` in your browser or use a local server:
+   ```bash
+   npx serve .
+   ```
 
-## 💡 Credits
-
-- 3D models and textures: [ceramicSoda/treeshader](https://github.com/ceramicSoda/treeshader)
-- Icons: [Font Awesome](https://fontawesome.com/)
-- Illustrations: [SVGator](https://www.svgator.com/)
-- Fonts: Google Fonts
-
----
-
-## 📬 Contact
-
-Feel free to reach out via the contact form on the site or connect on  
-[GitHub](https://github.com/Happyesss) | [LinkedIn](https://www.linkedin.com/in/shashank-kumar-rathour-9a49b32a5) | [Instagram](https://www.instagram.com/)
+3. Choose your preferred portfolio experience from the landing page!
 
 ---
 
-> _"Planting ideas, growing solutions, coding a greener tomorrow."_
+## 📱 Responsive Design
+
+All portfolios are fully responsive and work seamlessly on:
+- 🖥️ Desktop (1920px+)
+- 💻 Laptop (1024px - 1920px)
+- 📱 Tablet (768px - 1024px)
+- 📱 Mobile (320px - 768px)
+
+---
+
+## ✨ Features Highlights
+
+- **Interactive Experiences:** From games to terminals, each portfolio offers unique interactivity
+- **Modern Design:** Clean, professional, and visually appealing
+- **Keyboard Navigation:** Command palettes and shortcuts for power users
+- **Theme Support:** Light/dark themes available
+- **Smooth Animations:** Carefully crafted CSS and JS animations
+- **Accessibility:** Semantic HTML and ARIA labels
+
+---
+
+## 🤝 Contributing
+
+Contributions, issues, and feature requests are welcome! Feel free to check the [issues page](https://github.com/Happyesss/potfolio/issues).
+
+---
+
+## 📄 License
+
+This project is open source and available under the [MIT License](LICENSE).
+
+---
+
+## 👤 Author
+
+**Shashank Kumar Rathour**
+
+- GitHub: [@Happyesss](https://github.com/Happyesss)
+- LinkedIn: [Shashank Kumar Rathour](https://www.linkedin.com/in/shashank-kumar-rathour-9a49b32a5/)
+- Portfolio: [my-portfolio-forest.netlify.app](https://my-portfolio-forest.netlify.app)
+- Email: 22csaiml002@jssaten.ac.in
+
+---
+
+Made with ❤️ and lots of ☕

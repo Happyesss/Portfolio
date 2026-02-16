@@ -1,0 +1,129 @@
+/* ═══════════════════════════════════════════════════════
+   BOOT.CSS — Boot Sequence Styles
+   ═══════════════════════════════════════════════════════ */
+
+#boot-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: #000;
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.boot-content {
+    width: 80%;
+    max-width: 800px;
+    font-family: var(--font-terminal);
+    font-size: 16px;
+}
+
+.bios-header {
+    border-bottom: 1px solid var(--green-dark);
+    padding-bottom: 12px;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+}
+
+.bios-brand {
+    color: var(--green-primary);
+    font-size: 18px;
+    text-shadow: 0 0 10px var(--green-glow);
+    letter-spacing: 2px;
+}
+
+.bios-version {
+    color: var(--green-dim);
+    font-size: 13px;
+}
+
+.boot-log {
+    min-height: 300px;
+    max-height: 60vh;
+    overflow-y: auto;
+    padding: 10px 0;
+    line-height: 1.6;
+}
+
+.boot-log .log-line {
+    opacity: 0;
+    animation: bootLineIn 0.1s ease forwards;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.log-line .ok {
+    color: var(--green-primary);
+    font-weight: bold;
+}
+
+.log-line .fail {
+    color: var(--red);
+    font-weight: bold;
+}
+
+.log-line .warn {
+    color: var(--amber);
+}
+
+.log-line .info {
+    color: var(--cyan);
+}
+
+.log-line .dim {
+    color: #555;
+}
+
+@keyframes bootLineIn {
+    from { opacity: 0; transform: translateX(-5px); }
+    to   { opacity: 1; transform: translateX(0); }
+}
+
+.boot-progress {
+    width: 100%;
+    height: 6px;
+    background: #111;
+    border: 1px solid var(--green-dark);
+    margin-top: 20px;
+    overflow: hidden;
+}
+
+.boot-progress-bar {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, var(--green-dark), var(--green-primary));
+    box-shadow: 0 0 12px var(--green-glow);
+    transition: width 0.2s linear;
+}
+
+.boot-prompt {
+    margin-top: 24px;
+    text-align: center;
+    font-size: 18px;
+    color: var(--green-primary);
+    text-shadow: 0 0 15px var(--green-glow);
+    animation: bootPromptPulse 1.5s ease-in-out infinite;
+}
+
+@keyframes bootPromptPulse {
+    0%, 100% { opacity: 0.6; }
+    50%      { opacity: 1; }
+}
+
+/* Boot screen exit animation */
+.boot-exit {
+    animation: bootExit 0.8s ease-in forwards;
+}
+
+@keyframes bootExit {
+    0%   { opacity: 1; transform: scale(1); filter: brightness(1); }
+    50%  { opacity: 0.8; transform: scale(1.02); filter: brightness(2); }
+    100% { opacity: 0; transform: scale(0.95) scaleY(0.01); filter: brightness(3); }
+}

@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Code Quest — A Developer's Journey</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/hud.css">
+    <link rel="stylesheet" href="css/panels.css">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div id="loading-screen">
+        <div class="loader-content">
+            <div class="loader-stickman">
+                <div class="stick-head"></div>
+                <div class="stick-body"></div>
+                <div class="stick-arm-l"></div>
+                <div class="stick-arm-r"></div>
+                <div class="stick-leg-l"></div>
+                <div class="stick-leg-r"></div>
+            </div>
+            <h1 class="loader-title">CODE QUEST</h1>
+            <p class="loader-sub">A Developer's Journey</p>
+            <div class="loader-bar"><div class="loader-fill"></div></div>
+            <p class="loader-hint">Loading world...</p>
+        </div>
+    </div>
+
+    <!-- Title / Start Screen -->
+    <div id="start-screen" class="hidden">
+        <div class="stars-bg"></div>
+        <div class="start-content">
+            <h1 class="game-title">CODE QUEST</h1>
+            <p class="game-subtitle">A Developer's Journey</p>
+            <div class="story-intro">
+                <p>You are a stickman developer who has jumped into a portfolio.</p>
+                <p>Explore 5 zones, overcome obstacles, and discover who built this world.</p>
+            </div>
+            <button id="btn-start" class="btn-pixel">▶ START ADVENTURE</button>
+            <div class="controls-hint">
+                <span>⬅➡ Move</span>
+                <span>⬆ Jump</span>
+                <span>⬇ Crouch</span>
+                <span>E Interact</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Game Canvas -->
+    <canvas id="game-canvas"></canvas>
+
+    <!-- HUD Overlay -->
+    <div id="hud" class="hidden">
+        <div id="hud-top">
+            <div id="hud-zone">
+                <span class="zone-icon">🏠</span>
+                <span id="zone-name">Spawn Village</span>
+            </div>
+            <div id="hud-quest">
+                <span class="quest-icon">📜</span>
+                <span id="quest-text">Explore and find the signboard...</span>
+            </div>
+        </div>
+        <div id="hud-bottom">
+            <div id="hud-controls">
+                <span class="key">←→</span> Move
+                <span class="key">↑</span> Jump
+                <span class="key">↓</span> Crouch
+                <span class="key">E</span> Interact
+                <span class="key">ESC</span> Menu
+            </div>
+            <div id="hud-progress">
+                <div class="progress-dots">
+                    <span class="dot active" data-zone="0">1</span>
+                    <span class="dot" data-zone="1">2</span>
+                    <span class="dot" data-zone="2">3</span>
+                    <span class="dot" data-zone="3">4</span>
+                    <span class="dot" data-zone="4">5</span>
+                </div>
+            </div>
+        </div>
+        <div id="interact-prompt" class="hidden">
+            <span class="key">E</span> Interact
+        </div>
+    </div>
+
+    <!-- Info Panel (Portfolio Content) -->
+    <div id="info-panel" class="hidden">
+        <div class="panel-backdrop"></div>
+        <div class="panel-window">
+            <button id="panel-close" class="btn-close">✕</button>
+            <div id="panel-content">
+                <!-- Dynamically filled -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Dialogue Box -->
+    <div id="dialogue-box" class="hidden">
+        <div class="dialogue-portrait" id="dialogue-portrait"></div>
+        <div class="dialogue-text-area">
+            <span id="dialogue-name" class="dialogue-name">???</span>
+            <p id="dialogue-text" class="dialogue-text"></p>
+            <span class="dialogue-continue">▼ Press E</span>
+        </div>
+    </div>
+
+    <!-- Pause Menu -->
+    <div id="pause-menu" class="hidden">
+        <div class="pause-backdrop"></div>
+        <div class="pause-window">
+            <h2>PAUSED</h2>
+            <button class="btn-pixel" id="btn-resume">▶ Resume</button>
+            <button class="btn-pixel" id="btn-restart">↺ Restart</button>
+        </div>
+    </div>
+
+    <!-- Zone Transition -->
+    <div id="zone-transition" class="hidden">
+        <div class="transition-bg"></div>
+        <h2 id="transition-zone-name"></h2>
+        <p id="transition-zone-desc"></p>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/utils.js"></script>
+    <script src="js/audio.js"></script>
+    <script src="js/particles.js"></script>
+    <script src="js/player.js"></script>
+    <script src="js/world.js"></script>
+    <script src="js/interactions.js"></script>
+    <script src="js/hud.js"></script>
+    <script src="js/panels.js"></script>
+    <script src="js/scene.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,440 @@
+/* ========================================
+   Panels — Adventure-Styled Info & Dialogue
+   Warm, clean, Mario-inspired cards
+   ======================================== */
+
+/* Info Panel Overlay */
+#info-panel {
+    position: fixed;
+    inset: 0;
+    z-index: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.panel-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(62, 39, 35, 0.5);
+    backdrop-filter: blur(8px);
+}
+
+.panel-window {
+    position: relative;
+    z-index: 2;
+    background: var(--panel-bg);
+    border: 3px solid var(--panel-border);
+    border-radius: 20px;
+    padding: 40px;
+    max-width: 700px;
+    width: 90%;
+    max-height: 80vh;
+    overflow-y: auto;
+    box-shadow:
+        0 6px 0 rgba(139, 69, 19, 0.3),
+        0 12px 40px rgba(0, 0, 0, 0.2);
+    animation: panelSlideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes panelSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(30px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.btn-close {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    background: linear-gradient(180deg, #ef5350, #e53935);
+    border: 2px solid #c62828;
+    color: var(--text-white);
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    box-shadow: 0 2px 0 #b71c1c;
+}
+
+.btn-close:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 0 #b71c1c, 0 6px 12px rgba(229, 57, 53, 0.3);
+}
+
+/* Panel Content Styles */
+.panel-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 2px solid rgba(196, 114, 42, 0.2);
+}
+
+.panel-icon {
+    font-size: 36px;
+    width: 64px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(180deg, #fff8e1, #ffecb3);
+    border-radius: 14px;
+    border: 2px solid var(--accent-gold);
+    flex-shrink: 0;
+    box-shadow: 0 2px 0 rgba(255, 152, 0, 0.3);
+}
+
+.panel-title {
+    font-family: var(--pixel-font);
+    font-size: 16px;
+    color: var(--text-dark);
+    text-shadow: 1px 1px 0 rgba(255, 193, 7, 0.3);
+    letter-spacing: 2px;
+}
+
+.panel-subtitle {
+    font-size: 12px;
+    color: var(--text-brown);
+    margin-top: 4px;
+}
+
+.panel-body {
+    line-height: 1.8;
+    font-size: 14px;
+    color: var(--text-dark);
+}
+
+.panel-body p {
+    margin-bottom: 12px;
+}
+
+/* Skill Tags — Colorful adventure badges */
+.skill-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 16px;
+}
+
+.skill-tag {
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-family: var(--pixel-font);
+    font-size: 8px;
+    letter-spacing: 1px;
+    border: 2px solid;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 2px 0 rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s;
+}
+
+.skill-tag:hover {
+    transform: translateY(-2px);
+}
+
+.skill-tag.frontend {
+    color: var(--text-white);
+    border-color: #1565c0;
+    background: linear-gradient(180deg, #42a5f5, #1e88e5);
+    box-shadow: 0 2px 0 #0d47a1;
+}
+
+.skill-tag.backend {
+    color: var(--text-white);
+    border-color: #2e7d32;
+    background: linear-gradient(180deg, #66bb6a, #43a047);
+    box-shadow: 0 2px 0 #1b5e20;
+}
+
+.skill-tag.tool {
+    color: var(--text-dark);
+    border-color: #f57f17;
+    background: linear-gradient(180deg, #ffca28, #ffc107);
+    box-shadow: 0 2px 0 #e65100;
+}
+
+.skill-tag.language {
+    color: var(--text-white);
+    border-color: #c62828;
+    background: linear-gradient(180deg, #ef5350, #e53935);
+    box-shadow: 0 2px 0 #b71c1c;
+}
+
+.skill-bar {
+    width: 60px;
+    height: 6px;
+    background: rgba(255, 255, 255, 0.4);
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.skill-bar-fill {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 1s ease;
+    background: rgba(255, 255, 255, 0.8);
+}
+
+/* Project Cards — Warm adventure cards */
+.project-card {
+    background: linear-gradient(180deg, #fff8e1, #ffecb3);
+    border: 2px solid var(--accent-brown);
+    border-radius: 14px;
+    padding: 20px;
+    margin-bottom: 16px;
+    transition: all 0.2s;
+    box-shadow: 0 3px 0 rgba(139, 69, 19, 0.2);
+}
+
+.project-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 0 rgba(139, 69, 19, 0.2), 0 8px 20px rgba(0, 0, 0, 0.1);
+    border-color: var(--accent-gold);
+}
+
+.project-name {
+    font-family: var(--pixel-font);
+    font-size: 11px;
+    color: var(--text-dark);
+    margin-bottom: 8px;
+    text-shadow: 1px 1px 0 rgba(255, 193, 7, 0.3);
+}
+
+.project-desc {
+    font-size: 13px;
+    color: var(--text-brown);
+    line-height: 1.6;
+    margin-bottom: 10px;
+}
+
+.project-tech {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.tech-pill {
+    font-family: var(--pixel-font);
+    font-size: 7px;
+    padding: 5px 12px;
+    border-radius: 20px;
+    background: linear-gradient(180deg, #ff8a65, #ff7043);
+    color: var(--text-white);
+    border: 2px solid #e64a19;
+    box-shadow: 0 2px 0 #bf360c;
+}
+
+/* Timeline — Adventure journey style */
+.timeline {
+    position: relative;
+    padding-left: 34px;
+}
+
+.timeline::before {
+    content: '';
+    position: absolute;
+    left: 10px;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: linear-gradient(to bottom, var(--accent-green), var(--accent-gold), var(--accent-orange));
+    border-radius: 2px;
+}
+
+.timeline-item {
+    position: relative;
+    margin-bottom: 24px;
+    padding-bottom: 8px;
+}
+
+.timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -28px;
+    top: 4px;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--accent-gold);
+    border: 3px solid var(--bg-cream);
+    box-shadow: 0 0 0 2px var(--accent-gold), 0 2px 6px rgba(255, 193, 7, 0.3);
+}
+
+.timeline-date {
+    font-family: var(--pixel-font);
+    font-size: 8px;
+    color: var(--accent-orange);
+    margin-bottom: 4px;
+}
+
+.timeline-role {
+    font-family: var(--pixel-font);
+    font-size: 10px;
+    color: var(--text-dark);
+    margin-bottom: 4px;
+    text-shadow: 1px 1px 0 rgba(255, 193, 7, 0.2);
+}
+
+.timeline-desc {
+    font-size: 13px;
+    color: var(--text-brown);
+    line-height: 1.6;
+}
+
+/* Contact Section */
+.contact-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 16px;
+}
+
+.contact-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px;
+    background: linear-gradient(180deg, #fff8e1, #ffecb3);
+    border: 2px solid var(--accent-brown);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-decoration: none;
+    color: var(--text-dark);
+    box-shadow: 0 2px 0 rgba(139, 69, 19, 0.2);
+}
+
+.contact-item:hover {
+    border-color: var(--accent-gold);
+    transform: translateY(-3px);
+    box-shadow: 0 5px 0 rgba(139, 69, 19, 0.2), 0 6px 16px rgba(0, 0, 0, 0.1);
+}
+
+.contact-icon {
+    font-size: 24px;
+    flex-shrink: 0;
+}
+
+.contact-label {
+    font-family: var(--pixel-font);
+    font-size: 8px;
+    color: var(--text-dark);
+    letter-spacing: 1px;
+}
+
+.contact-value {
+    font-size: 12px;
+    color: var(--text-brown);
+    margin-top: 2px;
+}
+
+/* ========================================
+   Dialogue Box — RPG-style warm bubble
+   ======================================== */
+#dialogue-box {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 600;
+    display: flex;
+    align-items: flex-end;
+    gap: 16px;
+    animation: dialogueSlideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes dialogueSlideUp {
+    from {
+        opacity: 0;
+        transform: translateX(-50%) translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+    }
+}
+
+.dialogue-portrait {
+    width: 68px;
+    height: 68px;
+    border-radius: 14px;
+    border: 3px solid var(--accent-gold);
+    background: linear-gradient(180deg, #fff8e1, #ffe0b2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 34px;
+    flex-shrink: 0;
+    box-shadow: 0 3px 0 rgba(255, 152, 0, 0.3);
+}
+
+.dialogue-text-area {
+    background: rgba(255, 248, 225, 0.97);
+    border: 3px solid var(--panel-border);
+    border-radius: 14px;
+    padding: 18px 24px;
+    min-width: 400px;
+    max-width: 600px;
+    box-shadow: 0 4px 0 rgba(139, 69, 19, 0.3), 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.dialogue-name {
+    font-family: var(--pixel-font);
+    font-size: 10px;
+    color: var(--accent-orange);
+    letter-spacing: 1px;
+    display: block;
+    margin-bottom: 8px;
+    text-shadow: 1px 1px 0 rgba(255, 193, 7, 0.3);
+}
+
+.dialogue-text {
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--text-dark);
+    min-height: 40px;
+}
+
+.dialogue-continue {
+    font-family: var(--pixel-font);
+    font-size: 7px;
+    color: var(--text-dim);
+    float: right;
+    margin-top: 8px;
+    animation: blink 1s step-end infinite;
+}
+
+/* ========================================
+   Scrollbar — Warm styled
+   ======================================== */
+.panel-window::-webkit-scrollbar {
+    width: 8px;
+}
+
+.panel-window::-webkit-scrollbar-track {
+    background: rgba(196, 114, 42, 0.1);
+    border-radius: 4px;
+}
+
+.panel-window::-webkit-scrollbar-thumb {
+    background: var(--accent-brown);
+    border-radius: 4px;
+}
+
+.panel-window::-webkit-scrollbar-thumb:hover {
+    background: #6d4c41;
+}
