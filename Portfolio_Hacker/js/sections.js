@@ -139,6 +139,7 @@ const Sections = (() => {
 <span class="output-line">  │  Phone    -> +91 8527875164                     │</span>
 <span class="output-line">  │  GitHub   -> <a class="link" href="https://github.com/Happyesss" target="_blank">github.com/Happyesss</a>               │</span>
 <span class="output-line">  │  LinkedIn -> <a class="link" href="https://www.linkedin.com/in/shashank-kumar-rathour-9a49b32a5" target="_blank">linkedin.com/in/shashank-kumar</a>      │</span>
+<span class="output-line">  │  Resume   -> <a class="link" href="https://share.resumy.live/r/h0BZoQJh3r" target="_blank">share.resumy.live/r/h0BZoQJh3r</a>     │</span>
 <span class="output-line">  │  Insta    -> <a class="link" href="https://www.instagram.com/" target="_blank">instagram.com</a>                      │</span>
 <span class="output-line">  │  Website  -> <a class="link" href="https://my-portfolio-forest.netlify.app/" target="_blank">my-portfolio-forest.netlify.app</a>    │</span>
 <span class="output-line">  │                                                 │</span>

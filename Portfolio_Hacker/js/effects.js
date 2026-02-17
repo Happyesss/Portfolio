@@ -8,7 +8,7 @@ const Effects = (() => {
     let matrixAnimId = null;
     let matrixActive = false;
 
-    const MATRIX_CHARS = 'アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン0123456789ABCDEF<>{}[]|/\\';
+    const MATRIX_CHARS = '01';
     const FONT_SIZE = 14;
 
     /* ═══════ MATRIX RAIN ═══════ */
@@ -18,7 +18,7 @@ const Effects = (() => {
         matrixCtx = matrixCanvas.getContext('2d');
         resizeMatrix();
         window.addEventListener('resize', resizeMatrix);
-        startMatrix();
+        // Don't start automatically - wait for matrix command
     }
 
     function resizeMatrix() {
@@ -71,6 +71,10 @@ const Effects = (() => {
     function stopMatrix() {
         matrixActive = false;
         if (matrixAnimId) cancelAnimationFrame(matrixAnimId);
+        // Clear the canvas
+        if (matrixCtx && matrixCanvas) {
+            matrixCtx.clearRect(0, 0, matrixCanvas.width, matrixCanvas.height);
+        }
     }
 
     /* ═══════ INTENSIFY MATRIX ═══════ */
@@ -80,6 +84,7 @@ const Effects = (() => {
         setTimeout(() => {
             document.body.classList.remove('matrix-intense');
             if (matrixCanvas) matrixCanvas.style.opacity = '0.15';
+            stopMatrix();
         }, duration);
     }
 

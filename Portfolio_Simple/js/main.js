@@ -97,9 +97,8 @@ function executeCommand(item) {
 // Actions (No theme toggle - dark mode only)
 // ========================
 function downloadResume() {
-    showToast('Resume download started!');
-    // In a real scenario, this would trigger a download
-    // window.location.href = '/resume.pdf';
+    showToast('Opening resume...');
+    window.open('https://share.resumy.live/r/h0BZoQJh3r', '_blank');
 }
 
 function copyEmail() {

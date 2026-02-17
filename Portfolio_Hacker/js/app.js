@@ -6,7 +6,7 @@
 (async () => {
     'use strict';
 
-    /* ── Matrix rain starts immediately ── */
+    /* ── Matrix rain initialized but NOT started ── */
     Effects.initMatrix();
 
     /* ── Boot sequence ── */

@@ -98,8 +98,9 @@ const Commands = (() => {
         'matrix': {
             desc: 'Toggle matrix rain effect',
             handler: () => {
+                Effects.startMatrix();
                 Effects.matrixIntensify(5000);
-                return '<span class="success-line">☠ Matrix rain intensified for 5 seconds...</span>';
+                return '<span class="success-line">☠ Matrix rain activated and intensified for 5 seconds...</span>';
             }
         },
         'hack': {

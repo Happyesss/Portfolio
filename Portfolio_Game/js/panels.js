@@ -353,6 +353,13 @@ const PanelSystem = {
                                 <p class="contact-value">linkedin.com/in/shashank</p>
                             </div>
                         </a>
+                        <a class="contact-item" href="https://share.resumy.live/r/h0BZoQJh3r" target="_blank">
+                            <span class="contact-icon">📄</span>
+                            <div>
+                                <p class="contact-label">RESUME</p>
+                                <p class="contact-value">View My Resume</p>
+                            </div>
+                        </a>
                         <a class="contact-item" href="tel:+918527875164" target="_blank">
                             <span class="contact-icon">📱</span>
                             <div>

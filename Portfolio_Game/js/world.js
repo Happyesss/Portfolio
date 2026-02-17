@@ -440,17 +440,19 @@ class World {
         platforms.push({ x: 400, y: 360, w: 130, h: 24, type: 'brick', color: '#a1887f' });
         platforms.push({ x: 580, y: 310, w: 140, h: 24, type: 'brick', color: '#bcaaa4' });
         
-        // Tower climbing platforms - zigzag pattern with jumpable gaps
+        // Tower climbing platforms - zigzag pattern with closer, jumpable gaps
         const climbPlatforms = [
-            { x: towerX - 100, y: towerBase - 70, w: 140 },
-            { x: towerX + 60, y: towerBase - 130, w: 130 },
-            { x: towerX - 80, y: towerBase - 190, w: 130 },
-            { x: towerX + 70, y: towerBase - 250, w: 120 },
-            { x: towerX - 70, y: towerBase - 310, w: 120 },
-            { x: towerX + 60, y: towerBase - 370, w: 110 },
-            { x: towerX - 60, y: towerBase - 430, w: 110 },
-            { x: towerX + 50, y: towerBase - 490, w: 100 },
-            { x: towerX - 50, y: towerBase - 550, w: 100 },
+            { x: towerX - 100, y: towerBase - 60, w: 140 },
+            { x: towerX + 60, y: towerBase - 110, w: 130 },
+            { x: towerX - 80, y: towerBase - 160, w: 130 },
+            { x: towerX + 70, y: towerBase - 210, w: 120 },
+            { x: towerX - 70, y: towerBase - 260, w: 120 },
+            { x: towerX + 60, y: towerBase - 310, w: 110 },
+            { x: towerX - 60, y: towerBase - 360, w: 110 },
+            { x: towerX + 50, y: towerBase - 410, w: 100 },
+            { x: towerX - 50, y: towerBase - 460, w: 100 },
+            { x: towerX + 40, y: towerBase - 510, w: 100 },
+            { x: towerX - 40, y: towerBase - 560, w: 100 },
             { x: towerX, y: towerBase - 620, w: 160 }, // Top platform
         ];
         

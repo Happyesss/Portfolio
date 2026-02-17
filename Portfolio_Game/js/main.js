@@ -81,6 +81,30 @@ class Game {
     }
 
     // ============================
+    // Canvas Click Handler
+    // ============================
+    handleCanvasClick(worldX, worldY) {
+        // Check if clicked on a fence
+        for (const decoration of this.world.decorations) {
+            if (decoration.type === 'fence') {
+                const fenceX = decoration.x;
+                const fenceY = decoration.y;
+                const fenceW = 30; // Fence width (approximately)
+                const fenceH = 40; // Fence height (approximately)
+                
+                // Check if click is within fence bounds
+                if (worldX >= fenceX && worldX <= fenceX + fenceW &&
+                    worldY >= fenceY - fenceH && worldY <= fenceY) {
+                    // Open Portfolio_Forest in new tab
+                    window.open('../Portfolio_Forest/index.html', '_blank');
+                    AudioSystem.play('interact');
+                    return;
+                }
+            }
+        }
+    }
+
+    // ============================
     // Setup Input
     // ============================
     setupInput() {
@@ -147,6 +171,53 @@ class Game {
                     this.input.shift = false;
                     break;
             }
+        });
+
+        // Canvas click for interactive decorations (fences)
+        this.canvas.addEventListener('click', (e) => {
+            if (this.state !== 'playing') return;
+            
+            const rect = this.canvas.getBoundingClientRect();
+            const clickX = e.clientX - rect.left;
+            const clickY = e.clientY - rect.top;
+            
+            // Convert to world coordinates
+            const worldX = clickX + this.camera.x;
+            const worldY = clickY + this.camera.y;
+            
+            this.handleCanvasClick(worldX, worldY);
+        });
+
+        // Canvas hover for cursor change on interactive decorations
+        this.canvas.addEventListener('mousemove', (e) => {
+            if (this.state !== 'playing') return;
+            
+            const rect = this.canvas.getBoundingClientRect();
+            const mouseX = e.clientX - rect.left;
+            const mouseY = e.clientY - rect.top;
+            
+            // Convert to world coordinates
+            const worldX = mouseX + this.camera.x;
+            const worldY = mouseY + this.camera.y;
+            
+            // Check if hovering over a fence
+            let isOverFence = false;
+            for (const decoration of this.world.decorations) {
+                if (decoration.type === 'fence') {
+                    const fenceX = decoration.x;
+                    const fenceY = decoration.y;
+                    const fenceW = 30;
+                    const fenceH = 40;
+                    
+                    if (worldX >= fenceX && worldX <= fenceX + fenceW &&
+                        worldY >= fenceY - fenceH && worldY <= fenceY) {
+                        isOverFence = true;
+                        break;
+                    }
+                }
+            }
+            
+            this.canvas.style.cursor = isOverFence ? 'pointer' : 'default';
         });
     }
 
