@@ -295,6 +295,18 @@ body {
     position: relative;
 }
 
+/* Image previews: show the full image without cropping */
+.card-image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: top center;
+    display: block;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    background: var(--bg-card);
+}
+
 /* Card Overlay */
 .card-overlay {
     position: absolute;
