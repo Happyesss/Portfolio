@@ -261,9 +261,10 @@ class Game {
             btn.addEventListener('mouseleave', release);
         };
 
-        bindBtn('mobile-btn-left', 'left');
-        bindBtn('mobile-btn-up',   'jump');
-        bindBtn('mobile-btn-down', 'down');
+        bindBtn('mobile-btn-left',  'left');
+        bindBtn('mobile-btn-right', 'right');
+        bindBtn('mobile-btn-up',    'jump');
+        bindBtn('mobile-btn-down',  'down');
 
         // Orientation change handler — show/hide controls
         const handleOrientation = () => {

@@ -339,11 +339,13 @@
 /* ═══════ RESPONSIVE ═══════ */
 @media (max-width: 768px) {
     #terminal-container {
-        left: 2% !important;
-        top: 2% !important;
-        width: 96% !important;
-        height: calc(100vh - 36px) !important;
-        border-radius: 6px;
+        left: 0 !important;
+        top: 0 !important;
+        width: 100% !important;
+        height: calc(100vh - 32px) !important;
+        border-radius: 0;
+        z-index: 200;
+        background: rgba(0, 6, 0, 0.98);
     }
 
     .terminal-output {
@@ -392,6 +394,8 @@
         width: 100% !important;
         height: 100vh !important;
         border-radius: 0;
+        z-index: 200;
+        background: rgba(0, 6, 0, 1);
     }
 
     .terminal-output {

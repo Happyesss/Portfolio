@@ -137,6 +137,7 @@
         top: 10px;
         right: 10px;
         font-size: 10px;
+        z-index: 210; /* above terminal z-index 200 */
     }
 
     .guide-content {
@@ -160,7 +161,7 @@
         right: 8px;
         left: 8px;
         font-size: 10px;
-        /* Start collapsed on small screens */
+        z-index: 210;
     }
 
     .guide-content {

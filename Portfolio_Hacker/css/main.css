@@ -192,6 +192,16 @@ html, body {
         --guide-font-size: 11px;
     }
 
+    /* Hide 3D scene — terminal replaces it fully */
+    #three-canvas {
+        display: none;
+    }
+
+    /* Dark bg replaces 3D */
+    body {
+        background: #080808;
+    }
+
     #stats-bar {
         height: auto;
         min-height: 28px;
@@ -216,6 +226,10 @@ html, body {
 }
 
 @media (max-width: 480px) {
+    #three-canvas {
+        display: none;
+    }
+
     #stats-bar {
         display: none;
     }

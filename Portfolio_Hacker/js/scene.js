@@ -844,7 +844,6 @@ const Scene3D = (() => {
 
         // On mobile / small screens — skip 3D projection, CSS handles it
         if (window.innerWidth <= 768) return;
-
         const hw = SCREEN_W / 2;
         const hh = SCREEN_H / 2;
 

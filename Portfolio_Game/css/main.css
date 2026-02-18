@@ -544,6 +544,14 @@ canvas#game-canvas {
     height: 80px;
 }
 
+/* Right arrow — next to left arrow */
+.mobile-btn-right {
+    bottom: 30px;
+    left: 116px;
+    width: 80px;
+    height: 80px;
+}
+
 /* Up/Down arrows — stacked at bottom-right */
 .mobile-btn-up {
     bottom: 120px;
@@ -741,6 +749,14 @@ canvas#game-canvas {
     .mobile-btn-left {
         bottom: 16px;
         left: 14px;
+        width: 64px;
+        height: 64px;
+        font-size: 22px;
+    }
+
+    .mobile-btn-right {
+        bottom: 16px;
+        left: 88px;
         width: 64px;
         height: 64px;
         font-size: 22px;
