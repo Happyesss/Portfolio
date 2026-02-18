@@ -184,3 +184,39 @@ html, body {
     font-size: 14px;
     letter-spacing: 2px;
 }
+
+/* ═══════════════ RESPONSIVE — MOBILE ═══════════════ */
+@media (max-width: 768px) {
+    :root {
+        --terminal-font-size: 13px;
+        --guide-font-size: 11px;
+    }
+
+    #stats-bar {
+        height: auto;
+        min-height: 28px;
+        padding: 4px 10px;
+        gap: 10px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .stat-bar {
+        width: 40px;
+    }
+
+    .stat-val {
+        font-size: 10px;
+        min-width: 28px;
+    }
+
+    .clock-item {
+        margin-left: 0;
+    }
+}
+
+@media (max-width: 480px) {
+    #stats-bar {
+        display: none;
+    }
+}

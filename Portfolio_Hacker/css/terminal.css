@@ -338,10 +338,77 @@
 
 /* ═══════ RESPONSIVE ═══════ */
 @media (max-width: 768px) {
+    #terminal-container {
+        left: 2% !important;
+        top: 2% !important;
+        width: 96% !important;
+        height: calc(100vh - 36px) !important;
+        border-radius: 6px;
+    }
+
     .terminal-output {
         padding: 6px 8px;
+        font-size: clamp(10px, 2.8vw, 13px);
     }
+
     .terminal-input-line {
         padding: 5px 8px;
+        font-size: clamp(10px, 2.8vw, 13px);
+    }
+
+    .terminal-input {
+        font-size: clamp(10px, 2.8vw, 13px);
+    }
+
+    .terminal-prompt-line1 {
+        font-size: clamp(9px, 2.4vw, 12px);
+    }
+
+    .terminal-title {
+        font-size: 9px;
+    }
+
+    .terminal-status {
+        font-size: 9px;
+    }
+
+    .terminal-output .ascii-art {
+        font-size: clamp(6px, 1.6vw, 10px);
+    }
+
+    .skill-name {
+        min-width: 60px;
+    }
+
+    .skill-bar {
+        max-width: 90px;
+    }
+}
+
+@media (max-width: 480px) {
+    #terminal-container {
+        left: 0 !important;
+        top: 0 !important;
+        width: 100% !important;
+        height: 100vh !important;
+        border-radius: 0;
+    }
+
+    .terminal-output {
+        font-size: clamp(9px, 3vw, 12px);
+    }
+
+    .terminal-input {
+        font-size: clamp(9px, 3vw, 12px);
+    }
+
+    .terminal-output .ascii-art {
+        font-size: clamp(5px, 1.4vw, 8px);
+        overflow-x: auto;
+        display: block;
+    }
+
+    .project-card {
+        padding: 4px 6px;
     }
 }

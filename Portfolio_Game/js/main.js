@@ -40,6 +40,9 @@ class Game {
         // Input
         this.setupInput();
 
+        // Mobile touch controls
+        this.setupMobileControls();
+
         // UI Buttons
         this.setupUI();
 
@@ -219,6 +222,64 @@ class Game {
             
             this.canvas.style.cursor = isOverFence ? 'pointer' : 'default';
         });
+    }
+
+    // ============================
+    // Mobile Touch Controls
+    // ============================
+    setupMobileControls() {
+        const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+        const mobileControls = document.getElementById('mobile-controls');
+
+        // Show controls on touch devices regardless of width
+        if (isTouchDevice && mobileControls) {
+            mobileControls.classList.remove('hidden');
+        }
+
+        // Helper: attach press/release to a button element
+        const bindBtn = (id, key) => {
+            const btn = document.getElementById(id);
+            if (!btn) return;
+
+            const press = (e) => {
+                e.preventDefault();
+                this.input[key] = true;
+                btn.classList.add('pressed');
+            };
+            const release = (e) => {
+                e.preventDefault();
+                this.input[key] = false;
+                btn.classList.remove('pressed');
+            };
+
+            btn.addEventListener('touchstart', press, { passive: false });
+            btn.addEventListener('touchend', release, { passive: false });
+            btn.addEventListener('touchcancel', release, { passive: false });
+            // Mouse fallback for dev / tablet with mouse
+            btn.addEventListener('mousedown', press);
+            btn.addEventListener('mouseup', release);
+            btn.addEventListener('mouseleave', release);
+        };
+
+        bindBtn('mobile-btn-left', 'left');
+        bindBtn('mobile-btn-up',   'jump');
+        bindBtn('mobile-btn-down', 'down');
+
+        // Orientation change handler — show/hide controls
+        const handleOrientation = () => {
+            if (!mobileControls) return;
+            const isLandscape = window.matchMedia('(orientation: landscape)').matches;
+            const isNarrow = window.innerWidth <= 1024 || isTouchDevice;
+            if (isNarrow && isLandscape) {
+                mobileControls.classList.remove('hidden');
+            } else if (!isNarrow) {
+                mobileControls.classList.add('hidden');
+            }
+        };
+
+        window.addEventListener('orientationchange', handleOrientation);
+        window.addEventListener('resize', handleOrientation);
+        handleOrientation();
     }
 
     // ============================

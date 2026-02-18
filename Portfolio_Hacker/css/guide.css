@@ -133,21 +133,42 @@
 /* ═══════ RESPONSIVE ═══════ */
 @media (max-width: 768px) {
     #guide-panel {
-        width: 200px;
+        width: 190px;
         top: 10px;
         right: 10px;
         font-size: 10px;
     }
 
     .guide-content {
-        max-height: 250px;
+        max-height: 220px;
+    }
+
+    .guide-cmd {
+        font-size: 10px;
+    }
+
+    .guide-cmd code {
+        font-size: 10px;
     }
 }
 
 @media (max-width: 480px) {
     #guide-panel {
-        width: 180px;
-        top: 8px;
+        width: calc(100vw - 16px);
+        top: auto;
+        bottom: 8px;
         right: 8px;
+        left: 8px;
+        font-size: 10px;
+        /* Start collapsed on small screens */
+    }
+
+    .guide-content {
+        max-height: 180px;
+    }
+
+    .guide-title {
+        font-size: 10px;
+        letter-spacing: 1px;
     }
 }

@@ -127,3 +127,57 @@
     50%  { opacity: 0.8; transform: scale(1.02); filter: brightness(2); }
     100% { opacity: 0; transform: scale(0.95) scaleY(0.01); filter: brightness(3); }
 }
+
+/* ═══════════════ RESPONSIVE — MOBILE ═══════════════ */
+@media (max-width: 768px) {
+    .boot-content {
+        width: 92%;
+        font-size: 13px;
+    }
+
+    .bios-header {
+        flex-direction: column;
+        gap: 4px;
+        align-items: flex-start;
+    }
+
+    .bios-brand {
+        font-size: 12px;
+        letter-spacing: 1px;
+        word-break: break-all;
+    }
+
+    .bios-version {
+        font-size: 11px;
+    }
+
+    .boot-log {
+        min-height: 200px;
+        max-height: 55vh;
+        font-size: 12px;
+    }
+
+    .boot-log .log-line {
+        white-space: normal;
+        word-break: break-word;
+    }
+
+    .boot-prompt {
+        font-size: 14px;
+        margin-top: 16px;
+    }
+}
+
+@media (max-width: 480px) {
+    .boot-content {
+        font-size: 11px;
+    }
+
+    .bios-brand {
+        font-size: 10px;
+    }
+
+    .boot-log {
+        font-size: 10px;
+    }
+}

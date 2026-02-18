@@ -428,3 +428,342 @@ canvas#game-canvas {
     margin-bottom: 12px;
     font-size: 11px;
 }
+
+/* ========================================
+   Portrait Orientation Overlay
+   ======================================== */
+#rotate-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    background: linear-gradient(180deg, #1a1a2e 0%, #16213e 100%);
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.rotate-content {
+    text-align: center;
+    padding: 40px 30px;
+}
+
+.rotate-icon {
+    font-size: 64px;
+    display: block;
+    margin-bottom: 10px;
+    animation: rotatePhone 2s ease-in-out infinite;
+    transform-origin: center;
+}
+
+@keyframes rotatePhone {
+    0%, 100% { transform: rotate(0deg); }
+    30%      { transform: rotate(-90deg); }
+    70%      { transform: rotate(-90deg); }
+}
+
+.rotate-arrow {
+    font-size: 48px;
+    color: var(--accent-gold);
+    display: block;
+    margin-bottom: 20px;
+    animation: spinArrow 2s ease-in-out infinite;
+}
+
+@keyframes spinArrow {
+    0%, 100% { transform: rotate(0deg); opacity: 0.4; }
+    50%      { transform: rotate(360deg); opacity: 1; }
+}
+
+.rotate-title {
+    font-family: var(--pixel-font);
+    font-size: 16px;
+    color: var(--text-white);
+    letter-spacing: 3px;
+    margin-bottom: 14px;
+    text-shadow: 0 0 20px var(--accent-gold);
+}
+
+.rotate-sub {
+    font-family: var(--pixel-font);
+    font-size: 8px;
+    color: var(--accent-gold);
+    letter-spacing: 1px;
+    line-height: 1.8;
+}
+
+/* Show overlay in portrait on mobile/tablet */
+@media (max-width: 900px) and (orientation: portrait) {
+    #rotate-overlay {
+        display: flex;
+    }
+}
+
+/* ========================================
+   Mobile Touch Controls
+   ======================================== */
+#mobile-controls {
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    pointer-events: none;
+}
+
+.mobile-btn {
+    position: absolute;
+    pointer-events: auto;
+    background: rgba(255, 248, 225, 0.18);
+    border: 3px solid rgba(255, 248, 225, 0.5);
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 28px;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: none;
+    transition: background 0.1s, transform 0.1s;
+    backdrop-filter: blur(4px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255,255,255,0.15);
+}
+
+.mobile-btn:active,
+.mobile-btn.pressed {
+    background: rgba(255, 193, 7, 0.35);
+    border-color: var(--accent-gold);
+    transform: scale(0.92);
+    color: var(--accent-gold);
+}
+
+/* Left arrow — bottom-left */
+.mobile-btn-left {
+    bottom: 30px;
+    left: 24px;
+    width: 80px;
+    height: 80px;
+}
+
+/* Up/Down arrows — stacked at bottom-right */
+.mobile-btn-up {
+    bottom: 120px;
+    right: 24px;
+    width: 80px;
+    height: 80px;
+}
+
+.mobile-btn-down {
+    bottom: 30px;
+    right: 24px;
+    width: 80px;
+    height: 80px;
+}
+
+/* Only show on touch/mobile devices */
+#mobile-controls {
+    display: none !important;
+}
+
+@media (max-width: 1024px) {
+    #mobile-controls {
+        display: block !important;
+    }
+}
+
+/* ========================================
+   Mobile / Tablet Responsive Overrides
+   ======================================== */
+@media (max-width: 900px) and (orientation: landscape) {
+    /* Start screen smaller */
+    .start-content {
+        padding: 24px 28px;
+        max-width: 90vw;
+    }
+
+    .game-title {
+        font-size: 28px;
+        letter-spacing: 3px;
+    }
+
+    .game-subtitle {
+        font-size: 8px;
+        margin-bottom: 14px;
+    }
+
+    .story-intro {
+        padding: 12px;
+        margin-bottom: 16px;
+    }
+
+    .story-intro p {
+        font-size: 11px;
+    }
+
+    .btn-pixel {
+        font-size: 10px;
+        padding: 12px 28px;
+        margin-bottom: 14px;
+    }
+
+    .controls-hint {
+        font-size: 7px;
+        gap: 12px;
+    }
+
+    .mobile-controls-hint {
+        display: flex !important;
+        margin-top: 8px;
+        color: var(--accent-brown);
+        opacity: 0.8;
+    }
+
+    /* HUD adjustments */
+    #hud-top {
+        padding: 8px 12px;
+    }
+
+    #hud-zone, #hud-quest {
+        padding: 6px 10px;
+        border-width: 2px;
+    }
+
+    #zone-name {
+        font-size: 8px;
+    }
+
+    #quest-text {
+        font-size: 6px;
+    }
+
+    .quest-icon, .zone-icon {
+        font-size: 16px;
+    }
+
+    #hud-bottom {
+        padding: 8px 12px;
+        bottom: 120px;
+    }
+
+    #hud-controls {
+        display: none;
+    }
+
+    #hud-progress {
+        padding: 6px 10px;
+    }
+
+    .dot {
+        width: 22px;
+        height: 22px;
+        font-size: 6px;
+    }
+
+    /* Interact prompt above mobile buttons */
+    #interact-prompt {
+        bottom: 215px;
+    }
+
+    /* Loading screen */
+    .loader-content {
+        padding: 30px 24px;
+    }
+
+    .loader-title {
+        font-size: 22px;
+    }
+
+    .loader-sub {
+        font-size: 8px;
+    }
+
+    .loader-bar {
+        width: 220px;
+    }
+
+    /* Pause menu */
+    .pause-window {
+        padding: 28px 36px;
+    }
+
+    .pause-window h2 {
+        font-size: 20px;
+        margin-bottom: 20px;
+    }
+
+    /* Zone transition */
+    #transition-zone-name {
+        font-size: 22px;
+    }
+
+    #transition-zone-desc {
+        font-size: 8px;
+    }
+}
+
+/* Very small landscape (phone) */
+@media (max-width: 600px) and (orientation: landscape) {
+    .start-content {
+        padding: 14px 18px;
+    }
+
+    .game-title {
+        font-size: 20px;
+        margin-bottom: 6px;
+    }
+
+    .story-intro {
+        display: none;
+    }
+
+    .btn-pixel {
+        padding: 10px 22px;
+        font-size: 9px;
+        margin-bottom: 10px;
+    }
+
+    #hud-top {
+        padding: 4px 8px;
+        gap: 6px;
+    }
+
+    #hud-quest {
+        max-width: 200px;
+    }
+
+    #hud-bottom {
+        bottom: 100px;
+    }
+
+    #interact-prompt {
+        bottom: 190px;
+    }
+
+    .mobile-btn-left {
+        bottom: 16px;
+        left: 14px;
+        width: 64px;
+        height: 64px;
+        font-size: 22px;
+    }
+
+    .mobile-btn-up {
+        bottom: 88px;
+        right: 14px;
+        width: 64px;
+        height: 64px;
+        font-size: 22px;
+    }
+
+    .mobile-btn-down {
+        bottom: 16px;
+        right: 14px;
+        width: 64px;
+        height: 64px;
+        font-size: 22px;
+    }
+}
+
+/* Hidden on desktop */
+.mobile-controls-hint {
+    display: none;
+}

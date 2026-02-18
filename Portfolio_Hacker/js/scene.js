@@ -842,6 +842,9 @@ const Scene3D = (() => {
         const el = document.getElementById('terminal-container');
         if (!el) return;
 
+        // On mobile / small screens — skip 3D projection, CSS handles it
+        if (window.innerWidth <= 768) return;
+
         const hw = SCREEN_W / 2;
         const hh = SCREEN_H / 2;
 
@@ -886,6 +889,18 @@ const Scene3D = (() => {
         camera.aspect = window.innerWidth / window.innerHeight;
         camera.updateProjectionMatrix();
         renderer.setSize(window.innerWidth, window.innerHeight);
+
+        // On mobile, clear inline styles so CSS media queries take over
+        if (window.innerWidth <= 768) {
+            const el = document.getElementById('terminal-container');
+            if (el) {
+                el.style.left = '';
+                el.style.top = '';
+                el.style.width = '';
+                el.style.height = '';
+            }
+        }
+
         syncOverlay();
     }
 

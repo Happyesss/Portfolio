@@ -59,5 +59,14 @@ const Guide = (() => {
         if (panel) panel.style.display = 'none';
     }
 
-    return { init, show, hide, togglePanel };
+    function collapse() {
+        const content = document.getElementById('guide-content');
+        const toggle = document.getElementById('guide-toggle');
+        if (!content || !toggle) return;
+        isCollapsed = true;
+        content.classList.add('collapsed');
+        toggle.textContent = '☐';
+    }
+
+    return { init, show, hide, togglePanel, collapse };
 })();

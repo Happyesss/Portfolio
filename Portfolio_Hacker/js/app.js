@@ -22,15 +22,29 @@
     Guide.init();
     Guide.show();
 
+    // Collapse guide by default on mobile to save screen space
+    if (window.innerWidth <= 480) {
+        Guide.collapse();
+    }
+
     /* ── Stats ticker ── */
     Effects.updateStats();
 
-    /* ── Auto-focus terminal input ── */
+    /* ── Auto-focus terminal input (desktop only) ── */
     const termInput = document.getElementById('terminal-input');
     if (termInput) {
-        termInput.focus();
-        // Re-focus when window regains focus
-        window.addEventListener('focus', () => termInput.focus());
+        // Only auto-focus on non-touch devices to avoid pulling up keyboard unexpectedly
+        if (!('ontouchstart' in window)) {
+            termInput.focus();
+        }
+        // Re-focus when window regains focus (desktop)
+        window.addEventListener('focus', () => {
+            if (!('ontouchstart' in window)) termInput.focus();
+        });
+        // Tap on terminal area focuses input on mobile
+        document.getElementById('terminal-container').addEventListener('click', () => {
+            termInput.focus();
+        });
     }
 
     /* ── Block context menu for immersion ── */

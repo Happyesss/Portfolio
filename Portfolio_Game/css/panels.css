@@ -438,3 +438,120 @@
 .panel-window::-webkit-scrollbar-thumb:hover {
     background: #6d4c41;
 }
+
+/* ========================================
+   Responsive — Mobile / Tablet
+   ======================================== */
+@media (max-width: 900px) {
+    .panel-window {
+        padding: 28px 20px;
+        max-width: 95vw;
+        width: 95%;
+        max-height: 85vh;
+    }
+
+    .panel-title {
+        font-size: 12px;
+    }
+
+    .panel-icon {
+        width: 48px;
+        height: 48px;
+        font-size: 26px;
+    }
+
+    .panel-body {
+        font-size: 13px;
+    }
+
+    .contact-grid {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+
+    .contact-label {
+        font-size: 7px;
+    }
+
+    .contact-value {
+        font-size: 11px;
+    }
+
+    .skill-tag {
+        font-size: 7px;
+        padding: 6px 12px;
+    }
+
+    .project-name {
+        font-size: 9px;
+    }
+
+    .project-desc {
+        font-size: 12px;
+    }
+
+    .timeline-role {
+        font-size: 9px;
+    }
+
+    .timeline-desc {
+        font-size: 12px;
+    }
+
+    /* Dialogue box */
+    #dialogue-box {
+        bottom: 160px;
+        width: 92vw;
+        left: 4vw;
+        transform: none;
+        gap: 10px;
+    }
+
+    .dialogue-text-area {
+        min-width: 0;
+        flex: 1;
+        padding: 12px 16px;
+    }
+
+    .dialogue-text {
+        font-size: 12px;
+    }
+
+    .dialogue-portrait {
+        width: 50px;
+        height: 50px;
+        font-size: 26px;
+    }
+}
+
+@media (max-width: 600px) and (orientation: landscape) {
+    .panel-window {
+        padding: 20px 14px;
+        max-height: 88vh;
+    }
+
+    .panel-header {
+        margin-bottom: 14px;
+        padding-bottom: 10px;
+    }
+
+    .panel-icon {
+        display: none;
+    }
+
+    .panel-title {
+        font-size: 10px;
+    }
+
+    .panel-body {
+        font-size: 12px;
+    }
+
+    .timeline {
+        padding-left: 24px;
+    }
+
+    #dialogue-box {
+        bottom: 140px;
+    }
+}

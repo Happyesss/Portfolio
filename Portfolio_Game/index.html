@@ -45,6 +45,10 @@
                 <span>⬇ Crouch</span>
                 <span>E Interact</span>
             </div>
+            <div class="controls-hint mobile-controls-hint">
+                <span>◀ Left btn</span>
+                <span>▲▼ Right btns</span>
+            </div>
         </div>
     </div>
 
@@ -122,6 +126,31 @@
         <div class="transition-bg"></div>
         <h2 id="transition-zone-name"></h2>
         <p id="transition-zone-desc"></p>
+    </div>
+
+    <!-- ═══════════════ PORTRAIT ORIENTATION OVERLAY ═══════════════ -->
+    <div id="rotate-overlay">
+        <div class="rotate-content">
+            <div class="rotate-icon">📱</div>
+            <div class="rotate-arrow">↻</div>
+            <p class="rotate-title">ROTATE YOUR PHONE</p>
+            <p class="rotate-sub">Tilt to landscape for the best experience</p>
+        </div>
+    </div>
+
+    <!-- ═══════════════ MOBILE TOUCH CONTROLS ═══════════════ -->
+    <div id="mobile-controls" class="hidden">
+        <!-- Left side: move left -->
+        <div id="mobile-btn-left" class="mobile-btn mobile-btn-left" aria-label="Move Left">
+            <span>◀</span>
+        </div>
+        <!-- Right side: jump (up) and crouch (down) -->
+        <div id="mobile-btn-up" class="mobile-btn mobile-btn-up" aria-label="Jump">
+            <span>▲</span>
+        </div>
+        <div id="mobile-btn-down" class="mobile-btn mobile-btn-down" aria-label="Crouch">
+            <span>▼</span>
+        </div>
     </div>
 
     <!-- Scripts -->
