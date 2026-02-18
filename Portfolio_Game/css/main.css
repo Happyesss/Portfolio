@@ -783,3 +783,50 @@ canvas#game-canvas {
 .mobile-controls-hint {
     display: none;
 }
+
+/* Mobile interact button (E) */
+.mobile-btn-interact {
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 70px;
+    height: 70px;
+    font-family: var(--pixel-font);
+    font-size: 22px;
+    font-weight: bold;
+    background: rgba(255, 193, 7, 0.25);
+    border-color: var(--accent-gold);
+    color: var(--accent-gold);
+    text-shadow: 0 0 10px rgba(255, 193, 7, 0.5);
+    box-shadow: 0 4px 16px rgba(255, 193, 7, 0.3), inset 0 1px 0 rgba(255,255,255,0.15);
+}
+
+.mobile-btn-interact:active,
+.mobile-btn-interact.pressed {
+    background: rgba(255, 193, 7, 0.5);
+    transform: translateX(-50%) scale(0.92);
+}
+
+/* Dialogue continue hints - show/hide based on device */
+.dialogue-continue-mobile {
+    display: none;
+}
+
+@media (max-width: 1024px) {
+    .dialogue-continue-desktop {
+        display: none;
+    }
+    .dialogue-continue-mobile {
+        display: inline;
+    }
+}
+
+/* Very small landscape - adjust interact button */
+@media (max-width: 600px) and (orientation: landscape) {
+    .mobile-btn-interact {
+        width: 56px;
+        height: 56px;
+        font-size: 18px;
+        bottom: 16px;
+    }
+}

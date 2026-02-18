@@ -266,6 +266,29 @@ class Game {
         bindBtn('mobile-btn-up',    'jump');
         bindBtn('mobile-btn-down',  'down');
 
+        // Interact button (E) - triggers interaction
+        const interactBtn = document.getElementById('mobile-btn-interact');
+        if (interactBtn) {
+            const interactPress = (e) => {
+                e.preventDefault();
+                interactBtn.classList.add('pressed');
+                if (this.state === 'playing' && this.interactions) {
+                    this.interactions.interact();
+                }
+            };
+            const interactRelease = (e) => {
+                e.preventDefault();
+                interactBtn.classList.remove('pressed');
+            };
+
+            interactBtn.addEventListener('touchstart', interactPress, { passive: false });
+            interactBtn.addEventListener('touchend', interactRelease, { passive: false });
+            interactBtn.addEventListener('touchcancel', interactRelease, { passive: false });
+            interactBtn.addEventListener('mousedown', interactPress);
+            interactBtn.addEventListener('mouseup', interactRelease);
+            interactBtn.addEventListener('mouseleave', interactRelease);
+        }
+
         // Orientation change handler — show/hide controls
         const handleOrientation = () => {
             if (!mobileControls) return;

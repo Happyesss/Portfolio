@@ -185,21 +185,27 @@ html, body {
     letter-spacing: 2px;
 }
 
-/* ═══════════════ RESPONSIVE — MOBILE ═══════════════ */
+/* ═══════════════ RESPONSIVE — MOBILE (Keep Full Desktop Layout, Scaled) ═══════════════ */
 @media (max-width: 768px) {
     :root {
         --terminal-font-size: 13px;
         --guide-font-size: 11px;
     }
 
-    /* Hide 3D scene — terminal replaces it fully */
+    /* KEEP 3D scene visible - just scale it */
     #three-canvas {
-        display: none;
+        display: block;
     }
 
-    /* Dark bg replaces 3D */
+    /* Dark bg behind 3D */
     body {
         background: #080808;
+    }
+
+    /* Scale down the whole scene to fit mobile */
+    #main-scene {
+        transform: scale(0.85);
+        transform-origin: center center;
     }
 
     #stats-bar {
@@ -209,6 +215,8 @@ html, body {
         gap: 10px;
         flex-wrap: wrap;
         justify-content: center;
+        transform: scale(0.9);
+        transform-origin: bottom center;
     }
 
     .stat-bar {
@@ -226,11 +234,20 @@ html, body {
 }
 
 @media (max-width: 480px) {
+    /* Still show 3D scene */
     #three-canvas {
-        display: none;
+        display: block;
+    }
+
+    /* Scale down more for very small screens */
+    #main-scene {
+        transform: scale(0.7);
+        transform-origin: center center;
     }
 
     #stats-bar {
-        display: none;
+        transform: scale(0.8);
+        padding: 3px 8px;
+        gap: 8px;
     }
 }

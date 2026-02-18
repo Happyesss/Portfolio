@@ -180,8 +180,18 @@
     0%, 100% { transform: translateX(-50%) translateY(0); }
     50% { transform: translateX(-50%) translateY(-8px); }
 }
+
+/* Mobile key hint in interact prompt */
+.key-mobile {
+    background: linear-gradient(180deg, var(--accent-gold), #e6a800);
+    color: var(--text-dark);
+    border-color: #b38600;
+    font-weight: bold;
+    box-shadow: 0 2px 0 #b38600, 0 0 10px rgba(255, 193, 7, 0.4);
+}
+
 /* ========================================
-   Responsive HUD ??? Mobile
+   Responsive HUD — Mobile
    ======================================== */
 @media (max-width: 1024px) {
     #hud-top {

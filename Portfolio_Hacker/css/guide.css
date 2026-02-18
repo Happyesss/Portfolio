@@ -130,46 +130,61 @@
     color: var(--white-bright);
 }
 
-/* ═══════ RESPONSIVE ═══════ */
+/* ═══════ RESPONSIVE (Keep positioned, just smaller) ═══════ */
 @media (max-width: 768px) {
     #guide-panel {
-        width: 190px;
-        top: 10px;
-        right: 10px;
-        font-size: 10px;
-        z-index: 210; /* above terminal z-index 200 */
-    }
-
-    .guide-content {
-        max-height: 220px;
-    }
-
-    .guide-cmd {
-        font-size: 10px;
-    }
-
-    .guide-cmd code {
-        font-size: 10px;
-    }
-}
-
-@media (max-width: 480px) {
-    #guide-panel {
-        width: calc(100vw - 16px);
-        top: auto;
-        bottom: 8px;
+        width: 160px;
+        top: 8px;
         right: 8px;
-        left: 8px;
-        font-size: 10px;
-        z-index: 210;
+        font-size: 9px;
+        z-index: 60;
+        transform: scale(0.85);
+        transform-origin: top right;
     }
 
     .guide-content {
         max-height: 180px;
     }
 
+    .guide-cmd {
+        font-size: 9px;
+    }
+
+    .guide-cmd code {
+        font-size: 9px;
+    }
+
     .guide-title {
-        font-size: 10px;
+        font-size: 9px;
         letter-spacing: 1px;
+    }
+}
+
+@media (max-width: 480px) {
+    #guide-panel {
+        width: 140px;
+        top: 6px;
+        right: 6px;
+        font-size: 8px;
+        z-index: 60;
+        transform: scale(0.75);
+        transform-origin: top right;
+    }
+
+    .guide-content {
+        max-height: 150px;
+    }
+
+    .guide-title {
+        font-size: 8px;
+        letter-spacing: 0.5px;
+    }
+
+    .guide-cmd {
+        font-size: 8px;
+    }
+
+    .guide-cmd code {
+        font-size: 8px;
     }
 }

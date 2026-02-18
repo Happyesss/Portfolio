@@ -336,83 +336,86 @@
     to { opacity: 1; }
 }
 
-/* ═══════ RESPONSIVE ═══════ */
+/* ═══════ RESPONSIVE (Keep terminal positioned over 3D screen, just adjust fonts) ═══════ */
 @media (max-width: 768px) {
+    /* Keep original positioning - synced by JS */
     #terminal-container {
-        left: 0 !important;
-        top: 0 !important;
-        width: 100% !important;
-        height: calc(100vh - 32px) !important;
-        border-radius: 0;
-        z-index: 200;
-        background: rgba(0, 6, 0, 0.98);
+        /* Position still injected by JS via syncOverlay */
+        z-index: 50;
+        background: rgba(0, 6, 0, 0.92);
     }
 
     .terminal-output {
-        padding: 6px 8px;
-        font-size: clamp(10px, 2.8vw, 13px);
+        padding: 4px 6px;
+        font-size: clamp(6px, 0.65vw, 10px);
     }
 
     .terminal-input-line {
-        padding: 5px 8px;
-        font-size: clamp(10px, 2.8vw, 13px);
+        padding: 3px 6px;
+        font-size: clamp(6px, 0.65vw, 10px);
     }
 
     .terminal-input {
-        font-size: clamp(10px, 2.8vw, 13px);
+        font-size: clamp(6px, 0.65vw, 10px);
     }
 
     .terminal-prompt-line1 {
-        font-size: clamp(9px, 2.4vw, 12px);
+        font-size: clamp(5px, 0.55vw, 9px);
     }
 
     .terminal-title {
-        font-size: 9px;
+        font-size: 6px;
     }
 
     .terminal-status {
-        font-size: 9px;
+        font-size: 6px;
     }
 
     .terminal-output .ascii-art {
-        font-size: clamp(6px, 1.6vw, 10px);
+        font-size: clamp(3px, 0.35vw, 6px);
     }
 
     .skill-name {
-        min-width: 60px;
+        min-width: 50px;
     }
 
     .skill-bar {
-        max-width: 90px;
+        max-width: 70px;
     }
 }
 
 @media (max-width: 480px) {
+    /* Keep positioned over 3D - scaled down */
     #terminal-container {
-        left: 0 !important;
-        top: 0 !important;
-        width: 100% !important;
-        height: 100vh !important;
-        border-radius: 0;
-        z-index: 200;
-        background: rgba(0, 6, 0, 1);
+        z-index: 50;
+        background: rgba(0, 6, 0, 0.95);
     }
 
     .terminal-output {
-        font-size: clamp(9px, 3vw, 12px);
+        font-size: clamp(5px, 0.55vw, 8px);
     }
 
     .terminal-input {
-        font-size: clamp(9px, 3vw, 12px);
+        font-size: clamp(5px, 0.55vw, 8px);
     }
 
     .terminal-output .ascii-art {
-        font-size: clamp(5px, 1.4vw, 8px);
+        font-size: clamp(2.5px, 0.3vw, 5px);
         overflow-x: auto;
         display: block;
     }
 
     .project-card {
-        padding: 4px 6px;
+        padding: 3px 5px;
+    }
+
+    .t-btn {
+        width: 5px;
+        height: 5px;
+    }
+
+    .terminal-header {
+        min-height: 14px;
+        padding: 2px 5px;
     }
 }

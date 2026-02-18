@@ -69,16 +69,18 @@ class InteractionSystem {
         const prompt = document.getElementById('interact-prompt');
         const hasNearby = this.nearbyInteractable || this.nearbyNPC || this.nearbyPortal;
         const panelOpen = !document.getElementById('info-panel').classList.contains('hidden');
+        const isMobile = window.innerWidth <= 1024 || ('ontouchstart' in window);
         
         if (hasNearby && !panelOpen && !this.isDialogueActive) {
             prompt.classList.remove('hidden');
             // Update prompt text based on nearby object
+            const keyHint = isMobile ? '<span class="key key-mobile">E</span>' : '<span class="key">E</span>';
             if (this.nearbyPortal) {
-                prompt.innerHTML = '<span class="key">E</span> Enter Portal';
+                prompt.innerHTML = keyHint + ' Enter Portal';
             } else if (this.nearbyNPC) {
-                prompt.innerHTML = '<span class="key">E</span> Talk';
+                prompt.innerHTML = keyHint + ' Talk';
             } else {
-                prompt.innerHTML = '<span class="key">E</span> Interact';
+                prompt.innerHTML = keyHint + ' Interact';
             }
         } else {
             prompt.classList.add('hidden');
