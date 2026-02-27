@@ -1,293 +1,308 @@
 /* ========================================
-   Landing Page — Interactive JavaScript
-   Premium Particles, Animations, and Effects
+   Setflix Landing Page — Netflix Clone
+   TUDUM Animation & Profile Selection
    ======================================== */
 
 // ========================
-// Particle System — Enhanced
+// Netflix TUDUM Sound — plays assets/tudum.mp3
 // ========================
-function createParticles() {
-    const container = document.getElementById('particles');
-    const particleCount = 50;
-    
-    for (let i = 0; i < particleCount; i++) {
-        const particle = document.createElement('div');
-        particle.className = 'particle';
-        
-        // Random properties
-        const size = Math.random() * 4 + 1;
-        const x = Math.random() * 100;
-        const delay = Math.random() * 20;
-        const duration = Math.random() * 15 + 15;
-        const hue = Math.random() * 80 + 220; // Purple to cyan range
-        
-        particle.style.cssText = `
-            left: ${x}%;
-            width: ${size}px;
-            height: ${size}px;
-            background: hsl(${hue}, 80%, 65%);
-            animation-delay: ${delay}s;
-            animation-duration: ${duration}s;
-            box-shadow: 0 0 ${size * 3}px hsl(${hue}, 80%, 55%);
-        `;
-        
-        container.appendChild(particle);
+class TudumSound {
+    constructor() {
+        this.audio = new Audio('assets/tudum.mp3');
+        this.audio.volume = 1.0;
+        // Pre-load so it's ready instantly
+        this.audio.load();
+    }
+
+    init() {
+        // Nothing to init — Audio element is ready
+        return true;
+    }
+
+    play() {
+        this.audio.currentTime = 0;
+        return this.audio.play().catch(() => {
+            // Browser blocked autoplay — will retry on first interaction
+        });
     }
 }
 
 // ========================
-// Card 3D Tilt Effect — Premium
+// Intro Animation Controller
 // ========================
-function initCardEffects() {
-    const cards = document.querySelectorAll('.card');
-    
-    cards.forEach(card => {
-        let bounds;
-        
-        const rotateCard = (e) => {
-            const mouseX = e.clientX;
-            const mouseY = e.clientY;
-            
-            const leftX = mouseX - bounds.x;
-            const topY = mouseY - bounds.y;
-            
-            const center = {
-                x: leftX - bounds.width / 2,
-                y: topY - bounds.height / 2
-            };
-            
-            const distance = Math.sqrt(center.x**2 + center.y**2);
-            
-            card.style.transform = `
-                perspective(1200px)
-                rotateX(${-center.y / 15}deg)
-                rotateY(${center.x / 15}deg)
-                translateY(-16px)
-                scale3d(1.02, 1.02, 1.02)
-            `;
-            
-            // Update gradient position for shine effect
-            card.style.setProperty('--mouse-x', `${leftX}px`);
-            card.style.setProperty('--mouse-y', `${topY}px`);
-        };
-        
-        card.addEventListener('mouseenter', () => {
-            bounds = card.getBoundingClientRect();
-            card.addEventListener('mousemove', rotateCard);
+class SetflixIntro {
+    constructor() {
+        this.overlay = document.getElementById('introOverlay');
+        this.mainContent = document.getElementById('mainContent');
+        this.tudumSound = new TudumSound();
+        this.hasPlayed = sessionStorage.getItem('setflixIntroPlayed');
+        this.skipButton = null;
+        this.soundInitialized = false;
+    }
+
+    init() {
+        // NOTE: we used to skip the intro when sessionStorage indicated it
+        // had played, but that made development/testing confusing and
+        // sometimes resulted in the page popping in "without the sound"
+        // (the browser blocked audio and the overlay was removed instantly).
+        // Always show the animation for now; users can clear storage if
+        // they really want to bypass it.
+        // if (this.hasPlayed) {
+        //     this.skipIntro();
+        //     return;
+        // }
+
+        this.createSkipButton();
+
+        // Try autoplay immediately — succeeds if the browser permits it
+        // (e.g. user has interacted with the origin before)
+        const playPromise = this.tudumSound.play();
+
+        if (playPromise !== undefined) {
+            playPromise.catch(() => {
+                // Autoplay blocked — wait for the first tap/click then play
+                const onInteraction = () => {
+                    this.tudumSound.play();
+                };
+                document.addEventListener('pointerdown', onInteraction, { once: true });
+                document.addEventListener('keydown',     onInteraction, { once: true });
+            });
+        }
+
+        // End intro after exactly 3 seconds
+        setTimeout(() => {
+            this.endIntro();
+        }, 3000);
+    }
+
+    createSkipButton() {
+        this.skipButton = document.createElement('button');
+        this.skipButton.className = 'skip-intro';
+        this.skipButton.innerHTML = 'Skip Intro';
+        this.skipButton.addEventListener('click', (e) => {
+            e.stopPropagation();
+            this.skipIntro();
         });
-        
-        card.addEventListener('mouseleave', () => {
-            card.removeEventListener('mousemove', rotateCard);
-            card.style.transform = '';
-        });
-    });
+        document.body.appendChild(this.skipButton);
+    }
+
+    skipIntro() {
+        if (this.overlay) {
+            this.overlay.classList.add('fade-out');
+            setTimeout(() => {
+                this.overlay.classList.add('hidden');
+            }, 500);
+        }
+        if (this.mainContent) {
+            this.mainContent.classList.add('visible');
+        }
+        if (this.skipButton) {
+            this.skipButton.remove();
+        }
+        sessionStorage.setItem('setflixIntroPlayed', 'true');
+    }
+
+    endIntro() {
+        if (this.overlay) {
+            this.overlay.classList.add('fade-out');
+            setTimeout(() => {
+                this.overlay.classList.add('hidden');
+            }, 1000);
+        }
+        if (this.mainContent) {
+            setTimeout(() => {
+                this.mainContent.classList.add('visible');
+            }, 500);
+        }
+        if (this.skipButton) {
+            this.skipButton.style.opacity = '0';
+            setTimeout(() => {
+                if (this.skipButton && this.skipButton.parentNode) {
+                    this.skipButton.remove();
+                }
+            }, 300);
+        }
+        sessionStorage.setItem('setflixIntroPlayed', 'true');
+    }
 }
 
 // ========================
-// Smooth Scroll
+// Profile Manager - Fixed hover issues
 // ========================
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function(e) {
-        e.preventDefault();
-        const target = document.querySelector(this.getAttribute('href'));
-        if (target) {
-            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-    });
-});
+class ProfileManager {
+    constructor() {
+        this.profiles = document.querySelectorAll('.profile:not(.add-profile)');
+        this.addProfileEl = document.getElementById('addProfile');
+        this.manageBtn = document.getElementById('manageBtn');
+        this.isManageMode = false;
+    }
 
-// ========================
-// Intersection Observer for Staggered Animations
-// ========================
-function initScrollAnimations() {
-    const observerOptions = {
-        root: null,
-        rootMargin: '0px',
-        threshold: 0.1
-    };
-    
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('visible');
-                observer.unobserve(entry.target);
+    init() {
+        this.initProfileClicks();
+        this.initManageMode();
+        this.initAddProfile();
+    }
+
+    initProfileClicks() {
+        this.profiles.forEach(profile => {
+            profile.addEventListener('click', (e) => {
+                if (this.isManageMode) {
+                    e.preventDefault();
+                    const name = profile.querySelector('.profile-name').textContent;
+                    this.showToast(`Edit profile: ${name}`);
+                    return;
+                }
+
+                // Navigate with transition
+                e.preventDefault();
+                const href = profile.getAttribute('href');
+                
+                // Create transition overlay
+                const transition = document.createElement('div');
+                transition.className = 'page-transition';
+                document.body.appendChild(transition);
+                
+                // Force reflow
+                transition.offsetHeight;
+                
+                setTimeout(() => {
+                    transition.classList.add('active');
+                }, 10);
+
+                setTimeout(() => {
+                    window.location.href = href;
+                }, 500);
+            });
+        });
+    }
+
+    initManageMode() {
+        if (!this.manageBtn) return;
+
+        this.manageBtn.addEventListener('click', () => {
+            this.isManageMode = !this.isManageMode;
+            
+            if (this.isManageMode) {
+                this.manageBtn.textContent = 'Done';
+                this.manageBtn.style.background = 'var(--netflix-red, #E50914)';
+                this.manageBtn.style.borderColor = 'var(--netflix-red, #E50914)';
+                this.manageBtn.style.color = 'white';
+                
+                this.profiles.forEach(profile => {
+                    profile.classList.add('edit-mode');
+                });
+            } else {
+                this.manageBtn.textContent = 'Manage Profiles';
+                this.manageBtn.style.background = '';
+                this.manageBtn.style.borderColor = '';
+                this.manageBtn.style.color = '';
+                
+                this.profiles.forEach(profile => {
+                    profile.classList.remove('edit-mode');
+                });
             }
         });
-    }, observerOptions);
-    
-    // Observe cards with staggered delay
-    document.querySelectorAll('.card').forEach((card, index) => {
-        card.style.opacity = '0';
-        card.style.transform = 'translateY(60px) rotateX(10deg)';
-        card.style.transition = `opacity 0.8s cubic-bezier(0.23, 1, 0.32, 1) ${index * 0.15}s, transform 0.8s cubic-bezier(0.23, 1, 0.32, 1) ${index * 0.15}s`;
-        observer.observe(card);
-    });
-    
-    // Observe hero elements
-    const heroTitle = document.querySelector('.hero-title');
-    const heroSubtitle = document.querySelector('.hero-subtitle');
-    
-    if (heroTitle) {
-        heroTitle.style.opacity = '0';
-        heroTitle.style.transform = 'translateY(30px)';
-        heroTitle.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
-        observer.observe(heroTitle);
     }
-    
-    if (heroSubtitle) {
-        heroSubtitle.style.opacity = '0';
-        heroSubtitle.style.transform = 'translateY(30px)';
-        heroSubtitle.style.transition = 'opacity 0.8s ease 0.2s, transform 0.8s ease 0.2s';
-        observer.observe(heroSubtitle);
-    }
-}
 
-// Add visible class styles
-const animationStyles = document.createElement('style');
-animationStyles.textContent = `
-    .card.visible,
-    .hero-title.visible,
-    .hero-subtitle.visible {
-        opacity: 1 !important;
-        transform: translateY(0) rotateX(0) !important;
-    }
-`;
-document.head.appendChild(animationStyles);
+    initAddProfile() {
+        if (!this.addProfileEl) return;
 
-// ========================
-// Mouse Glow Effect — Follows cursor
-// ========================
-function initMouseGlow() {
-    const glow = document.createElement('div');
-    glow.className = 'mouse-glow';
-    glow.style.cssText = `
-        position: fixed;
-        width: 400px;
-        height: 400px;
-        background: radial-gradient(circle, rgba(139, 92, 246, 0.12) 0%, rgba(6, 182, 212, 0.05) 40%, transparent 70%);
-        border-radius: 50%;
-        pointer-events: none;
-        z-index: 1;
-        transform: translate(-50%, -50%);
-        transition: opacity 0.4s ease, transform 0.1s ease;
-        opacity: 0;
-        mix-blend-mode: screen;
-    `;
-    document.body.appendChild(glow);
-    
-    let mouseX = 0, mouseY = 0;
-    let glowX = 0, glowY = 0;
-    
-    document.addEventListener('mousemove', (e) => {
-        mouseX = e.clientX;
-        mouseY = e.clientY;
-        glow.style.opacity = '1';
-    });
-    
-    document.addEventListener('mouseleave', () => {
-        glow.style.opacity = '0';
-    });
-    
-    // Smooth follow animation
-    function animateGlow() {
-        glowX += (mouseX - glowX) * 0.15;
-        glowY += (mouseY - glowY) * 0.15;
-        glow.style.left = glowX + 'px';
-        glow.style.top = glowY + 'px';
-        requestAnimationFrame(animateGlow);
+        this.addProfileEl.addEventListener('click', () => {
+            this.showToast('New portfolio themes coming soon! 🚀');
+        });
     }
-    animateGlow();
-}
 
-// ========================
-// Card Shine Effect on Hover
-// ========================
-function initCardShine() {
-    const cards = document.querySelectorAll('.card');
-    
-    cards.forEach(card => {
-        const shine = document.createElement('div');
-        shine.className = 'card-shine';
-        shine.style.cssText = `
-            position: absolute;
-            inset: 0;
-            background: radial-gradient(
-                circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
-                rgba(255, 255, 255, 0.06) 0%,
-                transparent 50%
-            );
-            pointer-events: none;
-            z-index: 4;
-            opacity: 0;
-            transition: opacity 0.3s ease;
+    showToast(message) {
+        // Remove existing toast
+        const existing = document.querySelector('.toast-message');
+        if (existing) existing.remove();
+        
+        const toast = document.createElement('div');
+        toast.className = 'toast-message';
+        toast.style.cssText = `
+            position: fixed;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #333;
+            color: white;
+            padding: 16px 24px;
+            border-radius: 4px;
+            font-size: 14px;
+            z-index: 10000;
+            animation: toastIn 0.3s ease;
         `;
-        card.style.position = 'relative';
-        card.appendChild(shine);
+        toast.textContent = message;
+        document.body.appendChild(toast);
         
-        card.addEventListener('mouseenter', () => {
-            shine.style.opacity = '1';
-        });
+        // Add animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes toastIn {
+                from { opacity: 0; transform: translateX(-50%) translateY(20px); }
+                to { opacity: 1; transform: translateX(-50%) translateY(0); }
+            }
+        `;
+        document.head.appendChild(style);
         
-        card.addEventListener('mousemove', (e) => {
-            const rect = card.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-            shine.style.background = `radial-gradient(
-                600px circle at ${x}px ${y}px,
-                rgba(255, 255, 255, 0.08) 0%,
-                transparent 50%
-            )`;
-        });
+        setTimeout(() => {
+            toast.style.opacity = '0';
+            toast.style.transition = 'opacity 0.3s';
+            setTimeout(() => toast.remove(), 300);
+        }, 3000);
+    }
+}
+
+// ========================
+// Keyboard Navigation
+// ========================
+function initKeyboardNav() {
+    const profiles = document.querySelectorAll('.profile');
+    let currentIndex = -1;
+
+    profiles.forEach((profile, index) => {
+        profile.setAttribute('tabindex', '0');
         
-        card.addEventListener('mouseleave', () => {
-            shine.style.opacity = '0';
+        profile.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                profile.click();
+            }
         });
+    });
+
+    document.addEventListener('keydown', (e) => {
+        if (!document.querySelector('.main-content.visible')) return;
+        
+        if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+            e.preventDefault();
+            currentIndex = Math.min(currentIndex + 1, profiles.length - 1);
+            profiles[currentIndex].focus();
+        } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+            e.preventDefault();
+            currentIndex = Math.max(currentIndex - 1, 0);
+            profiles[currentIndex].focus();
+        }
     });
 }
 
 // ========================
-// Magnetic Button Effect
-// ========================
-function initMagneticButtons() {
-    const buttons = document.querySelectorAll('.btn-view');
-    
-    buttons.forEach(btn => {
-        btn.addEventListener('mousemove', (e) => {
-            const rect = btn.getBoundingClientRect();
-            const x = e.clientX - rect.left - rect.width / 2;
-            const y = e.clientY - rect.top - rect.height / 2;
-            
-            btn.style.transform = `translate(${x * 0.2}px, ${y * 0.2}px)`;
-        });
-        
-        btn.addEventListener('mouseleave', () => {
-            btn.style.transform = '';
-        });
-    });
-}
-
-// ========================
-// Initialize Everything
+// Initialize on DOM Ready
 // ========================
 document.addEventListener('DOMContentLoaded', () => {
-    createParticles();
-    initCardEffects();
-    initScrollAnimations();
-    initMouseGlow();
-    initCardShine();
-    initMagneticButtons();
-    
-    console.log('%c🚀 Portfolio Collection', 'font-size: 24px; font-weight: bold; background: linear-gradient(135deg, #8b5cf6, #06b6d4); -webkit-background-clip: text; -webkit-text-fill-color: transparent;');
-    console.log('%cDesigned with ❤️ — Explore four unique experiences!', 'font-size: 14px; color: #a1a1aa;');
+    // Start intro
+    const intro = new SetflixIntro();
+    intro.init();
+
+    // Initialize profiles
+    const profileManager = new ProfileManager();
+    profileManager.init();
+
+    // Keyboard navigation
+    initKeyboardNav();
+
+    // Console branding
+    console.log('%c SETFLIX ', 'font-size: 24px; font-weight: bold; color: #E50914; background: #000; padding: 8px 16px; border-radius: 4px;');
+    console.log('%c Who\'s watching? ', 'font-size: 12px; color: #808080;');
 });
 
-// ========================
-// Smooth Page Load Animation
-// ========================
-window.addEventListener('load', () => {
-    document.body.style.opacity = '0';
-    document.body.style.transition = 'opacity 0.6s ease';
-    requestAnimationFrame(() => {
-        document.body.style.opacity = '1';
-    });
-});

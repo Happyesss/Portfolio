@@ -1,38 +1,27 @@
 /* ========================================
-   Landing Page — Portfolio Collection
-   Beautiful, animated showcase of all portfolios
+   Setflix Landing Page — Exact Netflix Clone
+   TUDUM Animation: Exactly 3 seconds
    ======================================== */
 
 :root {
-    /* Colors */
-    --bg-dark: #05060a;
-    --bg-card: #0c0e14;
-    --bg-card-hover: #12141c;
-    
-    --text-white: #f4f4f5;
-    --text-gray: #a1a1aa;
-    --text-muted: #71717a;
-    
-    --accent-primary: #8b5cf6;
-    --accent-secondary: #a78bfa;
-    --accent-glow: rgba(139, 92, 246, 0.4);
-    
-    --accent-green: #10b981;
-    --accent-cyan: #06b6d4;
-    --accent-orange: #f97316;
-    --accent-pink: #ec4899;
-    
-    --border-color: #1f2028;
-    --border-hover: #2e2f3a;
+    /* Netflix Exact Colors */
+    --netflix-red: #E50914;
+    --netflix-red-hover: #f40612;
+    --netflix-black: #141414;
+    --netflix-dark: #000000;
+    --netflix-gray: #808080;
+    --netflix-light-gray: #e5e5e5;
+    --netflix-white: #ffffff;
+    --netflix-profile-bg: #333;
     
     /* Typography */
-    --font-display: 'Space Grotesk', sans-serif;
-    --font-mono: 'JetBrains Mono', monospace;
+    --font-netflix: 'Netflix Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    --font-body: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
     
     /* Transitions */
-    --transition-fast: 150ms ease;
-    --transition-medium: 300ms ease;
-    --transition-slow: 500ms ease;
+    --transition-fast: 0.1s ease;
+    --transition-medium: 0.2s ease-out;
+    --transition-slow: 0.4s ease-out;
 }
 
 /* Reset */
@@ -43,964 +32,639 @@
 }
 
 html {
-    scroll-behavior: smooth;
+    font-size: 16px;
 }
 
 body {
-    font-family: var(--font-display);
-    background: var(--bg-dark);
-    color: var(--text-white);
+    font-family: var(--font-body);
+    background: var(--netflix-dark);
+    color: var(--netflix-white);
     min-height: 100vh;
     overflow-x: hidden;
-    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
-/* ========================
-   Background Effects
-   ======================== */
-.bg-pattern {
+/* ========================================
+   INTRO OVERLAY - Netflix TUDUM Animation
+   EXACTLY 3 SECONDS DURATION
+   ======================================== */
+.intro-overlay {
     position: fixed;
     inset: 0;
-    background-image: 
-        radial-gradient(circle at 1px 1px, rgba(255,255,255,0.03) 1px, transparent 0);
-    background-size: 40px 40px;
-    pointer-events: none;
-    z-index: 0;
+    background: var(--netflix-dark);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 0.6s ease-out, visibility 0.6s ease-out;
 }
 
-.bg-glow {
-    position: fixed;
-    border-radius: 50%;
-    filter: blur(120px);
-    opacity: 0.5;
-    pointer-events: none;
-    z-index: 0;
-    animation: float 20s ease-in-out infinite;
+.intro-overlay.fade-out {
+    opacity: 0;
+    visibility: hidden;
 }
 
-.glow-1 {
-    width: 600px;
-    height: 600px;
-    background: var(--accent-primary);
-    top: -200px;
-    left: -200px;
-    animation-delay: 0s;
+.intro-overlay.hidden {
+    display: none;
 }
 
-.glow-2 {
-    width: 500px;
-    height: 500px;
-    background: var(--accent-cyan);
-    bottom: -150px;
-    right: -150px;
-    animation-delay: -7s;
+.setflix-intro {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    position: relative;
 }
 
-.glow-3 {
-    width: 400px;
-    height: 400px;
-    background: var(--accent-pink);
+.setflix-logo-container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Netflix-style Ribbon N Animation */
+.logo-ribbons {
+    position: absolute;
+    width: 100px;
+    height: 200px;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    opacity: 0.2;
-    animation-delay: -14s;
-}
-
-@keyframes float {
-    0%, 100% { transform: translate(0, 0); }
-    25% { transform: translate(30px, -30px); }
-    50% { transform: translate(-20px, 20px); }
-    75% { transform: translate(20px, 30px); }
-}
-
-/* Particles */
-#particles {
-    position: fixed;
-    inset: 0;
-    pointer-events: none;
+    opacity: 0;
+    animation: ribbonFade 3s ease forwards;
     z-index: 1;
 }
 
-.particle {
+@keyframes ribbonFade {
+    0% { opacity: 1; transform: translate(-50%, -50%) scale(1.5); }
+    15% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    25% { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
+    100% { opacity: 0; }
+}
+
+.ribbon {
     position: absolute;
-    width: 4px;
-    height: 4px;
-    background: var(--accent-primary);
-    border-radius: 50%;
-    opacity: 0;
-    animation: particleFloat 15s ease-in-out infinite;
+    width: 28px;
+    background: var(--netflix-red);
+    box-shadow: 
+        2px 0 10px rgba(229, 9, 20, 0.6),
+        -2px 0 10px rgba(229, 9, 20, 0.6);
 }
 
-@keyframes particleFloat {
-    0% {
-        opacity: 0;
-        transform: translateY(100vh) scale(0);
-    }
-    10% {
-        opacity: 0.8;
-    }
-    90% {
-        opacity: 0.8;
-    }
-    100% {
-        opacity: 0;
-        transform: translateY(-100vh) scale(1);
-    }
+.ribbon-left {
+    left: 10px;
+    height: 0;
+    top: 0;
+    animation: ribbonGrowLeft 3s ease forwards;
 }
 
-/* ========================
-   Main Layout
-   ======================== */
-.main {
+.ribbon-right {
+    right: 10px;
+    height: 0;
+    top: 0;
+    animation: ribbonGrowRight 3s ease forwards;
+}
+
+@keyframes ribbonGrowLeft {
+    0% { height: 0; }
+    10% { height: 100%; }
+    25%, 100% { height: 100%; }
+}
+
+@keyframes ribbonGrowRight {
+    0% { height: 0; top: 100%; }
+    10% { height: 100%; top: 0; }
+    25%, 100% { height: 100%; top: 0; }
+}
+
+/* SETFLIX Text - Main Logo Animation */
+.setflix-text {
+    font-family: 'Bebas Neue', Impact, sans-serif;
+    font-size: 0;
+    font-weight: 400;
+    letter-spacing: 0.5em;
+    color: transparent;
     position: relative;
     z-index: 2;
-    max-width: 1400px;
-    margin: 0 auto;
-    padding: 2rem;
+    animation: netflixLogoAnimation 3s ease-out forwards;
 }
 
-/* Header — Premium Navigation */
+/* Netflix Logo Animation - EXACT 3 SECONDS */
+@keyframes netflixLogoAnimation {
+    0% {
+        font-size: 0;
+        opacity: 0;
+        letter-spacing: 1em;
+        text-shadow: none;
+    }
+    8% {
+        opacity: 1;
+    }
+    20% {
+        font-size: clamp(60px, 18vw, 180px);
+        letter-spacing: 0.3em;
+        color: var(--netflix-red);
+        text-shadow: 
+            0 0 80px rgba(229, 9, 20, 0.9),
+            0 0 120px rgba(229, 9, 20, 0.7),
+            0 0 200px rgba(229, 9, 20, 0.5);
+    }
+    30% {
+        font-size: clamp(50px, 16vw, 160px);
+        letter-spacing: 0.25em;
+    }
+    35%, 100% {
+        font-size: clamp(50px, 16vw, 160px);
+        letter-spacing: 0.25em;
+        color: var(--netflix-red);
+        text-shadow: 
+            0 0 60px rgba(229, 9, 20, 0.6),
+            0 0 100px rgba(229, 9, 20, 0.4);
+    }
+}
+
+/* Red Screen Flash for TUDUM - synced to 3s */
+.intro-overlay::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--netflix-red);
+    opacity: 0;
+    animation: tudumFlash 3s ease-out forwards;
+    pointer-events: none;
+    z-index: -1;
+}
+
+@keyframes tudumFlash {
+    0%, 15% {
+        opacity: 0;
+    }
+    20% {
+        opacity: 0.2;
+    }
+    25% {
+        opacity: 0;
+    }
+    28% {
+        opacity: 0.1;
+    }
+    35%, 100% {
+        opacity: 0;
+    }
+}
+
+/* ========================================
+   MAIN CONTENT
+   ======================================== */
+.main-content {
+    opacity: 0;
+    visibility: hidden;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    transition: opacity 0.8s ease-in, visibility 0.8s ease-in;
+    position: relative;
+}
+
+.main-content.visible {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Netflix Background */
+.netflix-bg {
+    position: fixed;
+    inset: 0;
+    background: linear-gradient(
+        to bottom,
+        rgba(0, 0, 0, 0.7) 0%,
+        rgba(20, 20, 20, 1) 100%
+    );
+    z-index: -1;
+}
+
+/* ========================================
+   HEADER - Netflix Style with Full Nav
+   ======================================== */
 .header {
     display: flex;
-    flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    padding: 1.5rem 0 4rem;
-    gap: 1rem;
+    padding: 15px 4%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.7) 50%, transparent 100%);
+    height: 68px;
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 25px;
 }
 
 .logo {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
 }
 
-.logo-icon {
-    font-size: 1.75rem;
-    filter: drop-shadow(0 0 10px rgba(139, 92, 246, 0.5));
-    animation: logoPulse 3s ease-in-out infinite;
-}
-
-@keyframes logoPulse {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.1); }
-}
-
-.logo-text {
-    font-size: 1.35rem;
-    font-weight: 700;
-    background: linear-gradient(135deg, var(--text-white), var(--accent-primary));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    letter-spacing: -0.02em;
-}
-
-.nav-link {
-    display: flex;
-    align-items: center;
-    gap: 0.6rem;
-    padding: 0.65rem 1.25rem;
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 10px;
-    color: var(--text-gray);
-    text-decoration: none;
-    font-size: 0.9rem;
-    font-weight: 500;
-    transition: all var(--transition-medium);
-    backdrop-filter: blur(10px);
-}
-
-.nav-link:hover {
-    background: rgba(139, 92, 246, 0.1);
-    border-color: rgba(139, 92, 246, 0.3);
-    color: var(--text-white);
-    transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(139, 92, 246, 0.2);
-}
-
-.nav-link svg {
-    transition: transform var(--transition-fast);
-}
-
-.nav-link:hover svg {
-    transform: rotate(15deg) scale(1.1);
-}
-
-/* ========================
-   Hero Section — Premium Design
-   ======================== */
-.hero {
-    text-align: center;
-    padding: 4rem 0 5rem;
-    position: relative;
-}
-
-.hero::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 600px;
-    height: 600px;
-    background: radial-gradient(circle, rgba(139, 92, 246, 0.08) 0%, transparent 70%);
-    pointer-events: none;
-    z-index: -1;
-}
-
-.hero-title {
-    font-size: clamp(2.5rem, 6vw, 4.5rem);
-    font-weight: 800;
-    line-height: 1.1;
-    margin-bottom: 1.75rem;
-    letter-spacing: -0.02em;
-}
-
-.title-line {
-    display: block;
-}
-
-.gradient-text {
-    background: linear-gradient(135deg, var(--accent-primary), var(--accent-cyan), var(--accent-pink), var(--accent-primary));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    background-size: 300% 300%;
-    animation: gradientShift 6s ease infinite;
-}
-
-@keyframes gradientShift {
-    0%, 100% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-}
-
-.hero-subtitle {
-    max-width: 650px;
-    margin: 0 auto;
-    font-size: 1.15rem;
-    color: var(--text-gray);
-    line-height: 1.9;
+.header-logo-text {
+    font-family: 'Bebas Neue', Impact, sans-serif;
+    font-size: clamp(1.4rem, 3vw, 1.8rem);
+    letter-spacing: 0.12em;
+    color: var(--netflix-red);
     font-weight: 400;
 }
 
-/* ========================
-   Cards Grid — Premium Professional Design
-   ======================== */
-.cards-section {
-    padding: 2rem 0;
-}
-
-.cards-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 2rem;
-    perspective: 1200px;
-}
-
-/* Card Styles — Glass morphism + 3D transforms */
-.card {
-    position: relative;
-    background: linear-gradient(145deg, rgba(15, 17, 25, 0.9), rgba(20, 22, 32, 0.8));
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 24px;
-    overflow: hidden;
-    transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
-    transform-style: preserve-3d;
-    backdrop-filter: blur(20px);
-}
-
-.card::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(135deg, transparent 40%, rgba(139, 92, 246, 0.03) 100%);
-    opacity: 0;
-    transition: opacity 0.5s ease;
-    pointer-events: none;
-    z-index: 0;
-}
-
-.card::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.05), transparent);
-    transition: left 0.7s ease;
-    pointer-events: none;
-    z-index: 1;
-}
-
-.card:hover {
-    transform: translateY(-16px) rotateX(4deg);
-    border-color: rgba(139, 92, 246, 0.3);
-    box-shadow: 
-        0 30px 80px rgba(0, 0, 0, 0.5),
-        0 0 60px rgba(139, 92, 246, 0.15),
-        inset 0 1px 0 rgba(255, 255, 255, 0.1);
-}
-
-.card:hover::before {
-    opacity: 1;
-}
-
-.card:hover::after {
-    left: 100%;
-}
-
-/* Specific card accent colors on hover */
-.card-simple:hover {
-    border-color: rgba(139, 92, 246, 0.4);
-    box-shadow: 
-        0 30px 80px rgba(0, 0, 0, 0.5),
-        0 0 60px rgba(139, 92, 246, 0.2);
-}
-
-.card-game:hover {
-    border-color: rgba(249, 115, 22, 0.4);
-    box-shadow: 
-        0 30px 80px rgba(0, 0, 0, 0.5),
-        0 0 60px rgba(249, 115, 22, 0.2);
-}
-
-.card-forest:hover {
-    border-color: rgba(16, 185, 129, 0.4);
-    box-shadow: 
-        0 30px 80px rgba(0, 0, 0, 0.5),
-        0 0 60px rgba(16, 185, 129, 0.2);
-}
-
-.card-hacker:hover {
-    border-color: rgba(6, 182, 212, 0.4);
-    box-shadow: 
-        0 30px 80px rgba(0, 0, 0, 0.5),
-        0 0 60px rgba(6, 182, 212, 0.2);
-}
-
-/* Card Preview — Elevated image section */
-.card-preview {
-    position: relative;
-    height: 240px;
-    overflow: hidden;
-    background: linear-gradient(180deg, #0a0a0f 0%, #12121a 100%);
-}
-
-.card-preview::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 80px;
-    background: linear-gradient(to top, rgba(15, 17, 25, 1), transparent);
-    pointer-events: none;
-    z-index: 2;
-}
-
-.preview-content {
-    width: 100%;
-    height: 100%;
-    position: relative;
-}
-
-/* Image previews: elegant display */
-.card-image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: top center;
-    display: block;
-    transition: transform 0.7s cubic-bezier(0.23, 1, 0.32, 1), filter 0.5s ease;
-    filter: brightness(0.9) saturate(1.1);
-}
-
-.card:hover .card-image {
-    transform: scale(1.08);
-    filter: brightness(1) saturate(1.2);
-}
-
-/* Card Overlay — Premium interaction */
-.card-overlay {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(180deg, rgba(5, 6, 10, 0.3) 0%, rgba(5, 6, 10, 0.9) 100%);
-    backdrop-filter: blur(8px);
+/* Primary Navigation - Netflix style */
+.primary-nav {
     display: flex;
     align-items: center;
-    justify-content: center;
-    opacity: 0;
-    transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
-    z-index: 3;
+    gap: 20px;
 }
 
-.card:hover .card-overlay {
-    opacity: 1;
-}
-
-.btn-view {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    padding: 1rem 2.25rem;
-    background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
-    color: white;
+.nav-item {
+    color: var(--netflix-light-gray);
     text-decoration: none;
-    font-weight: 600;
-    font-size: 0.95rem;
-    border-radius: 14px;
-    transform: translateY(30px) scale(0.9);
-    transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
-    box-shadow: 0 10px 40px rgba(139, 92, 246, 0.4);
-    position: relative;
-    overflow: hidden;
+    font-size: 14px;
+    font-weight: 400;
+    transition: color var(--transition-fast);
 }
 
-.btn-view::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-    transform: translateX(-100%);
-    transition: transform 0.5s ease;
+.nav-item:hover {
+    color: #b3b3b3;
 }
 
-.card:hover .btn-view {
-    transform: translateY(0) scale(1);
-}
-
-.btn-view:hover {
-    box-shadow: 0 15px 50px rgba(139, 92, 246, 0.5);
-    transform: translateY(-3px) scale(1.02);
-}
-
-.btn-view:hover::before {
-    transform: translateX(100%);
-}
-
-/* Specific button colors */
-.card-game .btn-view {
-    background: linear-gradient(135deg, var(--accent-orange), #fb923c);
-    box-shadow: 0 10px 40px rgba(249, 115, 22, 0.4);
-}
-
-.card-game .btn-view:hover {
-    box-shadow: 0 15px 50px rgba(249, 115, 22, 0.5);
-}
-
-.card-forest .btn-view {
-    background: linear-gradient(135deg, var(--accent-green), #34d399);
-    box-shadow: 0 10px 40px rgba(16, 185, 129, 0.4);
-}
-
-.card-forest .btn-view:hover {
-    box-shadow: 0 15px 50px rgba(16, 185, 129, 0.5);
-}
-
-.card-hacker .btn-view {
-    background: linear-gradient(135deg, var(--accent-cyan), #22d3ee);
-    box-shadow: 0 10px 40px rgba(6, 182, 212, 0.4);
-}
-
-.card-hacker .btn-view:hover {
-    box-shadow: 0 15px 50px rgba(6, 182, 212, 0.5);
-}
-
-/* Card Info — Premium typography */
-.card-info {
-    position: relative;
-    padding: 1.75rem;
-    z-index: 2;
-}
-
-.card-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.4rem;
-    padding: 0.35rem 0.85rem;
-    background: linear-gradient(135deg, rgba(139, 92, 246, 0.15), rgba(139, 92, 246, 0.05));
-    color: var(--accent-primary);
-    font-size: 0.65rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 1.5px;
-    border-radius: 6px;
-    margin-bottom: 1rem;
-    border: 1px solid rgba(139, 92, 246, 0.2);
-    backdrop-filter: blur(4px);
-}
-
-.badge-special {
-    background: linear-gradient(135deg, rgba(249, 115, 22, 0.15), rgba(249, 115, 22, 0.05));
-    color: var(--accent-orange);
-    border-color: rgba(249, 115, 22, 0.2);
-}
-
-.badge-nature {
-    background: linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(16, 185, 129, 0.05));
-    color: var(--accent-green);
-    border-color: rgba(16, 185, 129, 0.2);
-}
-
-.badge-cyber {
-    background: linear-gradient(135deg, rgba(6, 182, 212, 0.15), rgba(6, 182, 212, 0.05));
-    color: var(--accent-cyan);
-    border-color: rgba(6, 182, 212, 0.2);
-}
-
-.card-title {
-    font-size: 1.5rem;
-    font-weight: 700;
-    margin-bottom: 0.75rem;
-    background: linear-gradient(135deg, var(--text-white) 0%, var(--text-gray) 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    transition: all 0.3s ease;
-}
-
-.card:hover .card-title {
-    background: linear-gradient(135deg, #fff 0%, var(--text-white) 100%);
-    -webkit-background-clip: text;
-    background-clip: text;
-}
-
-.card-desc {
-    font-size: 0.9rem;
-    color: var(--text-gray);
-    line-height: 1.75;
-    margin-bottom: 1.25rem;
-}
-
-.card-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-}
-
-.card-tags span {
-    padding: 0.35rem 0.75rem;
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 8px;
-    font-family: var(--font-mono);
-    font-size: 0.7rem;
-    color: var(--text-muted);
-    transition: all 0.3s ease;
-}
-
-.card:hover .card-tags span {
-    border-color: rgba(255, 255, 255, 0.12);
-    background: rgba(255, 255, 255, 0.05);
-}
-
-/* ========================
-   Preview Styles - Simple
-   ======================== */
-.preview-simple {
-    background: linear-gradient(180deg, #0a0a0f, #12121a);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 2rem;
-    padding: 2rem;
-}
-
-.preview-avatar {
-    width: 80px;
-    height: 80px;
-    background: linear-gradient(135deg, #1a1a25, #252530);
-    border: 2px solid #27272a;
-    border-radius: 12px;
-}
-
-.preview-lines {
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-}
-
-.preview-line {
-    height: 12px;
-    background: #1f1f2a;
-    border-radius: 6px;
-}
-
-.preview-line.w-60 { width: 150px; }
-.preview-line.w-40 { width: 100px; }
-
-.preview-dots {
-    display: flex;
-    gap: 0.5rem;
-    margin-top: 0.5rem;
-}
-
-.preview-dots span {
-    width: 28px;
-    height: 28px;
-    background: #1a1a25;
-    border: 1px solid #27272a;
-    border-radius: 6px;
-}
-
-/* ========================
-   Preview Styles - Game
-   ======================== */
-.preview-game {
-    background: linear-gradient(180deg, #87ceeb, #98d8c8);
-    position: relative;
-}
-
-.preview-sky {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(180deg, #87ceeb 0%, #b4e4d4 100%);
-}
-
-.preview-ground {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 60px;
-    background: linear-gradient(180deg, #7cb342, #558b2f);
-}
-
-.preview-stickman {
-    position: absolute;
-    bottom: 70px;
-    left: 50%;
-    transform: translateX(-50%);
-    animation: stickmanBounce 1s ease-in-out infinite;
-}
-
-.stick-body {
-    width: 20px;
-    height: 40px;
-    background: #333;
-    border-radius: 10px 10px 5px 5px;
-    position: relative;
-}
-
-.stick-body::before {
-    content: '';
-    position: absolute;
-    top: -15px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 18px;
-    height: 18px;
-    background: #333;
-    border-radius: 50%;
-}
-
-@keyframes stickmanBounce {
-    0%, 100% { transform: translateX(-50%) translateY(0); }
-    50% { transform: translateX(-50%) translateY(-10px); }
-}
-
-.preview-signboard {
-    position: absolute;
-    bottom: 60px;
-    right: 40px;
-    width: 40px;
-    height: 35px;
-    background: #8b4513;
-    border-radius: 4px;
-}
-
-.preview-signboard::before {
-    content: '';
-    position: absolute;
-    bottom: -20px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 6px;
-    height: 20px;
-    background: #5d4037;
-}
-
-/* ========================
-   Preview Styles - Forest
-   ======================== */
-.preview-forest {
-    background: linear-gradient(180deg, #1a472a, #0d2818);
-    position: relative;
-    overflow: hidden;
-}
-
-.preview-forest-sky {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(180deg, #1a3a2a 0%, #0f2518 100%);
-}
-
-.preview-trees {
-    position: absolute;
-    bottom: 40px;
-    left: 0;
-    right: 0;
-    display: flex;
-    justify-content: center;
-    gap: 30px;
-}
-
-.tree {
-    position: relative;
-}
-
-.tree::before {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 12px;
-    height: 30px;
-    background: #5d4037;
-    border-radius: 2px;
-}
-
-.tree::after {
-    content: '';
-    position: absolute;
-    bottom: 25px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 0;
-    height: 0;
-    border-left: 30px solid transparent;
-    border-right: 30px solid transparent;
-    border-bottom: 50px solid #2e7d32;
-}
-
-.tree-1::after { border-bottom-color: #388e3c; }
-.tree-2::after { border-bottom-color: #2e7d32; height: 0; bottom: 30px; border-bottom-width: 60px; border-left-width: 35px; border-right-width: 35px; }
-.tree-3::after { border-bottom-color: #43a047; }
-
-.preview-forest-ground {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 40px;
-    background: linear-gradient(180deg, #1b5e20, #0d3d15);
-}
-
-/* ========================
-   Preview Styles - Hacker
-   ======================== */
-.preview-hacker {
-    background: #0a0a0a;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 1.5rem;
-}
-
-.preview-terminal {
-    width: 100%;
-    max-width: 280px;
-    background: #0d0d0d;
-    border: 1px solid #1a1a1a;
-    border-radius: 8px;
-    overflow: hidden;
-}
-
-.terminal-header {
-    display: flex;
-    gap: 6px;
-    padding: 8px 12px;
-    background: #151515;
-    border-bottom: 1px solid #1a1a1a;
-}
-
-.terminal-dot {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-}
-
-.terminal-dot.red { background: #ff5f56; }
-.terminal-dot.yellow { background: #ffbd2e; }
-.terminal-dot.green { background: #27c93f; }
-
-.terminal-body {
-    padding: 12px;
-    font-family: var(--font-mono);
-    font-size: 0.75rem;
-}
-
-.terminal-line {
-    color: #00ff00;
-    margin-bottom: 4px;
-}
-
-.terminal-line.output {
-    color: #888;
-}
-
-.terminal-line.cursor::after {
-    content: '';
-    display: inline-block;
-    width: 8px;
-    height: 14px;
-    background: #00ff00;
-    animation: blink 1s step-end infinite;
-}
-
-@keyframes blink {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0; }
-}
-
-/* ========================
-   Footer — Premium Design
-   ======================== */
-.footer {
-    text-align: center;
-    padding: 4rem 0 2.5rem;
-    border-top: 1px solid rgba(255, 255, 255, 0.05);
-    margin-top: 5rem;
-    position: relative;
-}
-
-.footer::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 200px;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, var(--accent-primary), transparent);
-}
-
-.footer p {
-    font-size: 0.95rem;
-    color: var(--text-muted);
-    margin-bottom: 0.5rem;
-}
-
-.footer a {
-    color: var(--accent-primary);
-    text-decoration: none;
-    transition: all var(--transition-fast);
+.nav-item.active {
+    color: var(--netflix-white);
     font-weight: 500;
 }
 
-.footer a:hover {
-    color: var(--accent-secondary);
-    text-shadow: 0 0 20px var(--accent-glow);
+/* Header Right - Icons and Profile */
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.icon-btn {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: var(--netflix-white);
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.icon-btn svg {
+    width: 24px;
+    height: 24px;
+}
+
+.icon-btn:hover {
+    color: #b3b3b3;
+}
+
+/* Profile Dropdown in Header */
+.profile-dropdown {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+}
+
+.header-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 4px;
+    object-fit: cover;
+}
+
+.profile-dropdown .caret {
+    width: 16px;
+    height: 16px;
+    fill: var(--netflix-white);
+    transition: transform var(--transition-fast);
+}
+
+.profile-dropdown:hover .caret {
+    transform: rotate(180deg);
+}
+
+/* ========================================
+   PROFILE SELECTION - Exact Netflix Style
+   ======================================== */
+.profile-section {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    min-height: 100vh;
+    padding-top: 68px;
+}
+
+.profile-title {
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 400;
+    color: var(--netflix-white);
+    margin-bottom: 1em;
+    text-align: center;
+    font-family: var(--font-body);
+}
+
+/* Profiles Grid - Netflix uses specific spacing */
+.profiles-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 2vw;
+    max-width: 80%;
+    margin-bottom: 3em;
+}
+
+/* Individual Profile - Netflix exact styling */
+.profile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+    cursor: pointer;
+    position: relative;
+}
+
+/* Profile Avatar - Netflix uses rounded corners, not circles */
+.profile-avatar {
+    width: clamp(84px, 10vw, 200px);
+    height: clamp(84px, 10vw, 200px);
+    border-radius: 4px;
+    overflow: hidden;
+    position: relative;
+    border: none;
+    background: var(--netflix-profile-bg);
+    transition: none;
+}
+
+/* Border on hover - using box-shadow to avoid flicker */
+.profile:hover .profile-avatar,
+.profile:focus .profile-avatar {
+    box-shadow: 0 0 0 4px var(--netflix-white);
+}
+
+/* Profile Image */
+.profile-preview {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    border-radius: 4px;
+}
+
+/* Profile Name - Netflix typography */
+.profile-name {
+    margin-top: 0.6em;
+    font-size: clamp(12px, 1.3vw, 18px);
+    font-weight: 400;
+    color: var(--netflix-gray);
+    text-align: center;
+    transition: color var(--transition-fast);
+}
+
+.profile:hover .profile-name,
+.profile:focus .profile-name {
+    color: var(--netflix-white);
+}
+
+/* ========================================
+   ADD PROFILE - Netflix Style
+   ======================================== */
+.add-profile .profile-avatar,
+.add-avatar {
+    background: transparent !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.add-avatar svg {
+    width: 60%;
+    height: 60%;
+    fill: var(--netflix-gray);
+    transition: fill var(--transition-fast);
+}
+
+.add-profile:hover .add-avatar svg {
+    fill: var(--netflix-white);
+}
+
+.add-profile .profile-name {
+    color: var(--netflix-gray);
+}
+
+.add-profile:hover .profile-name {
+    color: var(--netflix-white);
+}
+
+/* ========================================
+   MANAGE PROFILES BUTTON - Netflix Style
+   ======================================== */
+.manage-profiles-btn {
+    background: transparent;
+    border: 1px solid var(--netflix-gray);
+    color: var(--netflix-gray);
+    padding: 0.5em 1.5em;
+    font-size: clamp(12px, 1.2vw, 18px);
+    font-family: var(--font-body);
+    font-weight: 400;
+    letter-spacing: 0.1em;
+    cursor: pointer;
+    transition: border-color var(--transition-fast), color var(--transition-fast);
+}
+
+.manage-profiles-btn:hover {
+    border-color: var(--netflix-white);
+    color: var(--netflix-white);
+}
+
+/* ========================================
+   FOOTER - Netflix Style
+   ======================================== */
+.footer {
+    padding: 30px 4%;
+    text-align: center;
+    color: var(--netflix-gray);
+    font-size: 13px;
+    margin-top: auto;
+}
+
+.footer-links {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.footer-links a {
+    color: var(--netflix-gray);
+    text-decoration: none;
+    font-size: 13px;
+    transition: color var(--transition-fast);
+}
+
+.footer-links a:hover {
+    color: var(--netflix-white);
+    text-decoration: underline;
+}
+
+.footer-credit {
+    margin-bottom: 8px;
+}
+
+.footer-credit a {
+    color: var(--netflix-gray);
+    text-decoration: none;
+    transition: color var(--transition-fast);
+}
+
+.footer-credit a:hover {
+    color: var(--netflix-white);
 }
 
 .footer-year {
-    font-size: 0.85rem;
-    color: var(--text-muted);
-    opacity: 0.7;
+    font-size: 12px;
+    color: #666;
 }
 
-/* ========================
-   Responsive Design — Premium Breakpoints
-   ======================== */
-@media (max-width: 1400px) {
-    .cards-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 2rem;
-        max-width: 900px;
-        margin: 0 auto;
+/* ========================================
+   PAGE TRANSITION
+   ======================================== */
+.page-transition {
+    position: fixed;
+    inset: 0;
+    background: var(--netflix-dark);
+    z-index: 9998;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s ease-out;
+}
+
+.page-transition.active {
+    opacity: 1;
+    pointer-events: all;
+}
+
+/* ========================================
+   RESPONSIVE - Netflix Breakpoints
+   ======================================== */
+@media (max-width: 1100px) {
+    .primary-nav {
+        display: none;
     }
 }
 
-@media (max-width: 900px) {
-    .cards-grid {
-        grid-template-columns: 1fr;
-        max-width: 500px;
-        gap: 2.5rem;
+@media (max-width: 800px) {
+    .profiles-grid {
+        gap: 15px;
+        max-width: 90%;
     }
     
-    .card:hover {
-        transform: translateY(-10px) rotateX(0deg);
+    .profile-avatar {
+        width: clamp(70px, 20vw, 120px);
+        height: clamp(70px, 20vw, 120px);
     }
     
-    .card-preview {
-        height: 220px;
+    .profile-title {
+        margin-bottom: 1.5em;
+    }
+    
+    .header-right .icon-btn {
+        display: none;
+    }
+    
+    .footer-links {
+        gap: 15px;
     }
 }
 
-@media (max-width: 640px) {
-    .main {
-        padding: 1rem;
-    }
-    
+@media (max-width: 500px) {
     .header {
-        flex-direction: row;
-        justify-content: space-between;
-        gap: 0.5rem;
-        padding: 0.5rem 0 2rem;
+        padding: 10px 4%;
+        height: 50px;
     }
     
-    .hero {
-        padding: 2rem 0 3rem;
+    .profiles-grid {
+        gap: 12px;
     }
     
-    .hero-title {
-        font-size: 2rem;
+    .profile-avatar {
+        width: 80px;
+        height: 80px;
     }
     
-    .hero-subtitle {
-        font-size: 1rem;
-        line-height: 1.7;
+    .profile-name {
+        font-size: 11px;
     }
     
-    .card-preview {
-        height: 200px;
+    .manage-profiles-btn {
+        padding: 0.4em 1.2em;
+        font-size: 12px;
     }
     
-    .card-info {
-        padding: 1.25rem;
-    }
-    
-    .card-title {
-        font-size: 1.25rem;
-    }
-    
-    .card-desc {
-        font-size: 0.85rem;
-    }
-    
-    .btn-view {
-        padding: 0.85rem 1.75rem;
-        font-size: 0.85rem;
+    .header-avatar {
+        width: 28px;
+        height: 28px;
     }
 }
 
-/* ========================
-   Scrollbar
-   ======================== */
+/* ========================================
+   SCROLLBAR - Dark Theme
+   ======================================== */
 ::-webkit-scrollbar {
     width: 8px;
 }
 
 ::-webkit-scrollbar-track {
-    background: var(--bg-dark);
+    background: var(--netflix-dark);
 }
 
 ::-webkit-scrollbar-thumb {
-    background: var(--border-color);
+    background: #333;
     border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: var(--border-hover);
+    background: #555;
 }
 
 /* Selection */
 ::selection {
-    background: var(--accent-primary);
+    background: var(--netflix-red);
     color: white;
+}
+
+/* ========================================
+   LOADING ANIMATION FOR PROFILES
+   ======================================== */
+.profile-avatar.loading {
+    background: linear-gradient(90deg, #333 25%, #444 50%, #333 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
 }
