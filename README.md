@@ -14,7 +14,7 @@ Welcome to my **Portfolio Collection** — a showcase of four unique and creativ
 A modern, minimalist portfolio with a command palette navigation system. Features dark/light theme toggle, keyboard shortcuts, and a professional design.
 
 **Tech:** HTML5, CSS3, JavaScript  
-**Features:** Command Palette (Cmd+J), Theme Toggle, Smooth Animations
+**Features:** Command Palette (Cmd+J), Theme Toggle, Smooth Animations.
 
 ---
 
