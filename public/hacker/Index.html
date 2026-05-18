@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>H4CK3R_P0RTF0LI0 // SYS.ROOT</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=VT323&family=Fira+Code:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- Component CSS -->
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/effects.css">
+    <link rel="stylesheet" href="css/boot.css">
+    <link rel="stylesheet" href="css/terminal.css">
+    <link rel="stylesheet" href="css/guide.css">
+</head>
+<body>
+    <!-- ═══════════════ SCANLINE OVERLAY ═══════════════ -->
+    <div id="scanline-overlay"></div>
+    <div id="crt-flicker"></div>
+    <div id="vignette-overlay"></div>
+
+    <!-- ═══════════════ MATRIX RAIN CANVAS ═══════════════ -->
+    <canvas id="matrix-rain"></canvas>
+
+    <!-- ═══════════════ BOOT SEQUENCE ═══════════════ -->
+    <div id="boot-screen">
+        <div class="boot-content">
+            <div class="bios-header">
+                <span class="bios-brand">█▀▀ █▄█ █▀ ▀█▀ █▀▀ █▀▄▀█</span>
+                <span class="bios-version">BIOS v3.37 // SHADOW_ROOT OS</span>
+            </div>
+            <div id="boot-log" class="boot-log"></div>
+            <div class="boot-progress">
+                <div class="boot-progress-bar" id="boot-progress-bar"></div>
+            </div>
+            <div class="boot-prompt" id="boot-prompt" style="display:none;">
+                <span class="blink-cursor">Press any key to enter the system...</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════════ MAIN SCENE ═══════════════ -->
+    <div id="main-scene" style="display:none;">
+        <!-- Three.js 3D Computer Canvas -->
+        <canvas id="three-canvas"></canvas>
+
+        <!-- Terminal Overlay (renders on screen of 3D computer) -->
+        <div id="terminal-container">
+            <div class="terminal-header">
+                <div class="terminal-buttons">
+                    <span class="t-btn t-btn-red"></span>
+                    <span class="t-btn t-btn-yellow"></span>
+                    <span class="t-btn t-btn-green"></span>
+                </div>
+                <div class="terminal-title">root@shadow_root:~$</div>
+                <div class="terminal-status">
+                    <span id="connection-status" class="status-dot online"></span>
+                    <span id="status-text">CONNECTED</span>
+                </div>
+            </div>
+            <div id="terminal-output" class="terminal-output"></div>
+            <div class="terminal-input-line">
+                <div class="terminal-prompt-wrapper">
+                    <div class="terminal-prompt-line1">┌──(root㉿shadow_root)-[~]</div>
+                    <div class="terminal-prompt-line2">
+                        <span class="terminal-prompt">└─$ </span><input type="text" id="terminal-input" class="terminal-input" autofocus autocomplete="off" spellcheck="false">
+                    </div>
+                </div>
+                <span class="cursor-block">█</span>
+            </div>
+        </div>
+
+        <!-- ═══════════════ GUIDE PANEL (Top Right) ═══════════════ -->
+        <div id="guide-panel">
+            <div class="guide-header">
+                <span class="guide-icon">⚡</span>
+                <span class="guide-title">COMMAND GUIDE</span>
+                <button id="guide-toggle" class="guide-toggle">━</button>
+            </div>
+            <div id="guide-content" class="guide-content">
+                <div class="guide-section">
+                    <div class="guide-category">📂 NAVIGATION</div>
+                    <div class="guide-cmd"><code>whoami</code> - About me</div>
+                    <div class="guide-cmd"><code>ls projects/</code> - List projects</div>
+                    <div class="guide-cmd"><code>cat skills.txt</code> - My skills</div>
+                    <div class="guide-cmd"><code>cat contact.txt</code> - Contact info</div>
+                </div>
+                <div class="guide-section">
+                    <div class="guide-category">🔧 SYSTEM</div>
+                    <div class="guide-cmd"><code>help</code> - All commands</div>
+                    <div class="guide-cmd"><code>clear</code> - Clear terminal</div>
+                    <div class="guide-cmd"><code>neofetch</code> - System info</div>
+                    <div class="guide-cmd"><code>history</code> - Cmd history</div>
+                </div>
+                <div class="guide-section">
+                    <div class="guide-category">🎮 FUN</div>
+                    <div class="guide-cmd"><code>matrix</code> - Matrix effect</div>
+                    <div class="guide-cmd"><code>hack</code> - Hack animation</div>
+                    <div class="guide-cmd"><code>glitch</code> - Glitch mode</div>
+                    <div class="guide-cmd"><code>sudo rm -rf /</code> - Try it 😈</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ═══════════════ SYSTEM STATS BAR ═══════════════ -->
+        <div id="stats-bar">
+            <div class="stat-item">
+                <span class="stat-label">CPU</span>
+                <div class="stat-bar"><div class="stat-fill" id="cpu-bar" style="width:42%"></div></div>
+                <span class="stat-val" id="cpu-val">42%</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">MEM</span>
+                <div class="stat-bar"><div class="stat-fill" id="mem-bar" style="width:67%"></div></div>
+                <span class="stat-val" id="mem-val">67%</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">NET</span>
+                <div class="stat-bar"><div class="stat-fill stat-fill-net" id="net-bar" style="width:89%"></div></div>
+                <span class="stat-val" id="net-val">89%</span>
+            </div>
+            <div class="stat-item clock-item">
+                <span class="stat-label">SYS</span>
+                <span class="stat-val" id="sys-clock">00:00:00</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════════ SCRIPTS ═══════════════ -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="js/effects.js"></script>
+    <script src="js/audio.js"></script>
+    <script src="js/boot.js"></script>
+    <script src="js/scene.js"></script>
+    <script src="js/commands.js"></script>
+    <script src="js/sections.js"></script>
+    <script src="js/guide.js"></script>
+    <script src="js/terminal.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
