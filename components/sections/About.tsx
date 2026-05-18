@@ -10,25 +10,25 @@ const values = [
   {
     icon: '⚡',
     title: 'Speed + Craft',
-    description: 'I move fast without breaking things. Shipping in days, not months, with quality that lasts.',
+    description: "I build fast and ship quality. From a viral open-source tool with 3.2M views to enterprise-grade SaaS — speed and craft go hand in hand.",
     color: '#4facfe',
   },
   {
     icon: '🧠',
     title: 'Systems Thinking',
-    description: 'Every product decision is rooted in deep technical understanding and product empathy.',
+    description: 'Every product decision is rooted in deep technical understanding of LLD/HLD, system design, and product empathy.',
     color: '#a855f7',
   },
   {
     icon: '✦',
     title: 'Creative Engineering',
-    description: 'Code is a medium. I use it to craft experiences that feel inevitable in hindsight.',
+    description: 'Code is a medium. I use it to craft products that feel inevitable — from Redis-cached APIs to AI-powered resume builders.',
     color: '#00f5d4',
   },
   {
     icon: '🚀',
     title: 'Builder Mentality',
-    description: "I've founded startups, shipped products, and worn every hat. I know what it takes to go from 0 to 1.",
+    description: "I build products people actually use — 28K+ users, 3.2M views, 1K+ AI users. I know what it takes to go from 0 to scale.",
     color: '#f77f00',
   },
 ];
@@ -44,8 +44,8 @@ export default function About({ setActiveSection }: { setActiveSection: (id: str
       <div className="max-w-6xl mx-auto">
         <SectionHeader
           label="About Me"
-          title="The Architect Behind the Code"
-          subtitle="Engineer, founder, and maker obsessed with building things people actually use."
+          title="The Engineer Behind the Code"
+          subtitle="SDE, builder, and maker obsessed with creating products that impact millions of users."
           accentColor="blue"
         />
 

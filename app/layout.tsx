@@ -21,34 +21,37 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'Digital Architect | Full-Stack Engineer & Product Builder',
+  title: 'Shashank Kumar Rathour | Software Development Engineer',
   description:
-    'Building products, systems, and experiences that merge engineering with creativity. Full-stack engineer specializing in AI, cloud infrastructure, and product development.',
+    'Software Development Engineer building scalable products and innovative solutions. Specializing in React, Spring Boot, Redis, Azure, and AI-driven applications.',
   keywords: [
-    'software engineer',
+    'Shashank Kumar Rathour',
+    'software development engineer',
     'full-stack developer',
-    'AI engineer',
-    'product builder',
-    'React',
-    'Next.js',
-    'TypeScript',
+    'React developer',
+    'Spring Boot',
+    'Fairlx',
+    'Resumy',
+    'Assignme',
+    'AKTU Resources',
+    'Noida',
     'portfolio',
   ],
-  authors: [{ name: 'Digital Architect' }],
-  creator: 'Digital Architect',
+  authors: [{ name: 'Shashank Kumar Rathour' }],
+  creator: 'Shashank Kumar Rathour',
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    title: 'Digital Architect | Full-Stack Engineer & Product Builder',
+    title: 'Shashank Kumar Rathour | Software Development Engineer',
     description:
-      'Building products, systems, and experiences that merge engineering with creativity.',
-    siteName: 'Digital Architect Portfolio',
+      'Software Development Engineer building scalable products and innovative solutions that impact millions of users.',
+    siteName: 'Shashank Kumar Rathour Portfolio',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Digital Architect | Full-Stack Engineer & Product Builder',
+    title: 'Shashank Kumar Rathour | Software Development Engineer',
     description:
-      'Building products, systems, and experiences that merge engineering with creativity.',
+      'Software Development Engineer building scalable products and innovative solutions that impact millions of users.',
   },
   robots: {
     index: true,

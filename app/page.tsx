@@ -90,7 +90,7 @@ export default function Home() {
               <p>
                 Built with{' '}
                 <span className="gradient-text-blue">precision</span> &{' '}
-                <span className="gradient-text-orange">passion</span> — 2024
+                <span className="gradient-text-orange">passion</span> — 2026
               </p>
             </footer>
           </SmoothScroll>
