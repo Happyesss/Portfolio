@@ -9,7 +9,6 @@ import Hero from '@/components/sections/Hero';
 import About from '@/components/sections/About';
 import Skills from '@/components/sections/Skills';
 import Projects from '@/components/sections/Projects';
-import StartupJourney from '@/components/sections/StartupJourney';
 import GitHubStats from '@/components/sections/GitHubStats';
 import Timeline from '@/components/sections/Timeline';
 import PortfolioModes from '@/components/sections/PortfolioModes';
@@ -68,9 +67,6 @@ export default function Home() {
               </section>
               <section id="projects">
                 <Projects setActiveSection={setActiveSection} />
-              </section>
-              <section id="startup">
-                <StartupJourney setActiveSection={setActiveSection} />
               </section>
               <section id="github">
                 <GitHubStats setActiveSection={setActiveSection} />

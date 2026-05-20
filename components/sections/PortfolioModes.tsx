@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
+import { useSectionInView } from '@/hooks/useScrollProgress';
 import { SectionHeader } from '@/components/ui/GlassCard';
 
 interface PortfolioMode {
@@ -37,10 +38,16 @@ const portfolioModes: PortfolioMode[] = [
 ];
 
 export default function PortfolioModes({ setActiveSection }: { setActiveSection: (section: string) => void }) {
-  const { ref, inView } = useInView({
+  const { ref: inViewRef, inView } = useInView({
     threshold: 0.1,
     triggerOnce: true,
   });
+  const sectionRef = useSectionInView('portfolio-modes', setActiveSection);
+
+  const setRefs = (node: HTMLDivElement | null) => {
+    sectionRef.current = node;
+    inViewRef(node);
+  };
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -63,7 +70,7 @@ export default function PortfolioModes({ setActiveSection }: { setActiveSection:
   };
 
   return (
-    <div ref={ref} className="relative section-padding bg-bg-primary overflow-hidden">
+    <div ref={setRefs} className="relative section-padding bg-bg-primary overflow-hidden">
       <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-accent-blue/30 to-transparent" aria-hidden="true" />
 
       <div className="max-w-6xl mx-auto">
@@ -81,7 +88,6 @@ export default function PortfolioModes({ setActiveSection }: { setActiveSection:
         </motion.div>
 
         <motion.div
-          ref={ref}
           variants={containerVariants}
           initial="hidden"
           animate={inView ? 'visible' : 'hidden'}

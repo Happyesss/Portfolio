@@ -131,72 +131,46 @@ export const projects = [
   },
 ];
 
-// ─── Experience ──────────────────────────────────────────────────────────────
-export const experience = [
-  {
-    company: 'Fairlx',
-    role: 'Software Development Engineer',
-    period: '2024 – Present',
-    location: 'Noida, India',
-    type: 'Startup',
-    color: '#4facfe',
-    description:
-      'Pioneering the development of Fairlx — the first-ever project management tool with a pay-as-you-go model. Leading system design and building for scale.',
-    highlights: [
-      'Designed Low-Level Design (LLD) and High-Level Design (HLD) for the platform',
-      'Engineered a Redis caching layer reducing API response times by 40%',
-      'Implemented scalable microservices architecture supporting 2x scale',
-      'Actively identifying and resolving architecture bottlenecks',
-    ],
-    tech: ['React', 'Spring Boot', 'Redis', 'Azure', 'PostgreSQL', 'Node.js'],
-  },
-  {
-    company: 'Resumy',
-    role: 'Founder & Lead Engineer',
-    period: '2024',
-    location: 'Remote',
-    type: 'Independent',
-    color: '#00f5d4',
-    description:
-      'Built and launched an AI-powered resume builder using LLM APIs that serves 1,000+ users with ATS-optimized resumes, cover letters, and cold emails.',
-    highlights: [
-      'Grew to 1,000+ users with real-time AI-powered resume generation',
-      'Integrated LLM APIs for ATS-optimized resumes, cover letters, and cold emails',
-      'Shipped real-time preview and instant generation in a single-page app',
-    ],
-    tech: ['React', 'LLM APIs', 'Node.js', 'OpenAI', 'Vercel'],
-  },
-  {
-    company: 'Assignme',
-    role: 'Creator & Maintainer',
-    period: '2023',
-    location: 'Open Source',
-    type: 'Independent',
-    color: '#a855f7',
-    description:
-      'Created a viral open-source assignment automation tool that reached 3.2M views in one month and processed 3.97M HTTP requests.',
-    highlights: [
-      'Built custom handwriting fonts using FontForge for authentic output',
-      'Achieved 3.2M views in the first month of launch',
-      'Processed 3.97M HTTP requests efficiently with a lightweight architecture',
-    ],
-    tech: ['FontForge', 'JavaScript', 'Linux', 'Cloudflare Pages'],
-  },
+// ─── Education ───────────────────────────────────────────────────────────────
+export const education = [
   {
     company: 'JSS Academy of Technical Education',
-    role: 'B.Tech — Computer Science (AI & ML)',
-    period: '2022 – 2026',
+    role: 'B.Tech in Computer Science and Engineering (Artificial Intelligence & Machine Learning)',
+    period: '2022 - 2026',
     location: 'Noida, India',
     type: 'Education',
-    color: '#f77f00',
+    color: '#4facfe',
     description:
-      'Pursuing B.Tech in Computer Science Engineering with specialization in Artificial Intelligence & Machine Learning.',
+      'B.Tech in CSE with a specialization in Artificial Intelligence and Machine Learning.',
     highlights: [
-      'Specialization in AI & ML with hands-on project experience',
-      'Built multiple production-grade products during coursework',
-      'Active contributor to open-source during academic journey',
+      'Focused coursework in AI/ML, data structures, and system design',
+      'Built multiple production-grade projects during the program',
     ],
-    tech: ['Python', 'Java', 'Data Structures', 'Algorithms', 'AI/ML'],
+    tech: ['AI/ML', 'Data Structures', 'Algorithms', 'Python', 'Java'],
+  },
+  {
+    company: 'Jesus and Mary Convent School',
+    role: 'Senior Secondary (XII)',
+    period: '2021 - 2022',
+    location: 'Greater Noida, India',
+    type: 'Education',
+    color: '#00f5d4',
+    description:
+      'Physics, Chemistry, Mathematics (PCM) with Computer Science.',
+    highlights: [],
+    tech: ['Physics', 'Chemistry', 'Mathematics', 'Computer Science'],
+  },
+  {
+    company: 'Jesus and Mary Convent School',
+    role: 'Secondary (X)',
+    period: '2019 - 2020',
+    location: 'Greater Noida, India',
+    type: 'Education',
+    color: '#a855f7',
+    description:
+      'Core curriculum with emphasis on science and mathematics.',
+    highlights: [],
+    tech: ['Science', 'Mathematics', 'English', 'Social Science'],
   },
 ];
 

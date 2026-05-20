@@ -1,10 +1,12 @@
 'use client';
 
+import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { useSectionInView } from '@/hooks/useScrollProgress';
 import { personalInfo } from '@/lib/data';
 import GlassCard, { SectionHeader } from '@/components/ui/GlassCard';
 import { staggerContainer, fadeInUp, fadeInLeft, fadeInRight } from '@/lib/animations';
+import profileImage from '@/assets/my.jpeg';
 
 const values = [
   {
@@ -67,10 +69,13 @@ export default function About({ setActiveSection }: { setActiveSection: (id: str
               {/* Avatar placeholder */}
               <div className="absolute inset-8 rounded-2xl glass flex items-center justify-center">
                 <div className="text-center">
-                  <div className="w-28 h-28 rounded-full bg-gradient-to-br from-accent-blue/30 to-accent-teal/20 border-2 border-accent-blue/40 flex items-center justify-center mx-auto mb-4">
-                    <span className="font-display text-4xl font-bold gradient-text-blue">
-                      {personalInfo.firstName[0]}{personalInfo.lastName[0]}
-                    </span>
+                  <div className="w-28 h-28 rounded-full bg-gradient-to-br from-accent-blue/30 to-accent-teal/20 border-2 border-accent-blue/40 flex items-center justify-center mx-auto mb-4 overflow-hidden">
+                    <Image
+                      src={profileImage}
+                      alt="Shashank Kumar Rathour"
+                      className="w-full h-full object-cover"
+                      priority
+                    />
                   </div>
                   <p className="font-display font-semibold text-text-primary">{personalInfo.name}</p>
                   <p className="text-text-muted text-sm mt-1">{personalInfo.location}</p>

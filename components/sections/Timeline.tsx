@@ -3,14 +3,12 @@
 import { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { useSectionInView } from '@/hooks/useScrollProgress';
-import { experience } from '@/lib/data';
+import { education } from '@/lib/data';
 import { SectionHeader } from '@/components/ui/GlassCard';
 import { staggerContainer, fadeInUp } from '@/lib/animations';
 
 const TYPE_ICONS: Record<string, string> = {
-  Startup: '🚀',
-  'Scale-up': '📈',
-  Independent: '🌐',
+  Education: '🎓',
 };
 
 export default function Timeline({ setActiveSection }: { setActiveSection: (id: string) => void }) {
@@ -30,9 +28,9 @@ export default function Timeline({ setActiveSection }: { setActiveSection: (id: 
 
       <div className="max-w-4xl mx-auto" ref={containerRef}>
         <SectionHeader
-          label="Experience"
-          title="Career Timeline"
-          subtitle="Every role, every company, every challenge that built who I am as an engineer."
+          label="Education"
+          title="Academic Timeline"
+          subtitle="My academic journey from school to university."
           accentColor="blue"
         />
 
@@ -55,7 +53,7 @@ export default function Timeline({ setActiveSection }: { setActiveSection: (id: 
             whileInView="visible"
             viewport={{ once: true }}
           >
-            {experience.map((exp, i) => (
+            {education.map((exp, i) => (
               <motion.div
                 key={`${exp.company}-${i}`}
                 variants={fadeInUp}
@@ -106,27 +104,31 @@ export default function Timeline({ setActiveSection }: { setActiveSection: (id: 
                   <p className="text-text-secondary text-sm leading-relaxed mb-4">{exp.description}</p>
 
                   {/* Highlights */}
-                  <ul className="space-y-2 mb-4">
-                    {exp.highlights.map((highlight, j) => (
-                      <li key={j} className="flex items-start gap-2 text-text-muted text-sm">
-                        <span className="mt-1 text-xs" style={{ color: exp.color }}>▸</span>
-                        <span>{highlight}</span>
-                      </li>
-                    ))}
-                  </ul>
+                  {exp.highlights.length > 0 && (
+                    <ul className="space-y-2 mb-4">
+                      {exp.highlights.map((highlight, j) => (
+                        <li key={j} className="flex items-start gap-2 text-text-muted text-sm">
+                          <span className="mt-1 text-xs" style={{ color: exp.color }}>▸</span>
+                          <span>{highlight}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
 
-                  {/* Tech stack */}
-                  <div className="flex flex-wrap gap-1.5 pt-3 border-t border-surface-border">
-                    {exp.tech.map((tech) => (
-                      <span
-                        key={tech}
-                        className="px-2.5 py-0.5 rounded-full font-mono text-xs"
-                        style={{ background: `${exp.color}10`, color: exp.color, border: `1px solid ${exp.color}25` }}
-                      >
-                        {tech}
-                      </span>
-                    ))}
-                  </div>
+                  {/* Subjects */}
+                  {exp.tech.length > 0 && (
+                    <div className="flex flex-wrap gap-1.5 pt-3 border-t border-surface-border">
+                      {exp.tech.map((tech) => (
+                        <span
+                          key={tech}
+                          className="px-2.5 py-0.5 rounded-full font-mono text-xs"
+                          style={{ background: `${exp.color}10`, color: exp.color, border: `1px solid ${exp.color}25` }}
+                        >
+                          {tech}
+                        </span>
+                      ))}
+                    </div>
+                  )}
                 </motion.div>
               </motion.div>
             ))}
@@ -135,7 +137,7 @@ export default function Timeline({ setActiveSection }: { setActiveSection: (id: 
           {/* Timeline end */}
           <div className="relative pl-20 md:pl-32 mt-8">
             <div className="absolute left-6 md:left-[3.5rem] -translate-x-1/2 w-3 h-3 rounded-full bg-accent-blue/30 border border-accent-blue/40" />
-            <p className="text-text-muted font-mono text-sm pt-1">The journey continues...</p>
+            <p className="text-text-muted font-mono text-sm pt-1">The learning continues...</p>
           </div>
         </div>
 

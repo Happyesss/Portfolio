@@ -8,9 +8,9 @@ const MESSAGES: Record<string, string> = {
   about: 'Learn about who I am and what drives me →',
   skills: 'Explore my technical universe →',
   projects: 'Discover what I\'ve built →',
-  startup: 'Follow my entrepreneurial journey →',
+  'portfolio-modes': 'Pick a portfolio mode and explore →',
   github: 'See my open source contributions →',
-  timeline: 'Trace my career path →',
+  timeline: 'See my education journey →',
   testimonials: 'Hear from people I\'ve worked with →',
   contact: 'Ready to build something together? →',
 };
