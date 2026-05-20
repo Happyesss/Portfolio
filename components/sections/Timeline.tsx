@@ -147,7 +147,9 @@ export default function Timeline({ setActiveSection }: { setActiveSection: (id: 
           viewport={{ once: true }}
         >
           <a
-            href="#"
+            href="https://share.resumy.live/r/h0BZoQJh3r"
+            target="_blank"
+            rel="noopener noreferrer"
             className="inline-flex items-center gap-3 px-8 py-4 rounded-2xl glass-bright border border-surface-border text-text-primary hover:border-accent-blue/40 hover:text-accent-blue transition-all duration-300 font-medium group"
           >
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
