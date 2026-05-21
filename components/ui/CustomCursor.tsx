@@ -5,21 +5,37 @@ import { motion } from 'framer-motion';
 import { useMousePosition } from '@/hooks/useMousePosition';
 
 type CursorState = 'default' | 'hover' | 'click' | 'text' | 'drag';
+type ClickType = 'left' | 'right' | null;
+
+const MOUSE_WIDTH = 26;
+const MOUSE_HEIGHT = 38;
+const GLOW_SIZE = 72;
 
 export default function CustomCursor() {
   const { x, y } = useMousePosition(true);
   const [cursorState, setCursorState] = useState<CursorState>('default');
   const [isVisible, setIsVisible] = useState(false);
-  const trailRef = useRef<{ x: number; y: number }[]>([]);
+  const [isMoving, setIsMoving] = useState(false);
+  const [activeClick, setActiveClick] = useState<ClickType>(null);
+  const [scrollPulse, setScrollPulse] = useState(false);
+  const moveTimeoutRef = useRef<number | null>(null);
+  const clickTimeoutRef = useRef<number | null>(null);
+  const scrollTimeoutRef = useRef<number | null>(null);
+  const isPointerDownRef = useRef(false);
 
   useEffect(() => {
     const handleMouseEnter = () => setIsVisible(true);
     const handleMouseLeave = () => setIsVisible(false);
-    const handleMouseDown = () => setCursorState('click');
-    const handleMouseUp = () => setCursorState('default');
 
-    // Detect interactive elements
-    const handleElementHover = (e: MouseEvent) => {
+    const handleMouseMove = (e: MouseEvent) => {
+      setIsMoving(true);
+      if (moveTimeoutRef.current) {
+        window.clearTimeout(moveTimeoutRef.current);
+      }
+      moveTimeoutRef.current = window.setTimeout(() => setIsMoving(false), 140);
+
+      if (isPointerDownRef.current) return;
+
       const target = e.target as HTMLElement;
       if (
         target.tagName === 'A' ||
@@ -45,214 +61,259 @@ export default function CustomCursor() {
       }
     };
 
+    const handleMouseDown = (e: MouseEvent) => {
+      isPointerDownRef.current = true;
+      setCursorState('click');
+
+      if (e.button === 0) {
+        setActiveClick('left');
+      } else if (e.button === 2) {
+        setActiveClick('right');
+      }
+
+      if (clickTimeoutRef.current) {
+        window.clearTimeout(clickTimeoutRef.current);
+      }
+      clickTimeoutRef.current = window.setTimeout(() => setActiveClick(null), 160);
+    };
+
+    const handleMouseUp = () => {
+      isPointerDownRef.current = false;
+      setCursorState('default');
+      setActiveClick(null);
+    };
+
+    const handleWheel = () => {
+      setScrollPulse(true);
+      if (scrollTimeoutRef.current) {
+        window.clearTimeout(scrollTimeoutRef.current);
+      }
+      scrollTimeoutRef.current = window.setTimeout(() => setScrollPulse(false), 140);
+    };
+
     document.addEventListener('mouseenter', handleMouseEnter);
     document.addEventListener('mouseleave', handleMouseLeave);
+    document.addEventListener('mousemove', handleMouseMove);
     document.addEventListener('mousedown', handleMouseDown);
     document.addEventListener('mouseup', handleMouseUp);
-    document.addEventListener('mousemove', handleElementHover);
+    document.addEventListener('wheel', handleWheel, { passive: true });
 
     return () => {
       document.removeEventListener('mouseenter', handleMouseEnter);
       document.removeEventListener('mouseleave', handleMouseLeave);
+      document.removeEventListener('mousemove', handleMouseMove);
       document.removeEventListener('mousedown', handleMouseDown);
       document.removeEventListener('mouseup', handleMouseUp);
-      document.removeEventListener('mousemove', handleElementHover);
+      document.removeEventListener('wheel', handleWheel);
+      if (moveTimeoutRef.current) {
+        window.clearTimeout(moveTimeoutRef.current);
+      }
+      if (clickTimeoutRef.current) {
+        window.clearTimeout(clickTimeoutRef.current);
+      }
+      if (scrollTimeoutRef.current) {
+        window.clearTimeout(scrollTimeoutRef.current);
+      }
     };
   }, []);
 
-  const cursorVariants = {
+  const mouseBodyVariants = {
     default: {
-      width: 14,
-      height: 14,
-      background: 'linear-gradient(135deg, rgba(79,172,254,1), rgba(0,245,212,1))',
-      borderRadius: '50%',
-      border: '1px solid rgba(255,255,255,0.9)',
-      boxShadow: '0 0 10px rgba(79,172,254,0.85), 0 0 18px rgba(0,245,212,0.45)',
+      scale: 1,
+      boxShadow: '0 10px 20px rgba(0,0,0,0.45)',
     },
     hover: {
-      width: 14,
-      height: 14,
-      background: 'linear-gradient(135deg, rgba(79,172,254,1), rgba(0,245,212,1))',
-      borderRadius: '50%',
-      border: '1px solid rgba(255,255,255,0.95)',
-      boxShadow: '0 0 14px rgba(79,172,254,1), 0 0 24px rgba(0,245,212,0.6)',
+      scale: 1.05,
+      boxShadow: '0 12px 24px rgba(0,0,0,0.5)',
     },
     click: {
-      width: 10,
-      height: 10,
-      backgroundColor: 'rgba(247,127,0,0.95)',
-      borderRadius: '50%',
-      border: '1px solid rgba(255,255,255,0.85)',
-      boxShadow: '0 0 10px rgba(247,127,0,0.8)',
+      scale: 0.94,
+      boxShadow: '0 8px 16px rgba(0,0,0,0.45)',
     },
     text: {
-      width: 4,
-      height: 26,
-      backgroundColor: 'rgba(232,234,246,0.9)',
-      borderRadius: '2px',
-      border: '1px solid rgba(79,172,254,0.8)',
-      boxShadow: '0 0 8px rgba(79,172,254,0.7)',
+      scale: 1,
+      boxShadow: '0 10px 20px rgba(0,0,0,0.4)',
     },
     drag: {
-      width: 16,
-      height: 16,
-      backgroundColor: 'rgba(0,245,212,0.15)',
-      borderRadius: '50%',
-      border: '2px solid rgba(0,245,212,0.8)',
-      boxShadow: '0 0 14px rgba(0,245,212,0.6)',
+      scale: 1.08,
+      boxShadow: '0 14px 26px rgba(0,0,0,0.55)',
     },
   };
 
-  const ringVariants = {
-    default: {
-      width: 36,
-      height: 36,
-      opacity: 0.5,
-      borderColor: 'rgba(79,172,254,0.55)',
-      boxShadow: '0 0 18px rgba(79,172,254,0.25)',
-    },
-    hover: {
-      width: 58,
-      height: 58,
-      opacity: 0.7,
-      borderColor: 'rgba(0,245,212,0.7)',
-      boxShadow: '0 0 26px rgba(0,245,212,0.35)',
-    },
-    click: {
-      width: 24,
-      height: 24,
-      opacity: 0.9,
-      borderColor: 'rgba(247,127,0,0.75)',
-      boxShadow: '0 0 18px rgba(247,127,0,0.35)',
-    },
-    text: {
-      width: 22,
-      height: 22,
-      opacity: 0.35,
-      borderColor: 'rgba(79,172,254,0.4)',
-      boxShadow: '0 0 12px rgba(79,172,254,0.2)',
-    },
-    drag: {
-      width: 72,
-      height: 72,
-      opacity: 0.55,
-      borderColor: 'rgba(0,245,212,0.55)',
-      boxShadow: '0 0 30px rgba(0,245,212,0.3)',
-    },
-  };
-
-  const accentVariants = {
-    default: {
-      width: 8,
-      height: 8,
-      opacity: 0.9,
-      rotate: 45,
-      borderColor: 'rgba(255,255,255,0.75)',
-      backgroundColor: 'rgba(7,7,17,0.55)',
-    },
-    hover: {
-      width: 12,
-      height: 12,
-      opacity: 1,
-      rotate: 45,
-      borderColor: 'rgba(0,245,212,0.85)',
-      backgroundColor: 'rgba(7,7,17,0.45)',
-    },
-    click: {
-      width: 6,
-      height: 6,
-      opacity: 1,
-      rotate: 45,
-      borderColor: 'rgba(247,127,0,0.85)',
-      backgroundColor: 'rgba(7,7,17,0.4)',
-    },
-    text: {
-      width: 0,
-      height: 0,
-      opacity: 0,
-      rotate: 45,
-      borderColor: 'transparent',
-      backgroundColor: 'transparent',
-    },
-    drag: {
-      width: 10,
-      height: 10,
-      opacity: 0.9,
-      rotate: 45,
-      borderColor: 'rgba(0,245,212,0.8)',
-      backgroundColor: 'rgba(7,7,17,0.5)',
-    },
-  };
-
-  const cursorOffsets = {
-    default: { x: 7, y: 7 },
-    hover: { x: 7, y: 7 },
-    click: { x: 5, y: 5 },
-    text: { x: 2, y: 13 },
-    drag: { x: 8, y: 8 },
-  };
-
-  const ringOffsets = {
-    default: 18,
-    hover: 29,
-    click: 12,
-    text: 11,
-    drag: 36,
-  };
-
-  const accentOffsets = {
-    default: 4,
-    hover: 6,
-    click: 3,
-    text: 0,
-    drag: 5,
+  const glowVariants = {
+    default: { scale: 1, opacity: 0.22 },
+    hover: { scale: 1.3, opacity: 0.32 },
+    click: { scale: 0.85, opacity: 0.35 },
+    text: { scale: 0.95, opacity: 0.2 },
+    drag: { scale: 1.45, opacity: 0.4 },
   };
 
   if (!isVisible) return null;
 
   return (
     <>
-      {/* Main cursor dot */}
-      <motion.div
-        className="fixed top-0 left-0 z-[9999] pointer-events-none"
-        style={{ x: x - cursorOffsets[cursorState].x, y: y - cursorOffsets[cursorState].y }}
-        animate={cursorVariants[cursorState]}
-        transition={{ type: 'spring', stiffness: 800, damping: 35, mass: 0.3 }}
-      />
-
-      {/* Inner diamond accent */}
-      <motion.div
-        className="fixed top-0 left-0 z-[9999] pointer-events-none border"
-        style={{ x: x - accentOffsets[cursorState], y: y - accentOffsets[cursorState] }}
-        animate={accentVariants[cursorState]}
-        transition={{ type: 'spring', stiffness: 700, damping: 35, mass: 0.25 }}
-      />
-
-      {/* Outer ring — follows with lag */}
-      <motion.div
-        className="fixed top-0 left-0 z-[9998] pointer-events-none rounded-full border"
-        style={{
-          x: x - ringOffsets[cursorState],
-          y: y - ringOffsets[cursorState],
-        }}
-        animate={ringVariants[cursorState]}
-        transition={{ type: 'spring', stiffness: 200, damping: 25, mass: 0.5 }}
-      />
-
-      {/* Glow halo */}
       <motion.div
         className="fixed top-0 left-0 z-[9997] pointer-events-none rounded-full"
         style={{
-          x: x - 36,
-          y: y - 36,
-          width: 72,
-          height: 72,
-          background: 'radial-gradient(circle, rgba(79,172,254,0.18) 0%, transparent 70%)',
+          x: x - GLOW_SIZE / 2,
+          y: y - GLOW_SIZE / 2,
+          width: GLOW_SIZE,
+          height: GLOW_SIZE,
+          background: 'radial-gradient(circle, rgba(79,172,254,0.35) 0%, transparent 70%)',
           filter: 'blur(10px)',
         }}
-        animate={{ opacity: cursorState === 'hover' ? 1 : 0.5 }}
-        transition={{ duration: 0.3 }}
+        animate={glowVariants[cursorState]}
+        transition={{ type: 'spring', stiffness: 120, damping: 20, mass: 0.6 }}
       />
+
+      <motion.div
+        className="fixed top-0 left-0 z-[9999] pointer-events-none"
+        style={{
+          x: x - MOUSE_WIDTH / 2,
+          y: y - MOUSE_HEIGHT / 2,
+          width: MOUSE_WIDTH,
+          height: MOUSE_HEIGHT,
+        }}
+        animate={mouseBodyVariants[cursorState]}
+        transition={{ type: 'spring', stiffness: 500, damping: 30, mass: 0.4 }}
+      >
+        <div
+          style={{
+            position: 'relative',
+            width: '100%',
+            height: '100%',
+            borderRadius: '14px 14px 18px 18px',
+            background: 'linear-gradient(180deg, rgba(34,38,52,0.98) 0%, rgba(12,15,24,0.98) 100%)',
+            border: '1px solid rgba(255,255,255,0.22)',
+            boxShadow: 'inset 0 1px 2px rgba(255,255,255,0.28), inset 0 -6px 10px rgba(0,0,0,0.35)',
+            overflow: 'hidden',
+          }}
+        >
+          <div
+            style={{
+              position: 'absolute',
+              top: 3,
+              left: 4,
+              right: 4,
+              height: 6,
+              borderRadius: '8px',
+              background: 'linear-gradient(180deg, rgba(255,255,255,0.42), rgba(255,255,255,0))',
+              opacity: 0.7,
+            }}
+          />
+
+          <div
+            style={{
+              position: 'absolute',
+              top: 4,
+              left: '50%',
+              width: 1,
+              height: 12,
+              background: 'rgba(255,255,255,0.14)',
+              transform: 'translateX(-0.5px)',
+            }}
+          />
+
+          <div
+            style={{
+              position: 'absolute',
+              top: 4,
+              left: 3,
+              width: 10,
+              height: 12,
+              borderRadius: '7px',
+              background: 'linear-gradient(180deg, rgba(50,55,70,0.98) 0%, rgba(30,34,48,0.98) 100%)',
+              border: '1px solid rgba(255,255,255,0.14)',
+              boxShadow: 'inset 0 1px 1px rgba(255,255,255,0.2)',
+            }}
+          >
+            <motion.div
+              style={{
+                position: 'absolute',
+                inset: 0,
+                borderRadius: '7px',
+                background:
+                  'radial-gradient(circle at 50% 0%, rgba(79,172,254,0.9) 0%, rgba(79,172,254,0.2) 55%, transparent 70%)',
+              }}
+              animate={{ opacity: activeClick === 'left' ? 1 : 0 }}
+              transition={{ duration: 0.08 }}
+            />
+          </div>
+
+          <div
+            style={{
+              position: 'absolute',
+              top: 4,
+              right: 3,
+              width: 10,
+              height: 12,
+              borderRadius: '7px',
+              background: 'linear-gradient(180deg, rgba(50,55,70,0.98) 0%, rgba(30,34,48,0.98) 100%)',
+              border: '1px solid rgba(255,255,255,0.14)',
+              boxShadow: 'inset 0 1px 1px rgba(255,255,255,0.2)',
+            }}
+          >
+            <motion.div
+              style={{
+                position: 'absolute',
+                inset: 0,
+                borderRadius: '7px',
+                background:
+                  'radial-gradient(circle at 50% 0%, rgba(247,127,0,0.95) 0%, rgba(247,127,0,0.25) 55%, transparent 70%)',
+              }}
+              animate={{ opacity: activeClick === 'right' ? 1 : 0 }}
+              transition={{ duration: 0.08 }}
+            />
+          </div>
+
+          <motion.div
+            style={{
+              position: 'absolute',
+              top: 5,
+              left: '50%',
+              width: 4,
+              height: 10,
+              borderRadius: '4px',
+              transform: 'translateX(-50%)',
+              border: '1px solid rgba(0,0,0,0.45)',
+              boxShadow: 'inset 0 1px 2px rgba(0,0,0,0.55)',
+            }}
+            animate={{
+              backgroundColor: scrollPulse ? 'rgba(0,245,212,0.95)' : 'rgba(200,205,218,0.8)',
+              boxShadow: scrollPulse
+                ? '0 0 8px rgba(0,245,212,0.85)'
+                : 'inset 0 1px 2px rgba(0,0,0,0.55)',
+            }}
+            transition={{ duration: 0.12 }}
+          />
+
+          <motion.div
+            style={{
+              position: 'absolute',
+              bottom: 4,
+              left: '50%',
+              width: 6,
+              height: 6,
+              borderRadius: '50%',
+              transform: 'translateX(-50%)',
+              backgroundColor: 'rgba(255,66,66,0.9)',
+            }}
+            animate={
+              isMoving
+                ? {
+                    opacity: [0.2, 1, 0.2],
+                    boxShadow: [
+                      '0 0 4px rgba(255,66,66,0.35)',
+                      '0 0 10px rgba(255,66,66,0.9)',
+                      '0 0 4px rgba(255,66,66,0.35)',
+                    ],
+                  }
+                : { opacity: 0.2, boxShadow: '0 0 4px rgba(255,66,66,0.35)' }
+            }
+            transition={{ duration: 0.8, repeat: isMoving ? Infinity : 0, ease: 'easeInOut' }}
+          />
+        </div>
+      </motion.div>
     </>
   );
 }

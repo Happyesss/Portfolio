@@ -82,7 +82,7 @@ function ContributionGraph({
   totalContributions: number;
   profileUrl: string;
 }) {
-  const weeks = 26;
+  const weeks = 52;
   const weekDays = 7;
   const totalCells = weeks * weekDays;
 
@@ -145,8 +145,8 @@ function ContributionGraph({
         </div>
       </div>
 
-      <div className="overflow-x-auto pb-1">
-        <div className="min-w-[780px]">
+      <div className="flex justify-center overflow-hidden pb-1">
+        <div className="scale-75 sm:scale-85 md:scale-90 lg:scale-100 origin-top">
           <div className="flex pl-9 gap-1 mb-2 text-[10px] font-mono text-text-muted">
             {monthLabels.map((label, index) => (
               <div key={`${label}-${index}`} className="w-3.5">
@@ -265,7 +265,7 @@ export default function GitHubStats({ setActiveSection }: { setActiveSection: (i
     { value: data.stats.totalForks, label: 'Forks', color: '#00f5d4' },
     { value: data.stats.totalPRs, label: 'Pull Requests', color: '#4ade80' },
     { value: data.stats.totalCommits, label: 'Commits', color: '#a855f7' },
-    { value: data.stats.followers, label: 'Followers', color: '#f43f5e' },
+    { value: data.stats.totalContributions, label: 'Contributions', color: '#f43f5e' },
   ];
 
   const formattedSyncTime = data.lastUpdated

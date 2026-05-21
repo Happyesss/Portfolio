@@ -50,10 +50,16 @@ function ProjectModal({ project, onClose }: { project: Project; onClose: () => v
 
             <div className="flex items-start gap-4">
               <div
-                className="w-14 h-14 rounded-2xl flex items-center justify-center text-2xl shrink-0"
+                className="w-14 h-14 rounded-2xl flex items-center justify-center text-2xl shrink-0 overflow-hidden"
                 style={{ background: `${project.color}20`, border: `1px solid ${project.color}40` }}
               >
-                {project.category === 'AI/ML' ? '🧠' : project.category === 'Cloud' ? '☁' : project.category === 'Backend' ? '⚙' : '◈'}
+                {project.logo ? (
+                  <img src={project.logo} alt={project.title} className="w-full h-full object-contain p-1.5" />
+                ) : (
+                  <>
+                    {project.category === 'AI/ML' ? '🧠' : project.category === 'Cloud' ? '☁' : project.category === 'Backend' ? '⚙' : '◈'}
+                  </>
+                )}
               </div>
               <div>
                 <span className="font-mono text-xs tracking-widest uppercase" style={{ color: project.color }}>
@@ -156,10 +162,16 @@ function ProjectCard({ project, onClick }: { project: Project; onClick: () => vo
       <div className="p-6">
         <div className="flex items-start justify-between mb-4">
           <div
-            className="w-12 h-12 rounded-xl flex items-center justify-center text-xl"
+            className="w-12 h-12 rounded-xl flex items-center justify-center text-xl shrink-0 overflow-hidden"
             style={{ background: `${project.color}15`, border: `1px solid ${project.color}30` }}
           >
-            {project.category === 'AI/ML' ? '🧠' : project.category === 'Cloud' ? '☁' : project.category === 'Backend' ? '⚙' : '◈'}
+            {project.logo ? (
+              <img src={project.logo} alt={project.title} className="w-full h-full object-contain p-1" />
+            ) : (
+              <>
+                {project.category === 'AI/ML' ? '🧠' : project.category === 'Cloud' ? '☁' : project.category === 'Backend' ? '⚙' : '◈'}
+              </>
+            )}
           </div>
           <div className="flex gap-1.5">
             <span

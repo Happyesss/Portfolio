@@ -50,7 +50,17 @@ export default function Skills({ setActiveSection }: { setActiveSection: (id: st
             viewport={{ once: true }}
             transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           >
-            <SkillsOrbit />
+            <div className="absolute inset-0 pointer-events-none">
+              <div className="absolute -top-16 right-8 w-56 h-56 bg-accent-blue/10 blur-[90px]" />
+              <div className="absolute bottom-8 left-8 w-52 h-52 bg-accent-purple/10 blur-[90px]" />
+            </div>
+
+            <div className="absolute top-4 left-4 right-4 flex items-center justify-between text-[10px] sm:text-xs text-text-muted font-mono pointer-events-none">
+              <span>Drag to rotate • Hover a planet</span>
+              <span className="uppercase tracking-wider">Orbit View</span>
+            </div>
+
+            <SkillsOrbit skills={skills} activeCategory={activeCategory} />
 
             {/* Legend */}
             <div className="absolute bottom-4 left-4 right-4 flex flex-wrap gap-2 justify-center">

@@ -69,7 +69,7 @@ export default function About({ setActiveSection }: { setActiveSection: (id: str
               {/* Avatar placeholder */}
               <div className="absolute inset-8 rounded-2xl glass flex items-center justify-center">
                 <div className="text-center">
-                  <div className="w-28 h-28 rounded-full bg-gradient-to-br from-accent-blue/30 to-accent-teal/20 border-2 border-accent-blue/40 flex items-center justify-center mx-auto mb-4 overflow-hidden">
+                  <div className="w-32 h-32 rounded-full bg-gradient-to-br from-accent-blue/30 to-accent-teal/20 border-2 border-accent-blue/40 flex items-center justify-center mx-auto mb-4 overflow-hidden">
                     <Image
                       src={profileImage}
                       alt="Shashank Kumar Rathour"

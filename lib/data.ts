@@ -70,6 +70,7 @@ export const projects = [
     category: 'SaaS',
     featured: true,
     year: 2024,
+    logo: '/fairlx_logo.png',
     architecture: ['React Frontend', 'Spring Boot Backend', 'Redis Cache Layer', 'PostgreSQL DB', 'Azure Cloud'],
   },
   {
@@ -89,6 +90,7 @@ export const projects = [
     category: 'AI/ML',
     featured: true,
     year: 2024,
+    logo: '/resumy_logo.png',
     architecture: ['React Frontend', 'Node.js API', 'OpenAI LLM Layer', 'Vercel Edge Deployment'],
   },
   {
@@ -108,6 +110,7 @@ export const projects = [
     category: 'Tools',
     featured: true,
     year: 2023,
+    logo: '/assignme_logo.png',
     architecture: ['FontForge Engine', 'JavaScript Core', 'Cloudflare Pages', 'Open Source'],
   },
   {
@@ -127,6 +130,7 @@ export const projects = [
     category: 'EdTech',
     featured: false,
     year: 2023,
+    logo: '/aktu_logo.png',
     architecture: ['React Frontend', 'Node.js + Express', 'MongoDB', 'SEO Optimized'],
   },
 ];

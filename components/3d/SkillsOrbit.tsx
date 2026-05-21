@@ -1,62 +1,82 @@
 'use client';
 
-import { useRef, useMemo } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { Text, Sphere, Line } from '@react-three/drei';
+import { Html, OrbitControls, Stars } from '@react-three/drei';
 import * as THREE from 'three';
-import { skills } from '@/lib/data';
+import { skills as allSkills } from '@/lib/data';
 import { SKILL_CATEGORIES } from '@/lib/constants';
 
-// Central core
-function CoreSphere() {
-  const mesh = useRef<THREE.Mesh>(null);
-  const innerMesh = useRef<THREE.Mesh>(null);
+type CategoryKey = keyof typeof SKILL_CATEGORIES;
+type Skill = (typeof allSkills)[number];
+
+interface SkillsOrbitProps {
+  skills?: Skill[];
+  activeCategory?: CategoryKey | 'all';
+}
+
+interface RingConfig {
+  category: CategoryKey;
+  radius: number;
+  tilt: number;
+  speed: number;
+  color: string;
+}
+
+const CATEGORY_RINGS: RingConfig[] = [
+  { category: 'frontend', radius: 1.15, tilt: 0.35, speed: 0.45, color: '#4facfe' },
+  { category: 'backend', radius: 1.54, tilt: 0.8, speed: 0.38, color: '#00f5d4' },
+  { category: 'ai', radius: 1.93, tilt: 1.1, speed: 0.32, color: '#a855f7' },
+  { category: 'cloud', radius: 2.26, tilt: 0.55, speed: 0.28, color: '#f77f00' },
+  { category: 'database', radius: 2.59, tilt: 1.6, speed: 0.24, color: '#4ade80' },
+  { category: 'devops', radius: 2.92, tilt: 2.1, speed: 0.2, color: '#f43f5e' },
+];
+
+function SunCore() {
+  const shellRef = useRef<THREE.Mesh>(null);
+  const coreRef = useRef<THREE.Mesh>(null);
 
   useFrame((state) => {
     const t = state.clock.elapsedTime;
-    if (mesh.current) {
-      mesh.current.rotation.y = t * 0.15;
-      mesh.current.rotation.x = Math.sin(t * 0.1) * 0.2;
+    if (shellRef.current) {
+      shellRef.current.rotation.y = t * 0.2;
+      shellRef.current.rotation.x = Math.sin(t * 0.15) * 0.18;
     }
-    if (innerMesh.current) {
-      innerMesh.current.rotation.y = -t * 0.25;
+    if (coreRef.current) {
+      coreRef.current.rotation.y = -t * 0.35;
     }
   });
 
   return (
     <group>
-      {/* Outer shell */}
-      <mesh ref={mesh}>
-        <icosahedronGeometry args={[1.2, 2]} />
+      <mesh ref={coreRef}>
+        <sphereGeometry args={[0.52, 32, 32]} />
         <meshStandardMaterial
-          color="#0a1a40"
+          color="#ffc36a"
+          emissive="#ff9f2a"
+          emissiveIntensity={1.5}
+          metalness={0.3}
+          roughness={0.2}
+        />
+      </mesh>
+      <mesh ref={shellRef}>
+        <icosahedronGeometry args={[0.68, 2]} />
+        <meshStandardMaterial
+          color="#1a2140"
           wireframe
           transparent
           opacity={0.4}
           emissive="#4facfe"
-          emissiveIntensity={0.3}
+          emissiveIntensity={0.5}
         />
       </mesh>
-      {/* Inner glow */}
-      <mesh ref={innerMesh}>
-        <sphereGeometry args={[0.9, 32, 32]} />
-        <meshStandardMaterial
-          color="#4facfe"
-          emissive="#4facfe"
-          emissiveIntensity={0.6}
-          metalness={0.9}
-          roughness={0.1}
-          transparent
-          opacity={0.8}
-        />
-      </mesh>
-      {/* Halo */}
       <mesh>
-        <sphereGeometry args={[1.4, 32, 32]} />
+        <sphereGeometry args={[0.88, 32, 32]} />
         <meshBasicMaterial
-          color="#4facfe"
+          color="#ff9f2a"
           transparent
-          opacity={0.04}
+          opacity={0.12}
+          blending={THREE.AdditiveBlending}
           side={THREE.BackSide}
         />
       </mesh>
@@ -64,123 +84,187 @@ function CoreSphere() {
   );
 }
 
-// Orbital ring
-function OrbitalRing({ radius, tilt, color }: { radius: number; tilt: number; color: string }) {
+function OrbitRing({ ring, isActive }: { ring: RingConfig; isActive: boolean }) {
   const mesh = useRef<THREE.Mesh>(null);
+
   useFrame((state) => {
     if (mesh.current) {
-      mesh.current.rotation.z = state.clock.elapsedTime * 0.08;
+      mesh.current.rotation.z = state.clock.elapsedTime * 0.12;
     }
   });
+
   return (
-    <mesh ref={mesh} rotation={[tilt, 0, 0]}>
-      <torusGeometry args={[radius, 0.015, 8, 120]} />
-      <meshBasicMaterial color={color} transparent opacity={0.2} />
+    <mesh ref={mesh}>
+      <torusGeometry args={[ring.radius, 0.016, 12, 180]} />
+      <meshBasicMaterial
+        color={ring.color}
+        transparent
+        opacity={isActive ? 0.35 : 0.12}
+      />
     </mesh>
   );
 }
 
-// Individual skill node
 function SkillNode({
-  name,
-  level,
-  color,
-  orbitRadius,
-  orbitSpeed,
-  orbitOffset,
-  tilt,
+  skill,
+  ring,
+  index,
+  total,
+  isDimmed,
+  showLabel,
 }: {
-  name: string;
-  level: number;
-  color: string;
-  orbitRadius: number;
-  orbitSpeed: number;
-  orbitOffset: number;
-  tilt: number;
+  skill: Skill;
+  ring: RingConfig;
+  index: number;
+  total: number;
+  isDimmed: boolean;
+  showLabel: boolean;
 }) {
-  const group = useRef<THREE.Group>(null);
+  const nodeRef = useRef<THREE.Group>(null);
+  const [hovered, setHovered] = useState(false);
+
+  const size = 0.035 + (skill.level / 100) * 0.055;
+  const baseAngle = useMemo(() => (index / Math.max(total, 1)) * Math.PI * 2, [index, total]);
 
   useFrame((state) => {
-    if (!group.current) return;
-    const t = state.clock.elapsedTime * orbitSpeed + orbitOffset;
-    group.current.position.x = Math.cos(t) * orbitRadius;
-    group.current.position.y = Math.sin(t) * orbitRadius * Math.sin(tilt);
-    group.current.position.z = Math.sin(t) * orbitRadius * Math.cos(tilt);
+    if (!nodeRef.current) return;
+    const angle = baseAngle + state.clock.elapsedTime * ring.speed;
+    nodeRef.current.position.x = Math.cos(angle) * ring.radius;
+    nodeRef.current.position.z = Math.sin(angle) * ring.radius;
   });
 
-  const nodeSize = 0.08 + (level / 100) * 0.1;
+  const nodeOpacity = isDimmed && !hovered ? 0.35 : 1;
 
   return (
-    <group ref={group}>
-      <mesh>
-        <sphereGeometry args={[nodeSize, 16, 16]} />
-        <meshStandardMaterial
-          color={color}
-          emissive={color}
-          emissiveIntensity={0.8}
-          metalness={0.7}
-          roughness={0.2}
-        />
-      </mesh>
+    <group ref={nodeRef}>
+          <mesh
+          onPointerOver={(event) => {
+            event.stopPropagation();
+            setHovered(true);
+          }}
+          onPointerOut={(event) => {
+            event.stopPropagation();
+            setHovered(false);
+          }}
+        >
+          <sphereGeometry args={[size, 24, 24]} />
+          <meshStandardMaterial
+            color={ring.color}
+            emissive={ring.color}
+            emissiveIntensity={hovered ? 1.4 : 0.85}
+            metalness={0.6}
+            roughness={0.25}
+            transparent
+            opacity={nodeOpacity}
+          />
+        </mesh>
+
+        <mesh>
+          <sphereGeometry args={[size * 1.35, 20, 20]} />
+          <meshBasicMaterial
+            color={ring.color}
+            transparent
+            opacity={hovered ? 0.2 : 0.1}
+            blending={THREE.AdditiveBlending}
+          />
+        </mesh>
+
+        {(hovered || showLabel) && (
+          <Html
+            center
+            distanceFactor={8}
+            position={[0, size + 0.22, 0]}
+            style={{ pointerEvents: 'none' }}
+          >
+            <div className="glass rounded-md px-2.5 py-1.5 border border-surface-border text-xs text-text-primary min-w-[120px] text-center">
+              <div className="font-mono text-[9px] text-text-muted uppercase tracking-wider mb-0.5">
+                {SKILL_CATEGORIES[skill.category as CategoryKey]?.label}
+              </div>
+              <div className="font-semibold text-xs">{skill.name}</div>
+              <div className="mt-1 h-0.5 rounded-full bg-white/10 overflow-hidden">
+                <div
+                  className="h-full rounded-full transition-all"
+                  style={{ width: `${skill.level}%`, background: ring.color, boxShadow: `0 0 6px ${ring.color}88` }}
+                />
+              </div>
+            </div>
+          </Html>
+        )}
     </group>
   );
 }
 
-function Scene() {
-  const categoryRings = [
-    { category: 'frontend', radius: 2.2, tilt: 0.2, speed: 0.25, color: '#4facfe' },
-    { category: 'backend', radius: 2.8, tilt: 0.8, speed: 0.2, color: '#00f5d4' },
-    { category: 'ai', radius: 3.5, tilt: 1.2, speed: 0.18, color: '#a855f7' },
-    { category: 'cloud', radius: 4.0, tilt: 0.5, speed: 0.15, color: '#f77f00' },
-    { category: 'database', radius: 4.6, tilt: 1.8, speed: 0.12, color: '#4ade80' },
-    { category: 'devops', radius: 5.2, tilt: 2.4, speed: 0.1, color: '#f43f5e' },
-  ];
+function Scene({ skills, activeCategory }: { skills: Skill[]; activeCategory: CategoryKey | 'all' }) {
+  const skillsToRender = useMemo(() => {
+    if (activeCategory === 'all') return skills;
+    return skills.filter((skill) => skill.category === activeCategory);
+  }, [skills, activeCategory]);
+
+  const grouped = useMemo(() => {
+    const initial: Record<CategoryKey, Skill[]> = {
+      frontend: [],
+      backend: [],
+      ai: [],
+      cloud: [],
+      database: [],
+      devops: [],
+    };
+    skillsToRender.forEach((skill) => {
+      const category = skill.category as CategoryKey;
+      if (initial[category]) {
+        initial[category].push(skill);
+      }
+    });
+    return initial;
+  }, [skillsToRender]);
 
   return (
     <>
-      <ambientLight intensity={0.2} />
-      <pointLight position={[5, 5, 5]} color="#4facfe" intensity={2} />
-      <pointLight position={[-5, -5, 3]} color="#a855f7" intensity={1} />
+      <color attach="background" args={['#070711']} />
+      <ambientLight intensity={0.4} color="#ffffff" />
+      <pointLight position={[4, 4, 4]} color="#4facfe" intensity={1.8} />
+      <pointLight position={[-4, -2.5, 2]} color="#a855f7" intensity={1.2} />
+      <directionalLight position={[0, 3, -2.5]} intensity={0.6} color="#ffffff" />
 
-      <CoreSphere />
+      <Stars radius={14} depth={30} count={900} factor={2.5} saturation={0.15} fade speed={0.4} />
 
-      {categoryRings.map((ring) => (
-        <OrbitalRing
-          key={ring.category}
-          radius={ring.radius}
-          tilt={ring.tilt}
-          color={ring.color}
-        />
-      ))}
+      <SunCore />
 
-      {skills.map((skill, i) => {
-        const ring = categoryRings.find((r) => r.category === skill.category)!;
+      {CATEGORY_RINGS.map((ring) => {
+        const isActive = activeCategory === 'all' || activeCategory === ring.category;
+        const showLabel = activeCategory !== 'all' && isActive;
+        const ringSkills = grouped[ring.category] ?? [];
         return (
-          <SkillNode
-            key={skill.name}
-            name={skill.name}
-            level={skill.level}
-            color={ring?.color ?? '#4facfe'}
-            orbitRadius={ring?.radius ?? 3}
-            orbitSpeed={ring?.speed ?? 0.2}
-            orbitOffset={(i / skills.length) * Math.PI * 2}
-            tilt={ring?.tilt ?? 0.5}
-          />
+          <group key={ring.category} rotation={[ring.tilt, 0, 0]}>
+            <OrbitRing ring={ring} isActive={isActive} />
+            {ringSkills.map((skill, index) => (
+              <SkillNode
+                key={skill.name}
+                skill={skill}
+                ring={ring}
+                index={index}
+                total={ringSkills.length}
+                isDimmed={!isActive}
+                showLabel={showLabel}
+              />
+            ))}
+          </group>
         );
       })}
     </>
   );
 }
 
-export default function SkillsOrbit() {
+export default function SkillsOrbit({ skills = allSkills, activeCategory = 'all' }: SkillsOrbitProps) {
   return (
     <Canvas
-      camera={{ position: [0, 3, 9], fov: 55 }}
+      camera={{ position: [0, 1.35, 5.2], fov: 55 }}
       dpr={[1, 1.5]}
-      gl={{ antialias: true, alpha: true }}
+      gl={{ antialias: true, alpha: true, pixelRatio: Math.min(window.devicePixelRatio, 2) }}
       aria-hidden="true"
     >
-      <Scene />
+      <OrbitControls enableZoom={false} enablePan={false} autoRotate autoRotateSpeed={0.5} />
+      <Scene skills={skills} activeCategory={activeCategory} />
     </Canvas>
   );
 }
