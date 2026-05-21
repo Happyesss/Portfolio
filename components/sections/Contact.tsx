@@ -1,85 +1,71 @@
 'use client';
 
-import { useState, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { useSectionInView } from '@/hooks/useScrollProgress';
 import { personalInfo } from '@/lib/data';
 import { SectionHeader } from '@/components/ui/GlassCard';
-import { staggerContainer, fadeInUp, fadeInLeft, fadeInRight } from '@/lib/animations';
+import { staggerContainer, fadeInUp } from '@/lib/animations';
 
-type FormStatus = 'idle' | 'sending' | 'sent' | 'error';
+const GithubIcon = () => (
+  <svg className="w-7 h-7" viewBox="0 0 24 24" fill="currentColor">
+    <path d="M12 2A10 10 0 0 0 2 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.45-1.15-1.1-1.46-1.1-1.46-.93-.62.07-.6.07-.6 1.02.07 1.56 1.05 1.56 1.05.9 1.55 2.36 1.1 2.93.84.09-.66.35-1.1.64-1.35-2.22-.25-4.55-1.11-4.55-4.92 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.02.8-.22 1.65-.33 2.5-.33.85 0 1.7.11 2.5.33 1.91-1.3 2.75-1.02 2.75-1.02.55 1.38.2 2.4.1 2.65.65.7 1.03 1.59 1.03 2.68 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0 0 12 2z"/>
+  </svg>
+);
 
-interface FormData {
-  name: string;
-  email: string;
-  subject: string;
-  message: string;
-}
+const LinkedinIcon = () => (
+  <svg className="w-7 h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
+    <rect x="2" y="9" width="4" height="12" />
+    <circle cx="4" cy="4" r="2" />
+  </svg>
+);
+
+const MailIcon = () => (
+  <svg className="w-7 h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+    <polyline points="22,6 12,13 2,6" />
+  </svg>
+);
 
 export default function Contact({ setActiveSection }: { setActiveSection: (id: string) => void }) {
   const ref = useSectionInView('contact', setActiveSection);
-  const [formData, setFormData] = useState<FormData>({ name: '', email: '', subject: '', message: '' });
-  const [status, setStatus] = useState<FormStatus>('idle');
-  const [focused, setFocused] = useState<string | null>(null);
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setStatus('sending');
-    // Simulate async send
-    await new Promise((res) => setTimeout(res, 1800));
-    setStatus('sent');
-  };
-
-  const inputClasses = (field: string) =>
-    `w-full bg-white/4 rounded-xl px-4 py-3.5 text-text-primary placeholder:text-text-muted outline-none transition-all duration-300 font-sans text-sm border ${
-      focused === field
-        ? 'border-accent-blue/60 shadow-[0_0_0_3px_rgba(79,172,254,0.1)]'
-        : 'border-surface-border hover:border-white/15'
-    }`;
 
   const contactLinks = [
     {
-      icon: '✉',
-      label: 'Email',
+      icon: <MailIcon />,
+      title: 'Email',
+      label: 'Drop a line',
       value: personalInfo.email,
       href: `mailto:${personalInfo.email}`,
       color: '#4facfe',
+      gradient: 'from-blue-500/20 to-cyan-500/20',
     },
     {
-      icon: '⬡',
-      label: 'GitHub',
+      icon: <LinkedinIcon />,
+      title: 'LinkedIn',
+      label: "Let's connect",
+      value: 'shashank-kumar-rathour',
+      href: personalInfo.linkedin,
+      color: '#a855f7',
+      gradient: 'from-purple-500/20 to-pink-500/20',
+    },
+    {
+      icon: <GithubIcon />,
+      title: 'GitHub',
+      label: 'Check my code',
       value: 'github.com/Happyesss',
       href: personalInfo.github,
       color: '#00f5d4',
-    },
-    {
-      icon: '◈',
-      label: 'LinkedIn',
-      value: 'linkedin.com/in/shashank-kumar-rathour',
-      href: personalInfo.linkedin,
-      color: '#a855f7',
-    },
-    {
-      icon: '◎',
-      label: 'Twitter',
-      value: '@shashankrathour',
-      href: personalInfo.twitter,
-      color: '#f77f00',
+      gradient: 'from-teal-500/20 to-emerald-500/20',
     },
   ];
 
   return (
     <div ref={ref} className="relative section-padding bg-bg-tertiary overflow-hidden">
       <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-accent-blue/30 to-transparent" aria-hidden="true" />
-
-      {/* Background radial glow */}
       <div className="absolute inset-0 bg-gradient-radial from-accent-blue/5 via-transparent to-transparent" aria-hidden="true" />
 
-      <div className="max-w-6xl mx-auto relative z-10">
+      <div className="max-w-5xl mx-auto relative z-10">
         <SectionHeader
           label="Contact Portal"
           title="Let's Build Together"
@@ -87,231 +73,80 @@ export default function Contact({ setActiveSection }: { setActiveSection: (id: s
           accentColor="blue"
         />
 
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-12 items-start">
-          {/* Left: Info panel */}
-          <motion.div
-            className="lg:col-span-2 space-y-6"
-            variants={staggerContainer(0.1)}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-          >
-            <motion.div variants={fadeInLeft}>
-              <h3 className="font-display text-xl font-semibold text-text-primary mb-2">
-                Available for
-              </h3>
-              <div className="space-y-2.5">
-                {[
-                  { icon: '🚀', text: 'Full-time CTO / Lead Engineer roles' },
-                  { icon: '🤝', text: 'Technical co-founder partnerships' },
-                  { icon: '⚡', text: 'Contract & consulting engagements' },
-                  { icon: '🧠', text: 'AI product & architecture consulting' },
-                  { icon: '🎓', text: 'Mentorship for early engineers' },
-                ].map((item, i) => (
-                  <div key={i} className="flex items-center gap-3 text-text-secondary text-sm">
-                    <span className="text-base">{item.icon}</span>
-                    {item.text}
-                  </div>
-                ))}
-              </div>
-            </motion.div>
-
-            {/* Contact links */}
-            <motion.div variants={fadeInLeft} className="space-y-3">
-              {contactLinks.map((link) => (
-                <a
-                  key={link.label}
-                  href={link.href}
-                  target={link.href.startsWith('http') ? '_blank' : undefined}
-                  rel={link.href.startsWith('http') ? 'noopener noreferrer' : undefined}
-                  className="flex items-center gap-4 glass rounded-xl px-4 py-3 border border-surface-border hover:border-opacity-50 transition-all duration-300 group"
-                  style={{ '--hover-color': link.color } as React.CSSProperties}
-                >
-                  <div
-                    className="w-9 h-9 rounded-lg flex items-center justify-center text-base shrink-0"
-                    style={{ background: `${link.color}15`, color: link.color }}
-                  >
-                    {link.icon}
-                  </div>
-                  <div>
-                    <div className="text-text-muted font-mono text-xs">{link.label}</div>
-                    <div className="text-text-primary text-sm group-hover:text-white transition-colors">{link.value}</div>
-                  </div>
-                  <svg className="w-4 h-4 text-text-muted group-hover:text-text-primary ml-auto transition-all duration-200 group-hover:translate-x-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                  </svg>
-                </a>
-              ))}
-            </motion.div>
-
-            {/* Response time */}
-            <motion.div
-              variants={fadeInLeft}
-              className="glass rounded-xl p-4 border border-surface-border"
+        <motion.div
+          className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 mt-12"
+          variants={staggerContainer(0.15)}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-50px" }}
+        >
+          {contactLinks.map((link) => (
+            <motion.a
+              key={link.title}
+              variants={fadeInUp}
+              href={link.href}
+              target={link.href.startsWith('http') ? '_blank' : undefined}
+              rel={link.href.startsWith('http') ? 'noopener noreferrer' : undefined}
+              className="relative group block h-full focus:outline-none"
             >
-              <div className="flex items-center gap-2 mb-2">
-                <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
-                <span className="text-text-primary font-medium text-sm">Currently Available</span>
+              {/* Animated glow on hover */}
+              <div 
+                className={`absolute -inset-0.5 bg-gradient-to-br ${link.gradient} rounded-3xl blur-md opacity-0 group-hover:opacity-100 transition-all duration-500 will-change-transform`} 
+              />
+              
+              <div className="relative h-full glass-bright rounded-2xl p-8 border border-surface-border/50 group-hover:border-transparent transition-all duration-300 overflow-hidden flex flex-col items-center text-center">
+                {/* Background accent layer */}
+                <div 
+                  className="absolute inset-0 opacity-0 group-hover:opacity-5 transition-opacity duration-500 pointer-events-none"
+                  style={{ background: `radial-gradient(circle at center, ${link.color}, transparent 80%)` }}
+                />
+
+                <div 
+                  className="w-20 h-20 mb-8 rounded-2xl flex items-center justify-center shadow-inner transform group-hover:-translate-y-2 group-hover:scale-110 transition-all duration-500 relative z-10 border border-white/5"
+                  style={{ 
+                    background: `linear-gradient(135deg, ${link.color}15, ${link.color}05)`, 
+                    color: link.color,
+                    boxShadow: `0 8px 32px -8px ${link.color}40`,
+                  }}
+                >
+                  <span className="relative z-10">{link.icon}</span>
+                  <div className="absolute inset-0 rounded-2xl bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                </div>
+                
+                <h3 className="font-display text-2xl font-bold text-text-primary mb-2 group-hover:text-white transition-colors relative z-10">
+                  {link.title}
+                </h3>
+                <p className="text-text-secondary text-sm mb-6 relative z-10">
+                  {link.label}
+                </p>
+                
+                {/* Email / Username value inside a pill */}
+                <div className="mt-auto px-4 py-2 w-full truncate rounded-full border border-surface-border bg-white/[0.02] text-text-muted font-mono text-xs group-hover:text-white group-hover:bg-white/[0.05] group-hover:border-white/20 transition-all duration-300 relative z-10">
+                  {link.value}
+                </div>
               </div>
-              <p className="text-text-muted text-xs leading-relaxed">
-                I typically respond within 24 hours. Looking for opportunities starting Q2 2024.
-              </p>
-            </motion.div>
-          </motion.div>
+            </motion.a>
+          ))}
+        </motion.div>
 
-          {/* Right: Form */}
-          <motion.div
-            className="lg:col-span-3"
-            variants={fadeInRight}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-          >
-            <div className="glass-bright rounded-3xl p-8 border border-surface-border">
-              <AnimatePresence mode="wait">
-                {status === 'sent' ? (
-                  <motion.div
-                    className="text-center py-12"
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ type: 'spring', stiffness: 300, damping: 25 }}
-                  >
-                    <motion.div
-                      className="w-20 h-20 rounded-full bg-green-500/10 border-2 border-green-500/40 flex items-center justify-center mx-auto mb-6"
-                      animate={{ scale: [1, 1.05, 1] }}
-                      transition={{ duration: 1.5, repeat: Infinity }}
-                    >
-                      <span className="text-3xl">✓</span>
-                    </motion.div>
-                    <h3 className="font-display text-2xl font-bold text-text-primary mb-3">
-                      Message Received!
-                    </h3>
-                    <p className="text-text-secondary leading-relaxed">
-                      Thanks for reaching out. I'll get back to you within 24 hours.
-                    </p>
-                    <button
-                      className="mt-6 text-accent-blue font-mono text-sm hover:underline"
-                      onClick={() => { setStatus('idle'); setFormData({ name: '', email: '', subject: '', message: '' }); }}
-                    >
-                      Send another message
-                    </button>
-                  </motion.div>
-                ) : (
-                  <motion.form
-                    key="form"
-                    onSubmit={handleSubmit}
-                    className="space-y-5"
-                    initial={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                  >
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                      <div>
-                        <label className="block text-text-secondary font-mono text-xs mb-2 uppercase tracking-wide" htmlFor="name">
-                          Name
-                        </label>
-                        <input
-                          id="name"
-                          name="name"
-                          type="text"
-                          required
-                          placeholder="Your name"
-                          value={formData.name}
-                          onChange={handleChange}
-                          onFocus={() => setFocused('name')}
-                          onBlur={() => setFocused(null)}
-                          className={inputClasses('name')}
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-text-secondary font-mono text-xs mb-2 uppercase tracking-wide" htmlFor="email">
-                          Email
-                        </label>
-                        <input
-                          id="email"
-                          name="email"
-                          type="email"
-                          required
-                          placeholder="your@email.com"
-                          value={formData.email}
-                          onChange={handleChange}
-                          onFocus={() => setFocused('email')}
-                          onBlur={() => setFocused(null)}
-                          className={inputClasses('email')}
-                        />
-                      </div>
-                    </div>
-
-                    <div>
-                      <label className="block text-text-secondary font-mono text-xs mb-2 uppercase tracking-wide" htmlFor="subject">
-                        Subject
-                      </label>
-                      <input
-                        id="subject"
-                        name="subject"
-                        type="text"
-                        required
-                        placeholder="What's this about?"
-                        value={formData.subject}
-                        onChange={handleChange}
-                        onFocus={() => setFocused('subject')}
-                        onBlur={() => setFocused(null)}
-                        className={inputClasses('subject')}
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-text-secondary font-mono text-xs mb-2 uppercase tracking-wide" htmlFor="message">
-                        Message
-                      </label>
-                      <textarea
-                        id="message"
-                        name="message"
-                        required
-                        rows={5}
-                        placeholder="Tell me about your project, idea, or just say hi..."
-                        value={formData.message}
-                        onChange={handleChange}
-                        onFocus={() => setFocused('message')}
-                        onBlur={() => setFocused(null)}
-                        className={`${inputClasses('message')} resize-none`}
-                      />
-                    </div>
-
-                    <motion.button
-                      type="submit"
-                      disabled={status === 'sending'}
-                      className="w-full py-4 rounded-xl font-semibold text-bg-primary transition-all duration-300 disabled:opacity-70 relative overflow-hidden"
-                      style={{ background: 'linear-gradient(135deg, #4facfe, #00f5d4)' }}
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.98 }}
-                    >
-                      {status === 'sending' ? (
-                        <span className="flex items-center justify-center gap-2">
-                          <svg className="animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24">
-                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-                          </svg>
-                          Sending...
-                        </span>
-                      ) : (
-                        <span className="flex items-center justify-center gap-2">
-                          Send Message
-                          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
-                          </svg>
-                        </span>
-                      )}
-                    </motion.button>
-
-                    <p className="text-text-muted font-mono text-xs text-center">
-                      No spam. No cold calls. Just great conversations.
-                    </p>
-                  </motion.form>
-                )}
-              </AnimatePresence>
-            </div>
-          </motion.div>
-        </div>
+        {/* Global availability signal */}
+        <motion.div
+           initial={{ opacity: 0, y: 20 }}
+           whileInView={{ opacity: 1, y: 0 }}
+           viewport={{ once: true }}
+           transition={{ delay: 0.6 }}
+           className="mt-16 flex justify-center"
+        >
+          <div className="inline-flex items-center gap-3 glass px-6 py-3 rounded-full border border-surface-border hover:border-white/20 transition-colors cursor-default">
+            <span className="relative flex h-3 w-3">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
+            </span>
+            <span className="text-text-secondary font-mono text-sm tracking-wide">
+              Currently open to new opportunities
+            </span>
+          </div>
+        </motion.div>
       </div>
     </div>
   );

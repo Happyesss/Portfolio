@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useSectionInView } from '@/hooks/useScrollProgress';
 import { projects } from '@/lib/data';
@@ -10,10 +10,21 @@ import { staggerContainer, fadeInUp, scaleIn } from '@/lib/animations';
 type Project = typeof projects[0];
 
 function ProjectModal({ project, onClose }: { project: Project; onClose: () => void }) {
+  useEffect(() => {
+    // Prevent background scroll when modal is open
+    const originalStyle = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    
+    return () => {
+      // Restore original scroll behavior when modal closes
+      document.body.style.overflow = originalStyle;
+    };
+  }, []);
+
   return (
     <AnimatePresence>
       <motion.div
-        className="fixed inset-0 z-50 flex items-center justify-center p-4 md:p-8"
+        className="fixed inset-0 z-50 flex items-center justify-center p-4 md:p-8 overflow-hidden"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
@@ -28,7 +39,7 @@ function ProjectModal({ project, onClose }: { project: Project; onClose: () => v
 
         {/* Modal */}
         <motion.div
-          className="relative glass-bright rounded-3xl w-full max-w-3xl max-h-[90vh] overflow-y-auto"
+          className="relative glass-bright rounded-3xl w-full max-w-3xl max-h-[90vh] overflow-hidden flex flex-col"
           style={{ borderColor: `${project.color}30`, boxShadow: `0 0 80px ${project.color}20` }}
           initial={{ scale: 0.85, opacity: 0, y: 40 }}
           animate={{ scale: 1, opacity: 1, y: 0 }}
@@ -37,7 +48,7 @@ function ProjectModal({ project, onClose }: { project: Project; onClose: () => v
         >
           {/* Header */}
           <div
-            className="relative p-8 pb-6 rounded-t-3xl overflow-hidden"
+            className="relative p-8 pb-6 rounded-t-3xl overflow-hidden flex-shrink-0"
             style={{ background: `linear-gradient(135deg, ${project.color}15, transparent)` }}
           >
             <button
@@ -71,7 +82,9 @@ function ProjectModal({ project, onClose }: { project: Project; onClose: () => v
             </div>
           </div>
 
-          <div className="px-8 pb-8 space-y-6">
+          {/* Scrollable Content */}
+          <div className="overflow-y-auto flex-1 px-8 pb-8">
+            <div className="space-y-6 pt-6">
             {/* Description */}
             <p className="text-text-secondary leading-relaxed">{project.longDescription}</p>
 
@@ -139,6 +152,7 @@ function ProjectModal({ project, onClose }: { project: Project; onClose: () => v
               >
                 GitHub →
               </a>
+            </div>
             </div>
           </div>
         </motion.div>
