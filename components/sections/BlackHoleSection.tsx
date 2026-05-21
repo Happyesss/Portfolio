@@ -1,20 +1,11 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
+import { useInView } from 'react-intersection-observer';
 
 /* ─── Data ──────────────────────────────────────────────────────────────────── */
-
-const FRAGMENTS = [
-  { name: 'Hero',      color: '#4facfe', icon: '🚀', x: 8,  y: 8  },
-  { name: 'About',     color: '#f093fb', icon: '👤', x: 84, y: 6  },
-  { name: 'Skills',    color: '#43e97b', icon: '⚡', x: 6,  y: 48 },
-  { name: 'Projects',  color: '#fa709a', icon: '💡', x: 86, y: 38 },
-  { name: 'GitHub',    color: '#667eea', icon: '🐙', x: 10, y: 80 },
-  { name: 'Timeline',  color: '#f6d365', icon: '📅', x: 82, y: 72 },
-  { name: 'Contact',   color: '#48c6ef', icon: '📬', x: 44, y: 91 },
-];
 
 const PLANETS = [
   {
@@ -535,33 +526,178 @@ function drawDisk(
 /* ─── Main Component ─────────────────────────────────────────────────────────── */
 
 export default function BlackHoleSection() {
-  const canvasRef     = useRef<HTMLCanvasElement>(null);
+  const canvasRef        = useRef<HTMLCanvasElement>(null);
   const overlayCanvasRef = useRef<HTMLCanvasElement>(null);
   const [phase, setPhase] = useState<'ambient' | 'consuming' | 'flash' | 'portal'>('ambient');
-  const [consumedIdx, setConsumedIdx] = useState(-1);
+  const triggeredRef     = useRef(false);
+
+  const { ref: inViewRef, inView } = useInView({ threshold: 0.3, triggerOnce: true });
 
   useBlackHoleCanvas(canvasRef, true, false);
   useBlackHoleCanvas(overlayCanvasRef, phase === 'consuming' || phase === 'flash', phase === 'consuming');
 
-  const trigger = () => {
-    if (phase !== 'ambient') return;
+  const trigger = useCallback(() => {
+    if (triggeredRef.current) return;
+    triggeredRef.current = true;
     setPhase('consuming');
-    setConsumedIdx(0);
+    // 80 items × 65ms stagger + float + spiral ≈ 8.5s total
+    const totalAnim = 8500;
+    setTimeout(() => setPhase('flash'), totalAnim);
+    setTimeout(() => setPhase('portal'), totalAnim + 900);
+  }, []);
 
-    // Consume sections one by one
-    FRAGMENTS.forEach((_, i) => {
-      setTimeout(() => setConsumedIdx(i), i * 600 + 400);
+  // Auto-trigger when section scrolls into view
+  useEffect(() => {
+    if (inView && !triggeredRef.current) {
+      const t = setTimeout(trigger, 1800);
+      return () => clearTimeout(t);
+    }
+  }, [inView, trigger]);
+
+  // Extract individual elements from all sections and suck each one into the black hole
+  useEffect(() => {
+    if (phase !== 'consuming') return;
+    const container = document.getElementById('bh-clone-container');
+    if (!container) return;
+
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+    const cx = vw / 2;
+    const cy = vh / 2;
+
+    const sections = Array.from(
+      document.querySelectorAll('main section[id]:not([id="blackhole"])')
+    ) as HTMLElement[];
+
+    // Extract individual meaningful elements — each flies separately like items into recycle bin
+    const SELECTORS = [
+      'h1','h2','h3','h4',
+      'img',
+      'p','li',
+      'button:not([aria-hidden="true"])',
+      '[class*="glass"]','[class*="card"]',
+      '[class*="badge"]','[class*="tag"]','[class*="chip"]','[class*="pill"]','[class*="skill"]',
+      'svg[role="img"]',
+    ].join(',');
+
+    const extracted: HTMLElement[] = [];
+    const seen = new WeakSet<HTMLElement>();
+
+    sections.forEach(section => {
+      const items = Array.from(section.querySelectorAll<HTMLElement>(SELECTORS));
+      items.forEach(el => {
+        // Skip canvas/video/script
+        if (['CANVAS','VIDEO','SCRIPT','NOSCRIPT','IFRAME','STYLE'].includes(el.tagName)) return;
+        // Skip if any ancestor is already extracted (prevents nesting)
+        let anc = el.parentElement;
+        while (anc && anc !== section) {
+          if (seen.has(anc)) return;
+          anc = anc.parentElement;
+        }
+        const w = el.offsetWidth;
+        const h = el.offsetHeight;
+        // Size guards: skip tiny or full-section-width containers
+        if (w < 28 || h < 10) return;
+        if (w > vw * 0.72 || h > vh * 0.65) return;
+        // Skip visually empty
+        const hasContent = el.tagName === 'IMG' || el.tagName === 'SVG' ||
+          (el.textContent || '').trim().length > 0 ||
+          !!el.querySelector('img,svg');
+        if (!hasContent) return;
+        extracted.push(el);
+        seen.add(el);
+      });
     });
 
-    // After all consumed → flash → portal
-    setTimeout(() => setPhase('flash'), FRAGMENTS.length * 600 + 1400);
-    setTimeout(() => setPhase('portal'), FRAGMENTS.length * 600 + 2200);
-  };
+    // Shuffle for variety then cap at 80 items
+    const items = extracted.sort(() => Math.random() - 0.5).slice(0, 80);
+    const clones: HTMLElement[] = [];
+    const margin = 70;
+
+    items.forEach((el, i) => {
+      const elW = el.offsetWidth;
+      const elH = el.offsetHeight;
+
+      // Scale so the clone is readable but not huge (max 240px wide)
+      const maxW = Math.min(240, Math.max(60, elW));
+      const scale = Math.min(maxW / Math.max(elW, 1), 1.6);
+
+      // Distribute start positions across the whole viewport in 8 zones
+      let startX: number, startY: number;
+      const zone = i % 8;
+      switch (zone) {
+        case 0: startX = margin + Math.random() * (cx - margin * 2);         startY = margin + Math.random() * (cy * 0.55); break;
+        case 1: startX = cx + Math.random() * (cx - margin);                 startY = margin + Math.random() * (cy * 0.55); break;
+        case 2: startX = margin + Math.random() * (cx - margin * 2);         startY = cy + Math.random() * (cy * 0.55); break;
+        case 3: startX = cx + Math.random() * (cx - margin);                 startY = cy + Math.random() * (cy * 0.55); break;
+        case 4: startX = margin + Math.random() * (margin * 1.5);            startY = margin + Math.random() * (vh - margin * 2); break;
+        case 5: startX = vw - margin * 1.5 + Math.random() * margin;         startY = margin + Math.random() * (vh - margin * 2); break;
+        case 6: startX = margin + Math.random() * (vw - margin * 2);         startY = margin + Math.random() * margin; break;
+        default: startX = margin + Math.random() * (vw - margin * 2);        startY = vh - margin + Math.random() * margin * 0.8; break;
+      }
+
+      const initRot = (Math.random() - 0.5) * 28;
+      const wrapper = document.createElement('div');
+      wrapper.style.cssText = [
+        'position:absolute',
+        `left:${startX}px`,
+        `top:${startY}px`,
+        `width:${elW}px`,
+        'pointer-events:none',
+        `transform:translate(-50%,-50%) scale(${scale}) rotate(${initRot}deg)`,
+        'transform-origin:center center',
+        'will-change:transform,opacity,filter',
+        'opacity:0',
+        'z-index:3',
+        'overflow:visible',
+        'border-radius:6px',
+      ].join(';');
+
+      const clone = el.cloneNode(true) as HTMLElement;
+      clone.style.cssText = `width:${elW}px;height:${elH}px;pointer-events:none;position:relative;transform:none;overflow:hidden;max-width:none`;
+      clone.querySelectorAll('canvas,video,iframe,script,noscript').forEach(e => e.remove());
+
+      wrapper.appendChild(clone);
+      container.appendChild(wrapper);
+      clones.push(wrapper);
+
+      // Stagger each item's appearance
+      const stagger = i * 65;
+
+      setTimeout(() => {
+        // Pop into view
+        wrapper.style.transition = 'opacity 0.28s ease-out, transform 0.28s ease-out';
+        wrapper.style.opacity = '1';
+        wrapper.style.transform = `translate(-50%,-50%) scale(${scale}) rotate(${initRot * 0.4}deg)`;
+
+        // Float briefly, then gravity takes over
+        const floatMs = 320 + Math.random() * 750;
+        setTimeout(() => {
+          const dx = cx - startX;
+          const dy = cy - startY;
+          const spinDir = Math.random() > 0.5 ? 1 : -1;
+          const spin = spinDir * (420 + Math.random() * 540);
+          const dur = (1.0 + Math.random() * 0.9).toFixed(2);
+          // Spaghettify: stretch toward center, then vanish
+          wrapper.style.transition = [
+            `transform ${dur}s cubic-bezier(0.42,0,0.98,0.76)`,
+            `opacity 0.4s ease-in calc(${dur}s * 0.68)`,
+            `filter ${dur}s ease-in 0.05s`,
+          ].join(',');
+          wrapper.style.transform = `translate(calc(-50% + ${dx}px),calc(-50% + ${dy}px)) scale(0.005) scaleX(0.001) rotate(${spin}deg)`;
+          wrapper.style.filter = 'blur(14px) brightness(5) saturate(2)';
+          wrapper.style.opacity = '0';
+        }, floatMs);
+      }, stagger);
+    });
+
+    return () => { clones.forEach(c => c.remove()); };
+  }, [phase]);
 
   return (
     <>
       {/* ── Ambient section ──────────────────────────────────────── */}
-      <section className="relative w-full min-h-screen bg-black flex flex-col items-center justify-center overflow-hidden">
+      <section ref={inViewRef} className="relative w-full min-h-screen bg-black flex flex-col items-center justify-center overflow-hidden">
         <canvas ref={canvasRef} className="absolute inset-0 w-full h-full" />
 
         {/* Top fade from previous section */}
@@ -587,40 +723,26 @@ export default function BlackHoleSection() {
               <h2 className="font-display text-4xl md:text-6xl font-black text-white mb-3 leading-tight">
                 The Event Horizon
               </h2>
-              <p className="text-white/40 text-base md:text-lg max-w-md font-light mb-12">
+              <p className="text-white/40 text-base md:text-lg max-w-md font-light mb-10">
                 Beyond this point, no information escapes.<br />
                 Choose your universe.
               </p>
 
-              {/* Trigger button */}
-              <motion.button
-                onClick={trigger}
-                className="relative group cursor-pointer"
-                whileHover={{ scale: 1.06 }}
-                whileTap={{ scale: 0.96 }}
-              >
-                {/* Pulsing rings */}
+              {/* Auto-trigger pulse — no button needed */}
+              <motion.div className="relative flex items-center justify-center mt-6">
                 {[1, 2, 3].map(i => (
-                  <motion.div key={i} className="absolute inset-0 rounded-full border border-orange-400/30"
-                    animate={{ scale: [1, 1.5 + i * 0.3], opacity: [0.5, 0] }}
-                    transition={{ duration: 2.5, delay: i * 0.55, repeat: Infinity, ease: 'easeOut' }}
+                  <motion.div key={i}
+                    className="absolute rounded-full border border-orange-400/25"
+                    style={{ width: i * 52, height: i * 52 }}
+                    animate={{ scale: [0.7, 1.6], opacity: [0.5, 0] }}
+                    transition={{ duration: 2.4, delay: i * 0.5, repeat: Infinity, ease: 'easeOut' }}
                   />
                 ))}
-                <div className="relative px-10 py-4 rounded-full border border-orange-500/60 bg-orange-500/10 backdrop-blur-sm
-                  group-hover:bg-orange-500/20 group-hover:border-orange-400 transition-all duration-300">
-                  <span className="font-mono text-sm tracking-[0.2em] text-orange-300 uppercase font-semibold">
-                    Enter the Event Horizon
-                  </span>
-                </div>
-              </motion.button>
-
-              <motion.p
-                className="mt-8 text-white/20 text-xs font-mono tracking-widest"
-                animate={{ opacity: [0.2, 0.6, 0.2] }}
-                transition={{ duration: 2.8, repeat: Infinity }}
-              >
-                ↓ scroll or click to begin ↓
-              </motion.p>
+                <div
+                  className="w-3 h-3 rounded-full bg-orange-400/65"
+                  style={{ boxShadow: '0 0 14px 5px rgba(255,140,60,0.65)' }}
+                />
+              </motion.div>
             </motion.div>
           )}
         </AnimatePresence>
@@ -653,37 +775,8 @@ export default function BlackHoleSection() {
               ))}
             </motion.div>
 
-            {/* Section fragment cards — spaghettify into center */}
-            {FRAGMENTS.map((frag, i) => (
-              <motion.div
-                key={frag.name}
-                className="absolute flex items-center gap-2 px-4 py-2 rounded-lg border font-mono text-sm font-semibold pointer-events-none"
-                style={{
-                  left:  `${frag.x}%`,
-                  top:   `${frag.y}%`,
-                  borderColor: frag.color + '80',
-                  background:  frag.color + '15',
-                  color:        frag.color,
-                  boxShadow:   `0 0 20px ${frag.color}40`,
-                  transform:   'translate(-50%, -50%)',
-                }}
-                initial={{ opacity: 0, scale: 0.5 }}
-                animate={consumedIdx >= i ? {
-                  left:   '50%',
-                  top:    '50%',
-                  scaleX: [1, 0.8, 0.15, 0],
-                  scaleY: [1, 1.2, 3.5, 0],
-                  opacity:[1, 1,   0.6,  0],
-                } : { opacity: [0, 1, 0.8], scale: [0.5, 1.05, 1] }}
-                transition={consumedIdx >= i
-                  ? { duration: 1.6, ease: 'easeIn', times: [0, 0.5, 0.85, 1] }
-                  : { duration: 0.5 }
-                }
-              >
-                <span>{frag.icon}</span>
-                <span>{frag.name}</span>
-              </motion.div>
-            ))}
+            {/* Real page sections cloned and spaghettified into the event horizon */}
+            <div id="bh-clone-container" className="absolute inset-0 overflow-hidden pointer-events-none" />
 
             {/* Flash effect */}
             {phase === 'flash' && (
@@ -851,7 +944,7 @@ export default function BlackHoleSection() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 1.5 }}
-              onClick={() => { setPhase('ambient'); setConsumedIdx(-1); }}
+              onClick={() => { setPhase('ambient'); triggeredRef.current = false; }}
             >
               ← Return to the observable universe
             </motion.button>

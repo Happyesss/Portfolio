@@ -33,7 +33,6 @@ export const SECTIONS = [
   { id: 'about', label: 'About', icon: '◈' },
   { id: 'skills', label: 'Skills', icon: '◎' },
   { id: 'projects', label: 'Projects', icon: '◰' },
-  { id: 'portfolio-modes', label: 'Modes', icon: '⬢' },
   { id: 'github', label: 'GitHub', icon: '◉' },
   { id: 'timeline', label: 'Education', icon: '🎓' },
   { id: 'testimonials', label: 'Reviews', icon: '◍' },

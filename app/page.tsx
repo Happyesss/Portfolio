@@ -32,9 +32,9 @@ export default function Home() {
     <>
       <LoadingScreen isLoaded={isLoaded} />
 
+      <CustomCursor />
       {isLoaded && (
         <>
-          <CustomCursor />
           <SmoothScroll>
             <Navigation activeSection={activeSection} />
 

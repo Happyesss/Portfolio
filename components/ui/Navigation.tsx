@@ -49,30 +49,42 @@ export default function Navigation({ activeSection }: NavigationProps) {
         >
           {/* Logo */}
           <button
-            className="flex items-center gap-2 group"
+            className="flex items-center group"
             onClick={() => scrollTo('hero')}
             aria-label="Scroll to top"
           >
-            <div className="w-7 h-7">
-              <svg viewBox="0 0 40 40" aria-hidden="true">
+            <div
+              className="w-8 h-8 transition-transform duration-300 group-hover:scale-110"
+              style={{ filter: 'drop-shadow(0 0 6px rgba(79,172,254,0.5))' }}
+            >
+              <svg viewBox="0 0 48 48" fill="none" aria-hidden="true">
                 <defs>
-                  <linearGradient id="navLogoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <linearGradient id="navLogoGrad" x1="0" y1="0" x2="48" y2="48" gradientUnits="userSpaceOnUse">
                     <stop offset="0%" stopColor="#4facfe" />
-                    <stop offset="100%" stopColor="#a855f7" />
+                    <stop offset="55%" stopColor="#a855f7" />
+                    <stop offset="100%" stopColor="#f97316" />
                   </linearGradient>
+                  <filter id="navLogoGlow" x="-50%" y="-50%" width="200%" height="200%">
+                    <feGaussianBlur stdDeviation="1.2" result="blur" />
+                    <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
+                  </filter>
                 </defs>
-                <polygon
-                  points="20,2 38,11 38,29 20,38 2,29 2,11"
-                  fill="none"
-                  stroke="url(#navLogoGrad)"
-                  strokeWidth="2"
-                />
-                <circle cx="20" cy="20" r="4" fill="url(#navLogoGrad)" />
+                <polygon points="24,2 43,13 43,35 24,46 5,35 5,13"
+                  stroke="url(#navLogoGrad)" strokeWidth="1.5" fill="none" opacity="0.7" />
+                <rect x="11" y="11" width="7" height="26" rx="2"
+                  fill="url(#navLogoGrad)" filter="url(#navLogoGlow)" />
+                <rect x="30" y="11" width="7" height="26" rx="2"
+                  fill="url(#navLogoGrad)" filter="url(#navLogoGlow)" />
+                <rect x="18" y="20" width="12" height="8" rx="2"
+                  fill="url(#navLogoGrad)" filter="url(#navLogoGlow)" />
+                <circle cx="24" cy="2" r="2" fill="url(#navLogoGrad)" />
+                <circle cx="43" cy="13" r="2" fill="url(#navLogoGrad)" />
+                <circle cx="43" cy="35" r="2" fill="url(#navLogoGrad)" />
+                <circle cx="24" cy="46" r="2" fill="url(#navLogoGrad)" />
+                <circle cx="5" cy="35" r="2" fill="url(#navLogoGrad)" />
+                <circle cx="5" cy="13" r="2" fill="url(#navLogoGrad)" />
               </svg>
             </div>
-            <span className="font-display font-semibold text-sm text-text-primary hidden sm:block group-hover:text-accent-blue transition-colors">
-              DA
-            </span>
           </button>
 
           <div className="w-px h-5 bg-white/10" aria-hidden="true" />
