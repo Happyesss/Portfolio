@@ -85,21 +85,13 @@ function SunCore() {
 }
 
 function OrbitRing({ ring, isActive }: { ring: RingConfig; isActive: boolean }) {
-  const mesh = useRef<THREE.Mesh>(null);
-
-  useFrame((state) => {
-    if (mesh.current) {
-      mesh.current.rotation.z = state.clock.elapsedTime * 0.12;
-    }
-  });
-
   return (
-    <mesh ref={mesh}>
-      <torusGeometry args={[ring.radius, 0.016, 12, 180]} />
+    <mesh>
+      <torusGeometry args={[ring.radius, 0.014, 12, 180]} />
       <meshBasicMaterial
         color={ring.color}
         transparent
-        opacity={isActive ? 0.35 : 0.12}
+        opacity={isActive ? 0.32 : 0.1}
       />
     </mesh>
   );
@@ -129,8 +121,10 @@ function SkillNode({
   useFrame((state) => {
     if (!nodeRef.current) return;
     const angle = baseAngle + state.clock.elapsedTime * ring.speed;
+    // torus is in local XY plane — orbit nodes in XY plane too so they sit on the ring
     nodeRef.current.position.x = Math.cos(angle) * ring.radius;
-    nodeRef.current.position.z = Math.sin(angle) * ring.radius;
+    nodeRef.current.position.y = Math.sin(angle) * ring.radius;
+    nodeRef.current.position.z = 0;
   });
 
   const nodeOpacity = isDimmed && !hovered ? 0.35 : 1;

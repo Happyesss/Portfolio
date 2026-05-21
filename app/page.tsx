@@ -11,7 +11,6 @@ import Skills from '@/components/sections/Skills';
 import Projects from '@/components/sections/Projects';
 import GitHubStats from '@/components/sections/GitHubStats';
 import Timeline from '@/components/sections/Timeline';
-import PortfolioModes from '@/components/sections/PortfolioModes';
 import Contact from '@/components/sections/Contact';
 import BlackHoleSection from '@/components/sections/BlackHoleSection';
 import SmoothScroll from '@/components/ui/SmoothScroll';
@@ -74,9 +73,6 @@ export default function Home() {
               </section>
               <section id="timeline">
                 <Timeline setActiveSection={setActiveSection} />
-              </section>
-              <section id="portfolio-modes">
-                <PortfolioModes setActiveSection={setActiveSection} />
               </section>
               <section id="contact">
                 <Contact setActiveSection={setActiveSection} />
