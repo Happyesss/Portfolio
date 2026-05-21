@@ -164,76 +164,102 @@ function ProjectModal({ project, onClose }: { project: Project; onClose: () => v
 function ProjectCard({ project, onClick }: { project: Project; onClick: () => void }) {
   return (
     <motion.button
-      className="project-card glass rounded-2xl overflow-hidden border border-surface-border text-left w-full group"
+      className="project-card group relative isolate w-full overflow-hidden rounded-3xl glass shadow-glass text-left transition-all duration-300 focus-visible:ring-2 focus-visible:ring-accent-blue/60"
       onClick={onClick}
+      aria-label={`Open ${project.title} details`}
       variants={scaleIn}
-      whileHover={{ y: -8 }}
-      transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+      whileHover={{ y: -6, scale: 1.01 }}
+      whileTap={{ scale: 0.99 }}
+      transition={{ type: 'spring', stiffness: 360, damping: 28 }}
     >
-      {/* Color accent top bar */}
-      <div className="h-1 w-full" style={{ background: `linear-gradient(90deg, ${project.color}, ${project.color}44)` }} />
+      {/* Ambient glass layers */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div
+          className="absolute -top-24 -right-16 h-44 w-44 rounded-full opacity-35 blur-3xl"
+          style={{ background: project.color }}
+        />
+        <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-white/5 to-transparent opacity-70" />
+        <div
+          className="absolute inset-0 opacity-30 mix-blend-screen"
+          style={{ background: `radial-gradient(140px 90px at 85% 15%, ${project.color}55, transparent 70%)` }}
+        />
+        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/60 to-transparent" />
+        <div className="absolute inset-0 ring-1 ring-white/10 ring-inset" />
+      </div>
 
-      <div className="p-6">
-        <div className="flex items-start justify-between mb-4">
-          <div
-            className="w-12 h-12 rounded-xl flex items-center justify-center text-xl shrink-0 overflow-hidden"
-            style={{ background: `${project.color}15`, border: `1px solid ${project.color}30` }}
-          >
-            {project.logo ? (
-              <img src={project.logo} alt={project.title} className="w-full h-full object-contain p-1" />
-            ) : (
-              <>
-                {project.category === 'AI/ML' ? '🧠' : project.category === 'Cloud' ? '☁' : project.category === 'Backend' ? '⚙' : '◈'}
-              </>
-            )}
-          </div>
-          <div className="flex gap-1.5">
-            <span
-              className="px-2.5 py-1 rounded-full font-mono text-xs"
-              style={{ background: `${project.color}15`, color: project.color }}
+      <div className="relative z-10 flex h-full flex-col p-6">
+        <div className="flex items-start justify-between gap-4">
+          <div className="flex items-start gap-4">
+            <div
+              className="h-12 w-12 rounded-2xl flex items-center justify-center text-xl shrink-0 overflow-hidden"
+              style={{ background: `${project.color}18`, border: `1px solid ${project.color}40` }}
             >
-              {project.category}
-            </span>
-            <span className="px-2.5 py-1 rounded-full font-mono text-xs glass text-text-muted border-surface-border">
-              {project.year}
-            </span>
+              {project.logo ? (
+                <img src={project.logo} alt={project.title} className="w-full h-full object-contain p-1.5" />
+              ) : (
+                <>
+                  {project.category === 'AI/ML' ? '🧠' : project.category === 'Cloud' ? '☁' : project.category === 'Backend' ? '⚙' : '◈'}
+                </>
+              )}
+            </div>
+            <div>
+              <div className="flex flex-wrap items-center gap-2">
+                <span
+                  className="px-2.5 py-1 rounded-full font-mono text-[11px] uppercase tracking-wider"
+                  style={{ background: `${project.color}15`, color: project.color, border: `1px solid ${project.color}30` }}
+                >
+                  {project.category}
+                </span>
+                <span className="px-2.5 py-1 rounded-full font-mono text-[11px] uppercase tracking-wider glass text-text-muted border-surface-border">
+                  {project.year}
+                </span>
+              </div>
+              <h3 className="font-display text-xl font-semibold text-text-primary mt-2 tracking-tight group-hover:text-white transition-colors">
+                {project.title}
+              </h3>
+              <p className="text-text-secondary text-sm mt-1">{project.subtitle}</p>
+            </div>
+          </div>
+          <div className="hidden sm:flex h-9 w-9 items-center justify-center rounded-full border border-white/15 bg-white/5 text-text-muted group-hover:text-text-primary group-hover:border-white/30 transition-colors">
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+            </svg>
           </div>
         </div>
 
-        <h3 className="font-display text-xl font-bold text-text-primary mb-1 group-hover:text-white transition-colors">
-          {project.title}
-        </h3>
-        <p className="text-text-secondary text-sm mb-3">{project.subtitle}</p>
-        <p className="text-text-muted text-sm leading-relaxed mb-5 line-clamp-2">{project.description}</p>
+        <p className="text-text-secondary/90 text-sm leading-relaxed mt-4 line-clamp-3">
+          {project.description}
+        </p>
 
-        {/* Tech tags */}
-        <div className="flex flex-wrap gap-1.5 mb-5">
+        <div className="mt-5 flex flex-wrap gap-2">
           {project.tech.slice(0, 4).map((t) => (
-            <span key={t} className="px-2 py-0.5 rounded glass font-mono text-xs text-text-muted border-surface-border">
+            <span
+              key={t}
+              className="px-2.5 py-1 rounded-full text-[11px] font-mono text-text-muted border border-white/10 bg-white/5"
+            >
               {t}
             </span>
           ))}
           {project.tech.length > 4 && (
-            <span className="px-2 py-0.5 rounded glass font-mono text-xs text-text-muted">
+            <span className="px-2.5 py-1 rounded-full text-[11px] font-mono text-text-muted border border-white/10 bg-white/5">
               +{project.tech.length - 4}
             </span>
           )}
         </div>
 
-        {/* Key metric */}
-        <div className="flex items-center justify-between pt-4 border-t border-surface-border">
-          <div className="flex gap-4">
+        <div className="mt-auto pt-5 flex items-center justify-between border-t border-white/10">
+          <div className="flex gap-6">
             {Object.entries(project.metrics)
               .slice(0, 2)
               .map(([key, value]) => (
                 <div key={key}>
-                  <div className="font-display font-bold text-sm" style={{ color: project.color }}>{value}</div>
-                  <div className="text-text-muted font-mono text-xs capitalize">{key}</div>
+                  <div className="font-display font-semibold text-sm" style={{ color: project.color }}>{value}</div>
+                  <div className="text-text-muted font-mono text-[11px] uppercase tracking-wider">{key}</div>
                 </div>
               ))}
           </div>
-          <span className="text-text-muted text-xs group-hover:text-accent-blue transition-colors font-mono">
-            View details →
+          <span className="text-text-muted text-[11px] uppercase tracking-widest font-mono group-hover:text-text-secondary transition-colors">
+            View case study →
           </span>
         </div>
       </div>
