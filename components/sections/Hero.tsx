@@ -93,18 +93,6 @@ export default function Hero({ setActiveSection }: { setActiveSection: (id: stri
 
       {/* Main content */}
       <div className="relative z-10 text-center max-w-5xl mx-auto px-6">
-        {/* Pre-title label */}
-        <motion.div
-          className="inline-flex items-center gap-2 mb-6 px-4 py-1.5 rounded-full glass"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.3 }}
-        >
-          <div className="w-1.5 h-1.5 rounded-full bg-accent-blue animate-pulse" />
-          <span className="font-mono text-xs text-accent-blue tracking-widest uppercase">
-            Digital Architect Studio
-          </span>
-        </motion.div>
 
         {/* Main name */}
         <div className="overflow-hidden mb-4">
@@ -215,9 +203,9 @@ export default function Hero({ setActiveSection }: { setActiveSection: (id: stri
         transition={{ duration: 1, delay: 2 }}
       >
         {[
-          { value: '6+', label: 'Years Exp.' },
-          { value: '50K+', label: 'Users Served' },
-          { value: '$2.5M', label: 'Raised' },
+          { value: '4+', label: 'Years Exp.' },
+          { value: '4M+', label: 'Views' },
+          { value: '30K+', label: 'Users' },
         ].map((stat) => (
           <div key={stat.label} className="glass rounded-xl px-4 py-2 text-right">
             <div className="font-display font-bold text-lg gradient-text-blue">{stat.value}</div>

@@ -531,7 +531,7 @@ export default function BlackHoleSection() {
   const [phase, setPhase] = useState<'ambient' | 'consuming' | 'flash' | 'portal'>('ambient');
   const triggeredRef     = useRef(false);
 
-  const { ref: inViewRef, inView } = useInView({ threshold: 0.3, triggerOnce: true });
+  const { ref: inViewRef, inView } = useInView({ threshold: 0.7, triggerOnce: true });
 
   useBlackHoleCanvas(canvasRef, true, false);
   useBlackHoleCanvas(overlayCanvasRef, phase === 'consuming' || phase === 'flash', phase === 'consuming');
@@ -554,7 +554,7 @@ export default function BlackHoleSection() {
     }
   }, [inView, trigger]);
 
-  // Extract individual elements from all sections and suck each one into the black hole
+  // White dots spiraling into the black hole
   useEffect(() => {
     if (phase !== 'consuming') return;
     const container = document.getElementById('bh-clone-container');
@@ -565,134 +565,73 @@ export default function BlackHoleSection() {
     const cx = vw / 2;
     const cy = vh / 2;
 
-    const sections = Array.from(
-      document.querySelectorAll('main section[id]:not([id="blackhole"])')
-    ) as HTMLElement[];
+    const DOT_COUNT = 200;
+    const dots: HTMLElement[] = [];
+    const timers: ReturnType<typeof setTimeout>[] = [];
 
-    // Extract individual meaningful elements — each flies separately like items into recycle bin
-    const SELECTORS = [
-      'h1','h2','h3','h4',
-      'img',
-      'p','li',
-      'button:not([aria-hidden="true"])',
-      '[class*="glass"]','[class*="card"]',
-      '[class*="badge"]','[class*="tag"]','[class*="chip"]','[class*="pill"]','[class*="skill"]',
-      'svg[role="img"]',
-    ].join(',');
+    for (let i = 0; i < DOT_COUNT; i++) {
+      const dot = document.createElement('div');
+      const size = Math.random() * 3 + 1.2;
+      const angle = Math.random() * Math.PI * 2;
+      const dist = 80 + Math.random() * Math.min(vw, vh) * 0.48;
+      const startX = cx + Math.cos(angle) * dist;
+      const startY = cy + Math.sin(angle) * dist;
 
-    const extracted: HTMLElement[] = [];
-    const seen = new WeakSet<HTMLElement>();
-
-    sections.forEach(section => {
-      const items = Array.from(section.querySelectorAll<HTMLElement>(SELECTORS));
-      items.forEach(el => {
-        // Skip canvas/video/script
-        if (['CANVAS','VIDEO','SCRIPT','NOSCRIPT','IFRAME','STYLE'].includes(el.tagName)) return;
-        // Skip if any ancestor is already extracted (prevents nesting)
-        let anc = el.parentElement;
-        while (anc && anc !== section) {
-          if (seen.has(anc)) return;
-          anc = anc.parentElement;
-        }
-        const w = el.offsetWidth;
-        const h = el.offsetHeight;
-        // Size guards: skip tiny or full-section-width containers
-        if (w < 28 || h < 10) return;
-        if (w > vw * 0.72 || h > vh * 0.65) return;
-        // Skip visually empty
-        const hasContent = el.tagName === 'IMG' || el.tagName === 'SVG' ||
-          (el.textContent || '').trim().length > 0 ||
-          !!el.querySelector('img,svg');
-        if (!hasContent) return;
-        extracted.push(el);
-        seen.add(el);
-      });
-    });
-
-    // Shuffle for variety then cap at 80 items
-    const items = extracted.sort(() => Math.random() - 0.5).slice(0, 80);
-    const clones: HTMLElement[] = [];
-    const margin = 70;
-
-    items.forEach((el, i) => {
-      const elW = el.offsetWidth;
-      const elH = el.offsetHeight;
-
-      // Scale so the clone is readable but not huge (max 240px wide)
-      const maxW = Math.min(240, Math.max(60, elW));
-      const scale = Math.min(maxW / Math.max(elW, 1), 1.6);
-
-      // Distribute start positions across the whole viewport in 8 zones
-      let startX: number, startY: number;
-      const zone = i % 8;
-      switch (zone) {
-        case 0: startX = margin + Math.random() * (cx - margin * 2);         startY = margin + Math.random() * (cy * 0.55); break;
-        case 1: startX = cx + Math.random() * (cx - margin);                 startY = margin + Math.random() * (cy * 0.55); break;
-        case 2: startX = margin + Math.random() * (cx - margin * 2);         startY = cy + Math.random() * (cy * 0.55); break;
-        case 3: startX = cx + Math.random() * (cx - margin);                 startY = cy + Math.random() * (cy * 0.55); break;
-        case 4: startX = margin + Math.random() * (margin * 1.5);            startY = margin + Math.random() * (vh - margin * 2); break;
-        case 5: startX = vw - margin * 1.5 + Math.random() * margin;         startY = margin + Math.random() * (vh - margin * 2); break;
-        case 6: startX = margin + Math.random() * (vw - margin * 2);         startY = margin + Math.random() * margin; break;
-        default: startX = margin + Math.random() * (vw - margin * 2);        startY = vh - margin + Math.random() * margin * 0.8; break;
-      }
-
-      const initRot = (Math.random() - 0.5) * 28;
-      const wrapper = document.createElement('div');
-      wrapper.style.cssText = [
+      dot.style.cssText = [
         'position:absolute',
         `left:${startX}px`,
         `top:${startY}px`,
-        `width:${elW}px`,
+        `width:${size}px`,
+        `height:${size}px`,
+        'border-radius:50%',
+        'background:rgba(255,255,255,0.92)',
         'pointer-events:none',
-        `transform:translate(-50%,-50%) scale(${scale}) rotate(${initRot}deg)`,
-        'transform-origin:center center',
-        'will-change:transform,opacity,filter',
+        'will-change:transform,opacity',
         'opacity:0',
-        'z-index:3',
-        'overflow:visible',
-        'border-radius:6px',
+        'transform:translate(-50%,-50%)',
+        `box-shadow:0 0 ${size * 2}px ${size * 0.5}px rgba(255,255,255,0.35)`,
       ].join(';');
 
-      const clone = el.cloneNode(true) as HTMLElement;
-      clone.style.cssText = `width:${elW}px;height:${elH}px;pointer-events:none;position:relative;transform:none;overflow:hidden;max-width:none`;
-      clone.querySelectorAll('canvas,video,iframe,script,noscript').forEach(e => e.remove());
+      container.appendChild(dot);
+      dots.push(dot);
 
-      wrapper.appendChild(clone);
-      container.appendChild(wrapper);
-      clones.push(wrapper);
-
-      // Stagger each item's appearance
-      const stagger = i * 65;
-
-      setTimeout(() => {
-        // Pop into view
-        wrapper.style.transition = 'opacity 0.28s ease-out, transform 0.28s ease-out';
-        wrapper.style.opacity = '1';
-        wrapper.style.transform = `translate(-50%,-50%) scale(${scale}) rotate(${initRot * 0.4}deg)`;
-
-        // Float briefly, then gravity takes over
-        const floatMs = 320 + Math.random() * 750;
-        setTimeout(() => {
+      const stagger = Math.random() * 3800;
+      const t1 = setTimeout(() => {
+        dot.style.transition = 'opacity 0.22s ease-out';
+        dot.style.opacity = String(0.5 + Math.random() * 0.5);
+        const t2 = setTimeout(() => {
           const dx = cx - startX;
           const dy = cy - startY;
-          const spinDir = Math.random() > 0.5 ? 1 : -1;
-          const spin = spinDir * (420 + Math.random() * 540);
-          const dur = (1.0 + Math.random() * 0.9).toFixed(2);
-          // Spaghettify: stretch toward center, then vanish
-          wrapper.style.transition = [
-            `transform ${dur}s cubic-bezier(0.42,0,0.98,0.76)`,
-            `opacity 0.4s ease-in calc(${dur}s * 0.68)`,
-            `filter ${dur}s ease-in 0.05s`,
+          const dur = (0.6 + Math.random() * 0.9).toFixed(2);
+          dot.style.transition = [
+            `transform ${dur}s cubic-bezier(0.55,0,1,0.55)`,
+            `opacity 0.28s ease-in calc(${dur}s * 0.68)`,
           ].join(',');
-          wrapper.style.transform = `translate(calc(-50% + ${dx}px),calc(-50% + ${dy}px)) scale(0.005) scaleX(0.001) rotate(${spin}deg)`;
-          wrapper.style.filter = 'blur(14px) brightness(5) saturate(2)';
-          wrapper.style.opacity = '0';
-        }, floatMs);
+          dot.style.transform = `translate(calc(-50% + ${dx}px), calc(-50% + ${dy}px)) scale(0.05)`;
+          dot.style.opacity = '0';
+        }, 180 + Math.random() * 450);
+        timers.push(t2);
       }, stagger);
-    });
+      timers.push(t1);
+    }
 
-    return () => { clones.forEach(c => c.remove()); };
+    return () => {
+      timers.forEach(clearTimeout);
+      dots.forEach(d => d.remove());
+    };
   }, [phase]);
+
+  // Reset on bfcache restore (browser back/forward)
+  useEffect(() => {
+    const handlePageShow = (e: PageTransitionEvent) => {
+      if (e.persisted) {
+        setPhase('ambient');
+        triggeredRef.current = false;
+      }
+    };
+    window.addEventListener('pageshow', handlePageShow);
+    return () => window.removeEventListener('pageshow', handlePageShow);
+  }, []);
 
   return (
     <>
@@ -796,7 +735,7 @@ export default function BlackHoleSection() {
               transition={{ delay: 1 }}
             >
               <p className="font-mono text-xs tracking-[0.4em] text-orange-400/60 uppercase">
-                Consuming the universe…
+                Consuming the website…
               </p>
             </motion.div>
           </motion.div>
@@ -807,7 +746,7 @@ export default function BlackHoleSection() {
       <AnimatePresence>
         {phase === 'portal' && (
           <motion.div
-            className="fixed inset-0 z-[110] flex flex-col items-center justify-center overflow-hidden"
+            className="fixed inset-0 z-[110] overflow-hidden"
             style={{ background: 'radial-gradient(ellipse at 50% 40%, #03001a, #000000)' }}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -839,6 +778,10 @@ export default function BlackHoleSection() {
               }}
             />
 
+            {/* Scrollable content layer */}
+            <div className="absolute inset-0 z-10 overflow-y-auto">
+            <div className="flex flex-col items-center justify-center min-h-full py-12 px-4">
+
             {/* Header */}
             <motion.div
               className="relative z-10 text-center mb-10 md:mb-14"
@@ -858,7 +801,7 @@ export default function BlackHoleSection() {
             </motion.div>
 
             {/* Planets */}
-            <div className="relative z-10 flex flex-col md:flex-row gap-12 md:gap-16 lg:gap-20 items-center justify-center px-6">
+            <div className="relative z-10 flex flex-col md:flex-row gap-8 md:gap-12 lg:gap-16 items-center justify-center px-6">
               {PLANETS.map((planet, i) => (
                 <motion.div
                   key={planet.name}
@@ -948,6 +891,8 @@ export default function BlackHoleSection() {
             >
               ← Return to the observable universe
             </motion.button>
+            </div>{/* end content wrapper */}
+            </div>{/* end scroll wrapper */}
           </motion.div>
         )}
       </AnimatePresence>

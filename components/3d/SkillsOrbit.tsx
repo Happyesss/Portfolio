@@ -24,12 +24,9 @@ interface RingConfig {
 }
 
 const CATEGORY_RINGS: RingConfig[] = [
-  { category: 'frontend', radius: 1.15, tilt: 0.35, speed: 0.45, color: '#4facfe' },
-  { category: 'backend', radius: 1.54, tilt: 0.8, speed: 0.38, color: '#00f5d4' },
-  { category: 'ai', radius: 1.93, tilt: 1.1, speed: 0.32, color: '#a855f7' },
-  { category: 'cloud', radius: 2.26, tilt: 0.55, speed: 0.28, color: '#f77f00' },
-  { category: 'database', radius: 2.59, tilt: 1.6, speed: 0.24, color: '#4ade80' },
-  { category: 'devops', radius: 2.92, tilt: 2.1, speed: 0.2, color: '#f43f5e' },
+  { category: 'concepts',  radius: 1.4, tilt: 0.5,  speed: 0.42, color: '#4facfe' },
+  { category: 'languages', radius: 2.1, tilt: 1.0,  speed: 0.32, color: '#a855f7' },
+  { category: 'tools',     radius: 2.8, tilt: 1.5,  speed: 0.24, color: '#00f5d4' },
 ];
 
 function SunCore() {
@@ -196,12 +193,9 @@ function Scene({ skills, activeCategory }: { skills: Skill[]; activeCategory: Ca
 
   const grouped = useMemo(() => {
     const initial: Record<CategoryKey, Skill[]> = {
-      frontend: [],
-      backend: [],
-      ai: [],
-      cloud: [],
-      database: [],
-      devops: [],
+      concepts:  [],
+      languages: [],
+      tools:     [],
     };
     skillsToRender.forEach((skill) => {
       const category = skill.category as CategoryKey;

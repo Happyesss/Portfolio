@@ -131,7 +131,15 @@ export default function Skills({ setActiveSection }: { setActiveSection: (id: st
                     >
                       <div className="flex items-center justify-between mb-2">
                         <div className="flex items-center gap-3">
-                          <span className="text-base w-6 text-center">{skill.icon}</span>
+                          {skill.icon.startsWith('http') ? (
+                            <img
+                              src={skill.icon}
+                              alt={skill.name}
+                              className="w-5 h-5 object-contain flex-shrink-0"
+                            />
+                          ) : (
+                            <span className="text-base w-6 text-center">{skill.icon}</span>
+                          )}
                           <span className="text-text-primary font-medium text-sm">{skill.name}</span>
                           <span
                             className="px-2 py-0.5 rounded-full font-mono text-xs"

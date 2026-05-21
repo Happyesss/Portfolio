@@ -17,38 +17,26 @@ export const personalInfo = {
 
 // ─── Skills ─────────────────────────────────────────────────────────────────
 export const skills = [
-  // Frontend
-  { name: 'React / Next.js', category: 'frontend', level: 92, icon: '⚛' },
-  { name: 'TypeScript', category: 'frontend', level: 85, icon: '𝙏𝙎' },
-  { name: 'Three.js / WebGL', category: 'frontend', level: 75, icon: '△' },
-  { name: 'Tailwind CSS', category: 'frontend', level: 90, icon: '🎨' },
-  { name: 'Framer Motion', category: 'frontend', level: 80, icon: '✦' },
-  // Backend
-  { name: 'Spring Boot / Java', category: 'backend', level: 88, icon: '☕' },
-  { name: 'Node.js / Express', category: 'backend', level: 85, icon: '⬡' },
-  { name: 'Python / FastAPI', category: 'backend', level: 78, icon: '🐍' },
-  { name: 'REST APIs', category: 'backend', level: 92, icon: '⇄' },
-  { name: 'System Design', category: 'backend', level: 85, icon: '◈' },
-  // AI/ML
-  { name: 'LLM APIs / OpenAI', category: 'ai', level: 88, icon: '🧠' },
-  { name: 'LangChain', category: 'ai', level: 75, icon: '◆' },
-  { name: 'AI Integrations', category: 'ai', level: 82, icon: '◎' },
-  { name: 'Prompt Engineering', category: 'ai', level: 85, icon: '⬟' },
-  { name: 'ML Pipelines', category: 'ai', level: 70, icon: '⬧' },
-  // Cloud
-  { name: 'Azure', category: 'cloud', level: 82, icon: '☁' },
-  { name: 'AWS', category: 'cloud', level: 75, icon: '◐' },
-  { name: 'Vercel / Edge', category: 'cloud', level: 90, icon: '▲' },
-  { name: 'Docker / CI-CD', category: 'cloud', level: 78, icon: '🐳' },
-  // Databases
-  { name: 'PostgreSQL', category: 'database', level: 85, icon: '🐘' },
-  { name: 'Redis', category: 'database', level: 90, icon: '◍' },
-  { name: 'MongoDB', category: 'database', level: 78, icon: '◉' },
-  { name: 'MySQL', category: 'database', level: 82, icon: '⚡' },
-  // DevOps
-  { name: 'GitHub Actions', category: 'devops', level: 85, icon: '⚙' },
-  { name: 'Linux / Shell', category: 'devops', level: 82, icon: '⇌' },
-  { name: 'Microservices', category: 'devops', level: 80, icon: '♦' },
+  // Concepts
+  { name: 'System Design',        category: 'concepts',  level: 88, icon: '⬡' },
+  { name: 'REST APIs',            category: 'concepts',  level: 92, icon: '⇄' },
+  { name: 'Microservices',        category: 'concepts',  level: 85, icon: '◈' },
+  { name: 'Backend Optimization', category: 'concepts',  level: 83, icon: '⚡' },
+  // Languages & Databases
+  { name: 'Java',       category: 'languages', level: 88, icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/java/java-original.svg' },
+  { name: 'C',          category: 'languages', level: 80, icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/c/c-original.svg' },
+  { name: 'JavaScript', category: 'languages', level: 90, icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg' },
+  { name: 'TypeScript', category: 'languages', level: 85, icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg' },
+  { name: 'MongoDB',    category: 'languages', level: 82, icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mongodb/mongodb-original.svg' },
+  // Frameworks & Tools
+  { name: 'React',       category: 'tools', level: 92, icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg' },
+  { name: 'TailwindCSS', category: 'tools', level: 90, icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tailwindcss/tailwindcss-plain.svg' },
+  { name: 'Redux',       category: 'tools', level: 82, icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/redux/redux-original.svg' },
+  { name: 'Spring Boot', category: 'tools', level: 87, icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/spring/spring-original.svg' },
+  { name: 'Git',         category: 'tools', level: 90, icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg' },
+  { name: 'Linux',       category: 'tools', level: 83, icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/linux/linux-original.svg' },
+  { name: 'Docker',      category: 'tools', level: 80, icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg' },
+  { name: 'Azure',       category: 'tools', level: 82, icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/azure/azure-original.svg' },
 ];
 
 // ─── Projects ───────────────────────────────────────────────────────────────

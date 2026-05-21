@@ -36,6 +36,7 @@
 
 html {
   scroll-behavior: auto; /* Lenis handles this */
+  position: relative;
 }
 
 body {

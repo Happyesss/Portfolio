@@ -41,12 +41,9 @@ export const SECTIONS = [
 
 // Skill categories
 export const SKILL_CATEGORIES = {
-  frontend: { color: '#4facfe', label: 'Frontend' },
-  backend: { color: '#00f5d4', label: 'Backend' },
-  ai: { color: '#a855f7', label: 'AI / ML' },
-  cloud: { color: '#f77f00', label: 'Cloud' },
-  database: { color: '#4ade80', label: 'Databases' },
-  devops: { color: '#f43f5e', label: 'DevOps' },
+  concepts:  { color: '#4facfe', label: 'Concepts' },
+  languages: { color: '#a855f7', label: 'Languages & DBs' },
+  tools:     { color: '#00f5d4', label: 'Frameworks & Tools' },
 } as const;
 
 // Easing curves

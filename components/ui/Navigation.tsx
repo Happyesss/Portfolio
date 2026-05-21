@@ -43,7 +43,7 @@ export default function Navigation({ activeSection }: NavigationProps) {
         aria-label="Main navigation"
       >
         <div
-          className={`glass-bright rounded-full px-6 py-3 flex items-center gap-6 transition-all duration-500 ${
+          className={`glass-bright rounded-full px-4 lg:px-6 py-2.5 lg:py-3 flex items-center gap-3 lg:gap-6 transition-all duration-500 ${
             isScrolled ? 'shadow-glow-blue' : ''
           }`}
         >
@@ -90,7 +90,7 @@ export default function Navigation({ activeSection }: NavigationProps) {
           <div className="w-px h-5 bg-white/10" aria-hidden="true" />
 
           {/* Nav items */}
-          <div className="hidden md:flex items-center gap-1">
+          <div className="hidden lg:flex items-center gap-1">
             {SECTIONS.slice(0, 6).map((section) => (
               <button
                 key={section.id}
@@ -114,19 +114,19 @@ export default function Navigation({ activeSection }: NavigationProps) {
             ))}
           </div>
 
-          <div className="w-px h-5 bg-white/10 hidden md:block" aria-hidden="true" />
+          <div className="w-px h-5 bg-white/10 hidden lg:block" aria-hidden="true" />
 
           {/* CTA */}
           <button
             onClick={() => scrollTo('contact')}
-            className="hidden sm:block px-4 py-1.5 rounded-full text-sm font-semibold bg-accent-blue/20 text-accent-blue border border-accent-blue/30 hover:bg-accent-blue/30 transition-all duration-300"
+            className="hidden lg:block px-4 py-1.5 rounded-full text-sm font-semibold bg-accent-blue/20 text-accent-blue border border-accent-blue/30 hover:bg-accent-blue/30 transition-all duration-300"
           >
             Hire Me
           </button>
 
           {/* Mobile menu toggle */}
           <button
-            className="md:hidden p-1.5 rounded-full text-text-secondary hover:text-text-primary transition-colors"
+            className="lg:hidden p-1.5 rounded-full text-text-secondary hover:text-text-primary transition-colors"
             onClick={() => setIsExpanded(!isExpanded)}
             aria-expanded={isExpanded}
             aria-label="Toggle navigation menu"
@@ -156,7 +156,7 @@ export default function Navigation({ activeSection }: NavigationProps) {
       <AnimatePresence>
         {isExpanded && (
           <motion.div
-            className="fixed inset-x-4 top-20 z-30 glass-bright rounded-2xl overflow-hidden md:hidden"
+            className="fixed inset-x-4 top-20 z-30 glass-bright rounded-2xl overflow-hidden lg:hidden"
             initial={{ opacity: 0, y: -20, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -20, scale: 0.95 }}

@@ -105,8 +105,8 @@ export default function About({ setActiveSection }: { setActiveSection: (id: str
                 <div className="flex items-center gap-2">
                   <span className="text-lg">🧠</span>
                   <div>
-                    <div className="text-text-primary font-mono text-xs font-semibold">AI / ML</div>
-                    <div className="text-accent-orange font-mono text-xs">Advanced</div>
+                    <div className="text-text-primary font-mono text-xs font-semibold">System Design</div>
+                    <div className="text-accent-orange font-mono text-xs">Expert</div>
                   </div>
                 </div>
               </motion.div>
@@ -151,9 +151,9 @@ export default function About({ setActiveSection }: { setActiveSection: (id: str
               className="grid grid-cols-3 gap-4 pt-4"
             >
               {[
-                { n: '6+', l: 'Years' },
-                { n: '2', l: 'Startups' },
-                { n: '100K+', l: 'Users' },
+                { n: '4+', l: 'Years Exp' },
+                { n: '4M+', l: 'Views' },
+                { n: '30K+', l: 'Users' },
               ].map((s) => (
                 <div key={s.l} className="glass rounded-xl p-4 text-center border-surface-border">
                   <div className="font-display text-2xl font-bold gradient-text-blue">{s.n}</div>
