@@ -13,6 +13,7 @@ import GitHubStats from '@/components/sections/GitHubStats';
 import Timeline from '@/components/sections/Timeline';
 import PortfolioModes from '@/components/sections/PortfolioModes';
 import Contact from '@/components/sections/Contact';
+import BlackHoleSection from '@/components/sections/BlackHoleSection';
 import SmoothScroll from '@/components/ui/SmoothScroll';
 
 // Lazy-load heavy 3D AI Orb
@@ -79,6 +80,9 @@ export default function Home() {
               </section>
               <section id="contact">
                 <Contact setActiveSection={setActiveSection} />
+              </section>
+              <section id="blackhole">
+                <BlackHoleSection />
               </section>
             </main>
 
