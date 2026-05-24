@@ -211,7 +211,8 @@ export default function GitHubStats({ setActiveSection }: { setActiveSection: (i
 
     const loadGitHubStats = async () => {
       try {
-        const response = await fetch(`/api/github/stats?username=${encodeURIComponent(githubStats.username)}`);
+        const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? '';
+        const response = await fetch(`${basePath}/api/github/stats?username=${encodeURIComponent(githubStats.username)}`);
         if (!response.ok) {
           throw new Error(`GitHub stats fetch failed: ${response.status}`);
         }

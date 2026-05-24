@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import Image from 'next/image';
 import { useSectionInView } from '@/hooks/useScrollProgress';
 import { projects } from '@/lib/data';
 import { SectionHeader } from '@/components/ui/GlassCard';
@@ -61,11 +62,11 @@ function ProjectModal({ project, onClose }: { project: Project; onClose: () => v
 
             <div className="flex items-start gap-4">
               <div
-                className="w-14 h-14 rounded-2xl flex items-center justify-center text-2xl shrink-0 overflow-hidden"
+                className="relative w-14 h-14 rounded-2xl flex items-center justify-center text-2xl shrink-0 overflow-hidden"
                 style={{ background: `${project.color}20`, border: `1px solid ${project.color}40` }}
               >
-                {project.logo ? (
-                  <img src={project.logo} alt={project.title} className="w-full h-full object-contain p-1.5" />
+              {project.logo ? (
+                  <Image src={project.logo} alt={project.title} fill className="object-contain p-1.5" unoptimized />
                 ) : (
                   <>
                     {project.category === 'AI/ML' ? '🧠' : project.category === 'Cloud' ? '☁' : project.category === 'Backend' ? '⚙' : '◈'}
@@ -191,11 +192,11 @@ function ProjectCard({ project, onClick }: { project: Project; onClick: () => vo
         <div className="flex items-start justify-between gap-4">
           <div className="flex items-start gap-4">
             <div
-              className="h-12 w-12 rounded-2xl flex items-center justify-center text-xl shrink-0 overflow-hidden"
+              className="relative h-12 w-12 rounded-2xl flex items-center justify-center text-xl shrink-0 overflow-hidden"
               style={{ background: `${project.color}18`, border: `1px solid ${project.color}40` }}
             >
               {project.logo ? (
-                <img src={project.logo} alt={project.title} className="w-full h-full object-contain p-1.5" />
+                <Image src={project.logo} alt={project.title} fill className="object-contain p-1.5" unoptimized />
               ) : (
                 <>
                   {project.category === 'AI/ML' ? '🧠' : project.category === 'Cloud' ? '☁' : project.category === 'Backend' ? '⚙' : '◈'}
