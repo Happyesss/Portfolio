@@ -74,40 +74,40 @@ export default function Timeline({ setActiveSection }: { setActiveSection: (id: 
 
                 {/* Card */}
                 <motion.div
-                  className="glass rounded-2xl p-6 border"
+                  className="glass rounded-2xl p-4 md:p-6 border"
                   style={{ borderColor: `${exp.color}20` }}
                   whileHover={{ y: -3 }}
                   transition={{ type: 'spring', stiffness: 400, damping: 30 }}
                 >
-                  <div className="flex flex-wrap items-start justify-between gap-3 mb-4">
+                  <div className="flex flex-wrap items-start justify-between gap-2 md:gap-3 mb-3 md:mb-4">
                     <div>
                       <div className="flex items-center gap-2 mb-1">
                         <span
-                          className="font-mono text-xs tracking-widest uppercase px-2.5 py-0.5 rounded-full"
+                          className="font-mono text-[10px] md:text-xs tracking-widest uppercase px-2 md:px-2.5 py-0.5 rounded-full"
                           style={{ background: `${exp.color}15`, color: exp.color }}
                         >
                           {exp.type}
                         </span>
                       </div>
-                      <h3 className="font-display text-xl font-bold text-text-primary">{exp.role}</h3>
-                      <div className="flex items-center gap-2 mt-1">
-                        <span className="text-text-secondary font-medium">{exp.company}</span>
+                      <h3 className="font-display text-base md:text-xl font-bold text-text-primary">{exp.role}</h3>
+                      <div className="flex flex-wrap items-center gap-1 md:gap-2 mt-1">
+                        <span className="text-text-secondary text-sm font-medium">{exp.company}</span>
                         <span className="text-text-muted">·</span>
-                        <span className="text-text-muted text-sm">{exp.location}</span>
+                        <span className="text-text-muted text-xs md:text-sm">{exp.location}</span>
                       </div>
                     </div>
-                    <span className="text-text-muted font-mono text-sm bg-white/5 px-3 py-1 rounded-lg whitespace-nowrap">
+                    <span className="text-text-muted font-mono text-xs md:text-sm bg-white/5 px-2 md:px-3 py-1 rounded-lg whitespace-nowrap">
                       {exp.period}
                     </span>
                   </div>
 
-                  <p className="text-text-secondary text-sm leading-relaxed mb-4">{exp.description}</p>
+                  <p className="text-text-secondary text-xs md:text-sm leading-relaxed mb-3 md:mb-4">{exp.description}</p>
 
                   {/* Highlights */}
                   {exp.highlights.length > 0 && (
-                    <ul className="space-y-2 mb-4">
+                    <ul className="space-y-1.5 md:space-y-2 mb-3 md:mb-4">
                       {exp.highlights.map((highlight, j) => (
-                        <li key={j} className="flex items-start gap-2 text-text-muted text-sm">
+                        <li key={j} className="flex items-start gap-2 text-text-muted text-xs md:text-sm">
                           <span className="mt-1 text-xs" style={{ color: exp.color }}>▸</span>
                           <span>{highlight}</span>
                         </li>

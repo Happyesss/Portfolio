@@ -23,8 +23,15 @@ export default function Home() {
   const [activeSection, setActiveSection] = useState('hero');
 
   useEffect(() => {
-    // Simulate minimum loading time for cinematic effect
-    const timer = setTimeout(() => setIsLoaded(true), 3200);
+    // Skip loading screen on back-navigation / revisit
+    if (sessionStorage.getItem('portfolio_loaded')) {
+      setIsLoaded(true);
+      return;
+    }
+    const timer = setTimeout(() => {
+      setIsLoaded(true);
+      sessionStorage.setItem('portfolio_loaded', '1');
+    }, 2000);
     return () => clearTimeout(timer);
   }, []);
 

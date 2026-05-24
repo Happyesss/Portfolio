@@ -779,46 +779,50 @@ export default function BlackHoleSection() {
             />
 
             {/* Scrollable content layer */}
-            <div className="absolute inset-0 z-10 overflow-y-auto">
-            <div className="flex flex-col items-center justify-center min-h-full py-12 px-4">
+            <div
+              className="absolute inset-0 z-10 overflow-y-auto"
+              data-lenis-prevent
+              style={{ WebkitOverflowScrolling: 'touch' } as React.CSSProperties}
+            >
+            <div className="flex flex-col items-center justify-center min-h-full py-6 md:py-12 px-4">
 
             {/* Header */}
             <motion.div
-              className="relative z-10 text-center mb-10 md:mb-14"
+              className="relative z-10 text-center mb-6 md:mb-14"
               initial={{ opacity: 0, y: -30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.9, delay: 0.2 }}
             >
-              <p className="font-mono text-xs tracking-[0.4em] text-orange-400/70 uppercase mb-3">
+              <p className="font-mono text-[10px] md:text-xs tracking-[0.4em] text-orange-400/70 uppercase mb-2 md:mb-3">
                 — Portal Open —
               </p>
-              <h2 className="font-display text-3xl md:text-5xl font-black text-white leading-tight">
+              <h2 className="font-display text-2xl md:text-5xl font-black text-white leading-tight">
                 Choose Your Universe
               </h2>
-              <p className="text-white/35 text-sm md:text-base mt-3 font-light max-w-lg mx-auto">
+              <p className="text-white/35 text-xs md:text-base mt-2 md:mt-3 font-light max-w-lg mx-auto">
                 Three worlds. Each designed for a different kind of exploration.
               </p>
             </motion.div>
 
             {/* Planets */}
-            <div className="relative z-10 flex flex-col md:flex-row gap-8 md:gap-12 lg:gap-16 items-center justify-center px-6">
+            <div className="relative z-10 flex flex-row gap-3 md:gap-12 lg:gap-16 items-start justify-center px-2 md:px-6 w-full">
               {PLANETS.map((planet, i) => (
                 <motion.div
                   key={planet.name}
                   initial={{ opacity: 0, y: 60, scale: 0.6 }}
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   transition={{ duration: 0.85, delay: 0.4 + i * 0.18, ease: [0.16, 1, 0.3, 1] }}
-                  className="flex flex-col items-center group"
+                  className="flex flex-col items-center group flex-1 min-w-0"
                 >
-                  <Link href={planet.link} className="flex flex-col items-center cursor-pointer">
+                  <Link href={planet.link} className="flex flex-col items-center cursor-pointer w-full">
                     {/* Planet float + hover */}
                     <motion.div
                       className="relative"
-                      animate={{ y: [0, -12, 0] }}
+                      animate={{ y: [0, -10, 0] }}
                       transition={{ duration: 4 + i * 0.8, ease: 'easeInOut', repeat: Infinity, delay: i * 1.2 }}
-                      whileHover={{ scale: 1.1 }}
+                      whileHover={{ scale: 1.08 }}
                     >
-                      <Planet theme={planet.theme} size={170} />
+                      <Planet theme={planet.theme} size={110} />
 
                       {/* Hover glow ring under planet */}
                       <motion.div
@@ -834,8 +838,8 @@ export default function BlackHoleSection() {
                     </motion.div>
 
                     {/* Planet info */}
-                    <div className="mt-10 text-center">
-                      <p className="font-mono text-[10px] tracking-[0.35em] uppercase mb-1"
+                    <div className="mt-4 md:mt-10 text-center">
+                      <p className="font-mono text-[9px] md:text-[10px] tracking-[0.25em] md:tracking-[0.35em] uppercase mb-0.5 md:mb-1"
                         style={{
                           color: planet.theme === 'simple' ? '#7ab8e8'
                             : planet.theme === 'hacker'  ? '#00ff50'
@@ -844,19 +848,19 @@ export default function BlackHoleSection() {
                       >
                         {planet.subtitle}
                       </p>
-                      <h3 className="font-display text-2xl md:text-3xl font-bold text-white mb-1">
+                      <h3 className="font-display text-base md:text-3xl font-bold text-white mb-0.5 md:mb-1">
                         {planet.name}
                       </h3>
-                      <p className="text-white/40 text-xs font-mono italic mb-3">
+                      <p className="text-white/40 text-[10px] md:text-xs font-mono italic mb-1 md:mb-3">
                         "{planet.tagline}"
                       </p>
-                      <p className="text-white/30 text-xs max-w-[160px] leading-relaxed mb-5">
+                      <p className="text-white/30 text-[10px] md:text-xs hidden md:block max-w-[160px] leading-relaxed mb-5">
                         {planet.desc}
                       </p>
 
                       {/* Enter button */}
                       <motion.div
-                        className="inline-flex items-center gap-2 px-5 py-2 rounded-full text-xs font-mono font-semibold border transition-all duration-300
+                        className="inline-flex items-center gap-1 md:gap-2 px-3 md:px-5 py-1.5 md:py-2 rounded-full text-[10px] md:text-xs font-mono font-semibold border transition-all duration-300
                           group-hover:gap-3"
                         style={{
                           borderColor: planet.theme === 'simple' ? 'rgba(100,180,255,0.45)'
@@ -883,7 +887,7 @@ export default function BlackHoleSection() {
 
             {/* Back / Reset */}
             <motion.button
-              className="relative z-10 mt-14 font-mono text-xs tracking-widest text-white/25 hover:text-white/50 transition-colors uppercase"
+              className="relative z-10 mt-6 md:mt-14 font-mono text-xs tracking-widest text-white/25 hover:text-white/50 transition-colors uppercase"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 1.5 }}
