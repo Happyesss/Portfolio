@@ -1,5 +1,10 @@
 import { NextResponse } from 'next/server';
 
+export const dynamic = 'force-static';
+export const revalidate = false;
+
+const GITHUB_USERNAME = 'Happyesss';
+
 interface ContributionDay {
   date: string;
   count: number;
@@ -50,13 +55,8 @@ function parseTotalContributions(markup: string): number | null {
   return Number.parseInt(headingMatch[1].replace(/,/g, ''), 10);
 }
 
-export async function GET(request: Request) {
-  const { searchParams } = new URL(request.url);
-  const username = searchParams.get('username');
-
-  if (!username) {
-    return NextResponse.json({ error: 'Missing username query parameter' }, { status: 400 });
-  }
+export async function GET() {
+  const username = GITHUB_USERNAME;
 
   const contributionsUrl = `https://github.com/users/${encodeURIComponent(username)}/contributions`;
   const response = await fetch(contributionsUrl, {

@@ -1,5 +1,10 @@
 import { NextResponse } from 'next/server';
 
+export const dynamic = 'force-static';
+export const revalidate = false;
+
+const GITHUB_USERNAME = 'Happyesss';
+
 interface GitHubUserResponse {
   login: string;
   name: string | null;
@@ -137,13 +142,8 @@ async function fetchContributionData(username: string): Promise<{ total: number;
   };
 }
 
-export async function GET(request: Request) {
-  const { searchParams } = new URL(request.url);
-  const username = searchParams.get('username');
-
-  if (!username) {
-    return NextResponse.json({ error: 'Missing username query parameter' }, { status: 400 });
-  }
+export async function GET() {
+  const username = GITHUB_USERNAME;
 
   const [user, repos, contributions, pullRequests, commits] = await Promise.all([
     fetchGitHubJson<GitHubUserResponse>(`https://api.github.com/users/${encodeURIComponent(username)}`),
