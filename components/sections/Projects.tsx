@@ -2,11 +2,12 @@
 
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import Image from 'next/image';
 import { useSectionInView } from '@/hooks/useScrollProgress';
 import { projects } from '@/lib/data';
 import { SectionHeader } from '@/components/ui/GlassCard';
 import { staggerContainer, fadeInUp, scaleIn } from '@/lib/animations';
+
+const BASE = process.env.NEXT_PUBLIC_BASE_PATH ?? '';
 
 type Project = typeof projects[0];
 
@@ -66,7 +67,7 @@ function ProjectModal({ project, onClose }: { project: Project; onClose: () => v
                 style={{ background: `${project.color}20`, border: `1px solid ${project.color}40` }}
               >
               {project.logo ? (
-                  <Image src={project.logo} alt={project.title} fill className="object-contain p-1.5" unoptimized />
+                  <img src={`${BASE}${project.logo}`} alt={project.title} className="w-full h-full object-contain p-1.5" />
                 ) : (
                   <>
                     {project.category === 'AI/ML' ? '🧠' : project.category === 'Cloud' ? '☁' : project.category === 'Backend' ? '⚙' : '◈'}
@@ -196,7 +197,7 @@ function ProjectCard({ project, onClick }: { project: Project; onClick: () => vo
               style={{ background: `${project.color}18`, border: `1px solid ${project.color}40` }}
             >
               {project.logo ? (
-                <Image src={project.logo} alt={project.title} fill className="object-contain p-1.5" unoptimized />
+                <img src={`${BASE}${project.logo}`} alt={project.title} className="w-full h-full object-contain p-1.5" />
               ) : (
                 <>
                   {project.category === 'AI/ML' ? '🧠' : project.category === 'Cloud' ? '☁' : project.category === 'Backend' ? '⚙' : '◈'}

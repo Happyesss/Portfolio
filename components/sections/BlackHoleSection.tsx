@@ -540,8 +540,7 @@ export default function BlackHoleSection() {
     if (triggeredRef.current) return;
     triggeredRef.current = true;
     setPhase('consuming');
-    // 80 items × 65ms stagger + float + spiral ≈ 8.5s total
-    const totalAnim = 8500;
+    const totalAnim = 4000;
     setTimeout(() => setPhase('flash'), totalAnim);
     setTimeout(() => setPhase('portal'), totalAnim + 900);
   }, []);
@@ -595,7 +594,7 @@ export default function BlackHoleSection() {
       container.appendChild(dot);
       dots.push(dot);
 
-      const stagger = Math.random() * 3800;
+      const stagger = Math.random() * 1500;
       const t1 = setTimeout(() => {
         dot.style.transition = 'opacity 0.22s ease-out';
         dot.style.opacity = String(0.5 + Math.random() * 0.5);
