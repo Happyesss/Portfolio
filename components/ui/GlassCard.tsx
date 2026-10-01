@@ -64,23 +64,23 @@ export function SectionHeader({
   };
 
   return (
-    <div className="text-center mb-16 md:mb-24">
+    <div className="text-center mb-10 sm:mb-16 md:mb-20 px-4">
       <motion.div
-        className={`inline-flex items-center gap-2 mb-4 px-4 py-1.5 rounded-full glass border-surface-border`}
+        className={`inline-flex items-center gap-2 mb-3 sm:mb-4 px-3.5 sm:px-4 py-1 sm:py-1.5 rounded-full glass border-surface-border`}
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.6 }}
       >
         <div className={`w-1.5 h-1.5 rounded-full bg-current ${accent[accentColor]} animate-pulse-glow`} />
-        <span className={`font-mono text-xs tracking-widest uppercase ${accent[accentColor]}`}>
+        <span className={`font-mono text-[11px] sm:text-xs tracking-widest uppercase ${accent[accentColor]}`}>
           {label}
         </span>
       </motion.div>
 
       <div className="overflow-hidden">
         <motion.h2
-          className="font-display text-4xl md:text-5xl lg:text-6xl font-bold text-text-primary leading-tight"
+          className="font-display text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-text-primary leading-tight"
           initial={{ y: '100%', opacity: 0 }}
           whileInView={{ y: 0, opacity: 1 }}
           viewport={{ once: true }}
@@ -92,7 +92,7 @@ export function SectionHeader({
 
       {subtitle && (
         <motion.p
-          className="mt-4 text-text-secondary text-lg max-w-2xl mx-auto leading-relaxed"
+          className="mt-3 sm:mt-4 text-text-secondary text-sm sm:text-base md:text-lg max-w-2xl mx-auto leading-relaxed"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}

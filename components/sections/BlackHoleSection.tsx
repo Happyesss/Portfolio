@@ -822,14 +822,14 @@ export default function BlackHoleSection() {
             </motion.div>
 
             {/* Planets */}
-            <div className="relative z-10 flex flex-row gap-3 md:gap-12 lg:gap-16 items-start justify-center px-2 md:px-6 w-full">
+            <div className="relative z-10 flex flex-col sm:flex-row gap-10 sm:gap-6 md:gap-12 lg:gap-16 items-center sm:items-start justify-center px-4 md:px-6 w-full max-w-4xl mx-auto">
               {PLANETS.map((planet, i) => (
                 <motion.div
                   key={planet.name}
                   initial={{ opacity: 0, y: 60, scale: 0.6 }}
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   transition={{ duration: 0.85, delay: 0.4 + i * 0.18, ease: [0.16, 1, 0.3, 1] }}
-                  className="flex flex-col items-center group flex-1 min-w-0"
+                  className="flex flex-col items-center group w-full sm:flex-1 max-w-xs sm:max-w-none"
                 >
                   <Link href={planet.link} className="flex flex-col items-center cursor-pointer w-full">
                     {/* Planet float + hover */}

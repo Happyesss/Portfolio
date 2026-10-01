@@ -16,20 +16,26 @@ function ProjectModal({ project, onClose }: { project: Project; onClose: () => v
     // Prevent background scroll when modal is open
     const originalStyle = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+    window.addEventListener('keydown', handleKeyDown);
     
     return () => {
-      // Restore original scroll behavior when modal closes
       document.body.style.overflow = originalStyle;
+      window.removeEventListener('keydown', handleKeyDown);
     };
-  }, []);
+  }, [onClose]);
 
   return (
     <AnimatePresence>
       <motion.div
-        className="fixed inset-0 z-50 flex items-center justify-center p-4 md:p-8 overflow-hidden"
+        className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 md:p-8 overflow-hidden"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
+        data-lenis-prevent="true"
       >
         {/* Backdrop */}
         <motion.div
@@ -39,31 +45,32 @@ function ProjectModal({ project, onClose }: { project: Project; onClose: () => v
           animate={{ opacity: 1 }}
         />
 
-        {/* Modal */}
+        {/* Modal Window */}
         <motion.div
-          className="relative bg-[#080808] border border-white/[0.1] rounded-2xl sm:rounded-3xl w-full max-w-xl sm:max-w-2xl max-h-[85vh] overflow-hidden flex flex-col shadow-2xl"
+          className="relative bg-[#080808] border border-white/[0.1] rounded-2xl sm:rounded-3xl w-full max-w-lg sm:max-w-2xl max-h-[88dvh] sm:max-h-[85vh] overflow-hidden flex flex-col shadow-2xl z-10"
           style={{ borderColor: `${project.color}35`, boxShadow: `0 0 60px ${project.color}15` }}
-          initial={{ scale: 0.9, opacity: 0, y: 30 }}
+          initial={{ scale: 0.92, opacity: 0, y: 25 }}
           animate={{ scale: 1, opacity: 1, y: 0 }}
-          exit={{ scale: 0.92, opacity: 0, y: 15 }}
-          transition={{ type: 'spring', stiffness: 320, damping: 28 }}
+          exit={{ scale: 0.94, opacity: 0, y: 15 }}
+          transition={{ type: 'spring', stiffness: 340, damping: 30 }}
+          data-lenis-prevent="true"
         >
-          {/* Header */}
+          {/* Fixed Header */}
           <div
-            className="relative p-5 sm:p-6 pb-3.5 rounded-t-2xl sm:rounded-t-3xl overflow-hidden flex-shrink-0 border-b border-white/[0.06]"
-            style={{ background: `linear-gradient(135deg, ${project.color}12, transparent)` }}
+            className="relative p-4 sm:p-6 pb-3.5 rounded-t-2xl sm:rounded-t-3xl overflow-hidden flex-shrink-0 border-b border-white/[0.08]"
+            style={{ background: `linear-gradient(135deg, ${project.color}14, transparent)` }}
           >
             <button
               onClick={onClose}
-              className="absolute top-4 right-4 w-8 h-8 rounded-full glass flex items-center justify-center text-xs text-text-muted hover:text-text-primary hover:bg-white/10 transition-colors"
+              className="absolute top-3.5 right-3.5 sm:top-4 sm:right-4 w-8 h-8 rounded-full glass flex items-center justify-center text-xs text-text-muted hover:text-text-primary hover:bg-white/10 active:scale-90 transition-all z-20"
               aria-label="Close project details"
             >
               ✕
             </button>
 
-            <div className="flex items-center gap-3.5">
+            <div className="flex items-center gap-3 sm:gap-3.5 pr-8">
               <div
-                className="relative w-11 h-11 rounded-xl flex items-center justify-center text-xl shrink-0 overflow-hidden bg-white/[0.04]"
+                className="relative w-10 h-10 sm:w-11 sm:h-11 rounded-xl flex items-center justify-center text-xl shrink-0 overflow-hidden bg-white/[0.04]"
                 style={{ border: `1px solid ${project.color}35` }}
               >
                 {project.logo ? (
@@ -74,28 +81,37 @@ function ProjectModal({ project, onClose }: { project: Project; onClose: () => v
                   </span>
                 )}
               </div>
-              <div>
-                <span className="font-mono text-[10px] tracking-wider uppercase font-semibold" style={{ color: project.color }}>
+              <div className="min-w-0">
+                <span className="font-mono text-[9.5px] sm:text-[10px] tracking-wider uppercase font-semibold block" style={{ color: project.color }}>
                   {project.category}
                 </span>
-                <h3 className="font-display text-lg sm:text-xl font-bold text-text-primary mt-0.5">{project.title}</h3>
-                <p className="text-text-secondary text-xs">{project.subtitle}</p>
+                <h3 className="font-display text-base sm:text-xl font-bold text-text-primary mt-0.5 truncate">{project.title}</h3>
+                <p className="text-text-secondary text-xs truncate">{project.subtitle}</p>
               </div>
             </div>
           </div>
 
-          {/* Scrollable Content */}
-          <div className="overflow-y-auto flex-1 px-5 sm:px-6 pb-5 pt-3.5">
-            <div className="space-y-3.5">
+          {/* Smooth Scrollable Content Body */}
+          <div
+            className="overflow-y-auto flex-1 px-4 sm:px-6 py-4 overscroll-contain touch-pan-y"
+            style={{
+              WebkitOverflowScrolling: 'touch',
+              touchAction: 'pan-y',
+              scrollbarWidth: 'thin',
+              scrollbarColor: 'rgba(255, 255, 255, 0.2) transparent',
+            }}
+            data-lenis-prevent="true"
+          >
+            <div className="space-y-4">
               {/* Description */}
               <p className="text-text-secondary text-xs sm:text-[13px] leading-relaxed">{project.longDescription}</p>
 
               {/* Metrics grid */}
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                 {Object.entries(project.metrics).map(([key, value]) => (
-                  <div key={key} className="glass rounded-xl p-2.5 text-center border border-white/[0.06]">
+                  <div key={key} className="glass rounded-xl p-2 sm:p-2.5 text-center border border-white/[0.06]">
                     <div className="font-display font-bold text-sm sm:text-base" style={{ color: project.color }}>{value}</div>
-                    <div className="text-text-muted font-mono text-[10px] capitalize mt-0.5">{key}</div>
+                    <div className="text-text-muted font-mono text-[9.5px] capitalize mt-0.5">{key}</div>
                   </div>
                 ))}
               </div>
@@ -103,12 +119,10 @@ function ProjectModal({ project, onClose }: { project: Project; onClose: () => v
               {/* Architecture */}
               <div>
                 <h4 className="text-text-primary font-semibold mb-2 font-mono text-xs">Architecture</h4>
-                <div className="flex flex-wrap gap-1.5">
+                <div className="flex flex-wrap gap-1.5 items-center">
                   {project.architecture.map((layer, i) => (
                     <div key={i} className="flex items-center gap-1.5">
-                      <span
-                        className="px-2.5 py-1 rounded-lg glass font-mono text-[11px] text-text-secondary border border-surface-border"
-                      >
+                      <span className="px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-lg glass font-mono text-[10.5px] sm:text-[11px] text-text-secondary border border-surface-border">
                         {layer}
                       </span>
                       {i < project.architecture.length - 1 && (
@@ -126,7 +140,7 @@ function ProjectModal({ project, onClose }: { project: Project; onClose: () => v
                   {project.tech.map((tech) => (
                     <span
                       key={tech}
-                      className="px-2.5 py-0.5 rounded-full font-mono text-[11px]"
+                      className="px-2.5 py-0.5 rounded-full font-mono text-[10.5px] sm:text-[11px]"
                       style={{ background: `${project.color}15`, color: project.color, border: `1px solid ${project.color}30` }}
                     >
                       {tech}
@@ -134,30 +148,34 @@ function ProjectModal({ project, onClose }: { project: Project; onClose: () => v
                   ))}
                 </div>
               </div>
-
-              {/* CTA links */}
-              <div className="flex gap-2.5 pt-1">
-                <a
-                  href={project.demo}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex-1 py-2.5 rounded-xl text-center font-semibold text-xs sm:text-sm transition-all duration-300 hover:opacity-95"
-                  style={{ background: project.color, color: '#000000' }}
-                >
-                  Live Demo →
-                </a>
-                {project.github && (
-                  <a
-                    href={project.github}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex-1 py-2.5 rounded-xl glass text-center font-medium text-xs sm:text-sm text-text-secondary hover:text-text-primary border border-surface-border transition-all duration-300 hover:bg-white/10"
-                  >
-                    GitHub →
-                  </a>
-                )}
-              </div>
             </div>
+          </div>
+
+          {/* Sticky Action Footer — Always visible & accessible on all screens */}
+          <div className="p-3.5 sm:p-4.5 border-t border-white/[0.08] bg-[#09090b]/95 backdrop-blur-md flex gap-2.5 shrink-0 rounded-b-2xl sm:rounded-b-3xl">
+            {project.demo && (
+              <a
+                href={project.demo}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex-1 py-2.5 sm:py-3 rounded-xl text-center font-semibold text-xs sm:text-sm transition-all duration-300 hover:opacity-95 active:scale-[0.98] shadow-md flex items-center justify-center gap-1.5"
+                style={{ background: project.color, color: '#000000' }}
+              >
+                <span>Live Demo</span>
+                <span>→</span>
+              </a>
+            )}
+            {project.github && (
+              <a
+                href={project.github}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex-1 py-2.5 sm:py-3 rounded-xl glass text-center font-medium text-xs sm:text-sm text-text-secondary hover:text-text-primary border border-surface-border transition-all duration-300 hover:bg-white/10 active:scale-[0.98] flex items-center justify-center gap-1.5"
+              >
+                <span>GitHub</span>
+                <span>→</span>
+              </a>
+            )}
           </div>
         </motion.div>
       </motion.div>

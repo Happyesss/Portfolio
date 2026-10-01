@@ -100,17 +100,17 @@ export default function About({ setActiveSection }: { setActiveSection: (id: str
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
-            className="space-y-6"
+            className="space-y-4 sm:space-y-6"
           >
             <motion.p
               variants={fadeInUp}
-              className="text-text-secondary text-lg leading-relaxed"
+              className="text-text-secondary text-sm sm:text-base md:text-lg leading-relaxed"
             >
               {personalInfo.bio}
             </motion.p>
             <motion.p
               variants={fadeInUp}
-              className="text-text-muted leading-relaxed"
+              className="text-text-muted text-xs sm:text-sm md:text-base leading-relaxed"
             >
               {personalInfo.bioExtended}
             </motion.p>
@@ -118,33 +118,33 @@ export default function About({ setActiveSection }: { setActiveSection: (id: str
             {/* Quick stats */}
             <motion.div
               variants={fadeInUp}
-              className="grid grid-cols-3 gap-4 pt-4"
+              className="grid grid-cols-3 gap-2 sm:gap-4 pt-2 sm:pt-4"
             >
               {[
                 { n: '4+', l: 'Years Exp' },
                 { n: '4M+', l: 'Views' },
                 { n: '30K+', l: 'Users' },
               ].map((s) => (
-                <div key={s.l} className="glass rounded-xl p-4 text-center border-surface-border">
-                  <div className="font-display text-2xl font-bold gradient-text-blue">{s.n}</div>
-                  <div className="text-text-muted font-mono text-xs mt-1">{s.l}</div>
+                <div key={s.l} className="glass rounded-xl p-2.5 sm:p-4 text-center border-surface-border">
+                  <div className="font-display text-xl sm:text-2xl font-bold gradient-text-blue">{s.n}</div>
+                  <div className="text-text-muted font-mono text-[11px] sm:text-xs mt-0.5 sm:mt-1">{s.l}</div>
                 </div>
               ))}
             </motion.div>
 
             {/* Social links */}
-            <motion.div variants={fadeInUp} className="flex gap-3 pt-2">
+            <motion.div variants={fadeInUp} className="flex flex-wrap gap-2 sm:gap-3 pt-2">
               {[
                 { label: 'GitHub', href: personalInfo.github, icon: '⬡' },
                 { label: 'LinkedIn', href: personalInfo.linkedin, icon: '◈' },
-                { label: 'Twitter', href: personalInfo.twitter, icon: '◎' },
+                { label: 'X (Twitter)', href: personalInfo.twitter, icon: '𝕏' },
               ].map((link) => (
                 <a
                   key={link.label}
                   href={link.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="glass rounded-xl px-4 py-2.5 text-text-secondary hover:text-accent-blue hover:border-accent-blue/30 border border-surface-border transition-all duration-300 font-mono text-sm flex items-center gap-2"
+                  className="glass rounded-xl px-3.5 sm:px-4 py-2 sm:py-2.5 text-text-secondary hover:text-accent-blue hover:border-accent-blue/30 border border-surface-border transition-all duration-300 font-mono text-xs sm:text-sm flex items-center gap-1.5 sm:gap-2"
                 >
                   <span>{link.icon}</span>
                   {link.label}
@@ -156,7 +156,7 @@ export default function About({ setActiveSection }: { setActiveSection: (id: str
 
         {/* Values grid */}
         <motion.div
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mt-20"
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 mt-12 sm:mt-20"
           variants={staggerContainer(0.1, 0.2)}
           initial="hidden"
           whileInView="visible"
@@ -164,20 +164,20 @@ export default function About({ setActiveSection }: { setActiveSection: (id: str
         >
           {values.map((val) => (
             <motion.div key={val.title} variants={fadeInUp}>
-              <GlassCard className="p-6 h-full" hover>
+              <GlassCard className="p-4 sm:p-6 h-full" hover>
                 <div
-                  className="w-10 h-10 rounded-xl flex items-center justify-center text-xl mb-4"
+                  className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center text-lg sm:text-xl mb-3 sm:mb-4"
                   style={{ background: `${val.color}15`, border: `1px solid ${val.color}30` }}
                 >
                   {val.icon}
                 </div>
                 <h3
-                  className="font-display font-semibold text-text-primary mb-2"
+                  className="font-display font-semibold text-text-primary text-sm sm:text-base mb-1.5 sm:mb-2"
                   style={{ color: val.color }}
                 >
                   {val.title}
                 </h3>
-                <p className="text-text-muted text-sm leading-relaxed">{val.description}</p>
+                <p className="text-text-muted text-xs sm:text-sm leading-relaxed">{val.description}</p>
               </GlassCard>
             </motion.div>
           ))}

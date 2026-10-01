@@ -47,6 +47,18 @@ const LINKS = [
       </svg>
     ),
   },
+  {
+    key:   'twitter',
+    label: 'X (Twitter)',
+    sub:   '@_happyesss',
+    href:  personalInfo.twitter,
+    color: '#38bdf8',
+    icon: (
+      <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
+        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+      </svg>
+    ),
+  },
 ];
 
 export default function Contact({ setActiveSection }: { setActiveSection: (id: string) => void }) {
@@ -111,7 +123,7 @@ export default function Contact({ setActiveSection }: { setActiveSection: (id: s
 
         {/* Contact pill row */}
         <motion.div
-          className="flex flex-col sm:flex-row gap-3"
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3"
           initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}

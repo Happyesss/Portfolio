@@ -26,7 +26,7 @@ export default function Hero({ setActiveSection }: { setActiveSection: (id: stri
   return (
     <div
       ref={setRefs}
-      className="relative min-h-screen flex items-center justify-center overflow-hidden"
+      className="relative min-h-0 sm:min-h-[100svh] flex flex-col justify-center items-center overflow-hidden px-4 pt-44 pb-8 sm:py-0"
     >
       {/* 3D scene background */}
       <div className="absolute inset-0 z-0">
@@ -35,14 +35,14 @@ export default function Hero({ setActiveSection }: { setActiveSection: (id: stri
 
       {/* Vignette overlay */}
       <div className="absolute inset-0 z-1 bg-gradient-radial from-transparent via-bg-primary/20 to-bg-primary/70 pointer-events-none" />
-      <div className="absolute bottom-0 left-0 right-0 h-48 bg-gradient-to-t from-bg-primary to-transparent z-1 pointer-events-none" />
+      <div className="absolute bottom-0 left-0 right-0 h-28 sm:h-48 bg-gradient-to-t from-bg-primary to-transparent z-1 pointer-events-none" />
 
       {/* Main content */}
-      <div className="relative z-10 text-center max-w-5xl mx-auto px-6">
+      <div className="relative z-10 text-center max-w-5xl mx-auto w-full px-2 sm:px-6">
         {/* Main name */}
-        <div className="overflow-hidden mb-4">
+        <div className="overflow-hidden mb-2 sm:mb-4">
           <motion.div
-            className="flex flex-wrap justify-center gap-4"
+            className="flex flex-wrap justify-center gap-2 sm:gap-4"
             variants={staggerContainer(0.12, 0.5)}
             initial="hidden"
             animate="visible"
@@ -62,12 +62,12 @@ export default function Hero({ setActiveSection }: { setActiveSection: (id: stri
 
         {/* Role */}
         <motion.div
-          className="overflow-hidden mb-8"
+          className="overflow-hidden mb-3 sm:mb-6"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.8, delay: 1 }}
         >
-          <p className="font-display text-xl md:text-2xl font-light text-text-secondary tracking-wide">
+          <p className="font-display text-base sm:text-xl md:text-2xl font-light text-text-secondary tracking-wide">
             Full-Stack Engineer &amp;{' '}
             <span className="gradient-text-orange font-medium">Product Architect</span>
           </p>
@@ -75,7 +75,7 @@ export default function Hero({ setActiveSection }: { setActiveSection: (id: stri
 
         {/* Tagline */}
         <motion.p
-          className="text-text-secondary text-lg md:text-xl max-w-2xl mx-auto leading-relaxed mb-12"
+          className="text-text-secondary text-xs sm:text-base md:text-xl max-w-xl mx-auto leading-relaxed mb-6 sm:mb-10 px-2"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 1.2 }}
@@ -83,16 +83,16 @@ export default function Hero({ setActiveSection }: { setActiveSection: (id: stri
           {personalInfo.tagline}
         </motion.p>
 
-        {/* CTA buttons */}
+        {/* CTA buttons — side-by-side on mobile, tablet, and desktop */}
         <motion.div
-          className="flex flex-col sm:flex-row items-center justify-center gap-4"
+          className="flex flex-row items-center justify-center gap-2.5 sm:gap-4 w-full max-w-sm sm:max-w-md mx-auto px-2 mb-6 sm:mb-10"
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 1.5 }}
         >
           <motion.a
             href="#projects"
-            className="group px-8 py-4 rounded-2xl bg-accent-blue text-bg-primary font-semibold text-base hover:bg-accent-blue/90 transition-all duration-300 shadow-glow-blue"
+            className="flex-1 px-3 sm:px-7 py-3 sm:py-3.5 rounded-xl sm:rounded-2xl bg-accent-blue text-bg-primary font-semibold text-xs sm:text-sm md:text-base hover:bg-accent-blue/90 transition-all duration-300 shadow-glow-blue flex items-center justify-center gap-1.5 sm:gap-2 whitespace-nowrap text-center"
             whileHover={{ scale: 1.04, y: -2 }}
             whileTap={{ scale: 0.98 }}
             onClick={(e) => {
@@ -100,17 +100,15 @@ export default function Hero({ setActiveSection }: { setActiveSection: (id: stri
               document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' });
             }}
           >
-            <span className="flex items-center gap-2">
-              View My Work
-              <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-              </svg>
-            </span>
+            <span>View My Work</span>
+            <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+            </svg>
           </motion.a>
 
           <motion.a
             href="#contact"
-            className="px-8 py-4 rounded-2xl glass-bright text-text-primary font-medium text-base hover:bg-white/10 transition-all duration-300"
+            className="flex-1 px-3 sm:px-7 py-3 sm:py-3.5 rounded-xl sm:rounded-2xl glass-bright text-text-primary font-medium text-xs sm:text-sm md:text-base hover:bg-white/10 transition-all duration-300 flex items-center justify-center whitespace-nowrap text-center"
             whileHover={{ scale: 1.04, y: -2 }}
             whileTap={{ scale: 0.98 }}
             onClick={(e) => {
@@ -122,9 +120,29 @@ export default function Hero({ setActiveSection }: { setActiveSection: (id: stri
           </motion.a>
         </motion.div>
 
-        {/* Scroll indicator */}
+        {/* Social proof quick stats — fills the bottom gap on mobile with high credibility */}
         <motion.div
-          className="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
+          className="flex items-center justify-center gap-3 sm:gap-6 pt-3 sm:pt-4 border-t border-white/[0.08] max-w-sm sm:max-w-md mx-auto text-text-muted font-mono text-[11px] sm:text-xs"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.8, delay: 1.8 }}
+        >
+          <span className="flex items-center gap-1.5">
+            <span className="text-accent-blue font-bold">4+</span> Years Exp
+          </span>
+          <span className="text-white/20">•</span>
+          <span className="flex items-center gap-1.5">
+            <span className="text-accent-teal font-bold">4M+</span> Views
+          </span>
+          <span className="text-white/20">•</span>
+          <span className="flex items-center gap-1.5">
+            <span className="text-accent-orange font-bold">30K+</span> Users
+          </span>
+        </motion.div>
+
+        {/* Scroll indicator — shown on tablet/desktop, hidden on mobile */}
+        <motion.div
+          className="hidden md:flex absolute bottom-6 lg:bottom-10 left-1/2 -translate-x-1/2 flex-col items-center gap-2 pointer-events-none"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 1, delay: 2.5 }}

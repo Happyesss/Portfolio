@@ -36,7 +36,7 @@ export default function Timeline({ setActiveSection }: { setActiveSection: (id: 
 
         <div className="relative">
           {/* Timeline spine */}
-          <div className="absolute left-8 md:left-16 top-0 bottom-0 w-px bg-white/5">
+          <div className="absolute left-4 sm:left-8 md:left-16 top-0 bottom-0 w-px bg-white/5">
             <motion.div
               className="w-full origin-top"
               style={{
@@ -47,7 +47,7 @@ export default function Timeline({ setActiveSection }: { setActiveSection: (id: 
           </div>
 
           <motion.div
-            className="space-y-12"
+            className="space-y-8 sm:space-y-12"
             variants={staggerContainer(0.15)}
             initial="hidden"
             whileInView="visible"
@@ -57,24 +57,24 @@ export default function Timeline({ setActiveSection }: { setActiveSection: (id: 
               <motion.div
                 key={`${exp.company}-${i}`}
                 variants={fadeInUp}
-                className="relative pl-20 md:pl-32"
+                className="relative pl-11 sm:pl-20 md:pl-32"
               >
                 {/* Timeline node */}
                 <div
-                  className="absolute left-6 md:left-14 -translate-x-1/2 w-5 h-5 rounded-full border-2 bg-bg-primary flex items-center justify-center"
+                  className="absolute left-4 sm:left-8 md:left-16 -translate-x-1/2 w-4 h-4 sm:w-5 sm:h-5 rounded-full border-2 bg-bg-primary flex items-center justify-center"
                   style={{ borderColor: exp.color, boxShadow: `0 0 12px ${exp.color}60` }}
                 >
-                  <div className="w-2 h-2 rounded-full" style={{ background: exp.color }} />
+                  <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full" style={{ background: exp.color }} />
                 </div>
 
                 {/* Type icon above node */}
-                <div className="absolute left-4 md:left-[3.1rem] -top-6 text-sm">
+                <div className="absolute left-2.5 sm:left-6 md:left-[3.1rem] -top-5 sm:-top-6 text-xs sm:text-sm">
                   {TYPE_ICONS[exp.type] ?? '💼'}
                 </div>
 
                 {/* Card */}
                 <motion.div
-                  className="glass rounded-2xl p-4 md:p-6 border"
+                  className="glass rounded-2xl p-4 sm:p-5 md:p-6 border"
                   style={{ borderColor: `${exp.color}20` }}
                   whileHover={{ y: -3 }}
                   transition={{ type: 'spring', stiffness: 400, damping: 30 }}

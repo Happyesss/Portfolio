@@ -29,26 +29,28 @@ export default function AIOrb({ activeSection }: AIOrbProps) {
     if (activeSection !== prevSection) {
       setPrevSection(activeSection);
       setMessage(MESSAGES[activeSection] ?? MESSAGES['hero']);
-      // Auto-show message briefly on section change
-      setIsExpanded(true);
-      const timer = setTimeout(() => setIsExpanded(false), 3500);
-      return () => clearTimeout(timer);
+      // Auto-show message briefly on section change only on desktop (not mobile)
+      if (typeof window !== 'undefined' && window.innerWidth >= 768) {
+        setIsExpanded(true);
+        const timer = setTimeout(() => setIsExpanded(false), 3500);
+        return () => clearTimeout(timer);
+      }
     }
   }, [activeSection, prevSection]);
 
   return (
-    <div className="fixed bottom-8 right-8 z-40 flex items-end gap-3">
+    <div className="fixed bottom-4 right-4 sm:bottom-8 sm:right-8 z-40 flex items-end gap-2 sm:gap-3">
       {/* Message bubble */}
       <AnimatePresence>
         {isExpanded && (
           <motion.div
-            className="glass-bright rounded-2xl px-4 py-3 max-w-[220px] mb-1"
+            className="glass-bright rounded-2xl px-3.5 py-2.5 sm:px-4 sm:py-3 max-w-[180px] sm:max-w-[220px] mb-1 bg-[#09090b]/95 border border-white/10 shadow-2xl"
             initial={{ opacity: 0, x: 20, scale: 0.9 }}
             animate={{ opacity: 1, x: 0, scale: 1 }}
             exit={{ opacity: 0, x: 10, scale: 0.95 }}
             transition={{ type: 'spring', stiffness: 400, damping: 35 }}
           >
-            <p className="text-text-primary text-xs leading-relaxed">{message}</p>
+            <p className="text-text-primary text-[11px] sm:text-xs leading-relaxed">{message}</p>
             <div className="absolute -right-2 bottom-4 w-0 h-0" style={{
               borderLeft: '8px solid rgba(255,255,255,0.06)',
               borderTop: '4px solid transparent',
@@ -61,7 +63,7 @@ export default function AIOrb({ activeSection }: AIOrbProps) {
       {/* Orb button */}
       <motion.button
         ref={orbRef}
-        className="relative w-14 h-14 rounded-full flex items-center justify-center group"
+        className="relative w-11 h-11 sm:w-14 sm:h-14 rounded-full flex items-center justify-center group"
         onClick={() => setIsExpanded(!isExpanded)}
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.95 }}

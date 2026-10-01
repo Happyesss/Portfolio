@@ -1,7 +1,7 @@
 'use client';
 
 import { useRef, useMemo } from 'react';
-import { useFrame } from '@react-three/fiber';
+import { useFrame, useThree } from '@react-three/fiber';
 import { MeshTransmissionMaterial, Float } from '@react-three/drei';
 import * as THREE from 'three';
 
@@ -118,6 +118,11 @@ function CodeBracket({ position }: { position: [number, number, number] }) {
 }
 
 export default function FloatingObjects() {
+  const { viewport } = useThree();
+  const isCompact = viewport.width < 7;
+  const isTablet = viewport.width >= 7 && viewport.width < 11;
+  const groupScale = isCompact ? 0.6 : isTablet ? 0.8 : 1;
+
   const shapes = [
     { position: [-4, 2, -3] as [number,number,number], rotation: [0.3, 0.5, 0] as [number,number,number], scale: 0.9, color: '#4facfe', speed: 0.3, type: 'icosahedron' as const },
     { position: [4, 1.5, -4] as [number,number,number], rotation: [0.1, 0.2, 0.4] as [number,number,number], scale: 0.7, color: '#a855f7', speed: 0.25, type: 'torusKnot' as const },
@@ -128,7 +133,7 @@ export default function FloatingObjects() {
   ];
 
   return (
-    <group>
+    <group scale={groupScale}>
       {shapes.map((props, i) => (
         <FloatingShape key={i} {...props} />
       ))}

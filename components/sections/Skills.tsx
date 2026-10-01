@@ -52,11 +52,11 @@ export default function Skills({ setActiveSection }: { setActiveSection: (id: st
           accentColor="teal"
         />
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
           {/* 3D Orbit visualization - rendered immediately from starting */}
           <div
             ref={orbitInViewRef}
-            className="relative h-[460px] rounded-3xl overflow-hidden glass border-surface-border order-2 lg:order-1"
+            className="relative h-[320px] sm:h-[400px] lg:h-[460px] rounded-3xl overflow-hidden glass border-surface-border order-2 lg:order-1"
           >
             <div className="absolute inset-0 pointer-events-none">
               <div className="absolute -top-16 right-8 w-56 h-56 bg-accent-blue/10 blur-[90px]" />
@@ -71,12 +71,12 @@ export default function Skills({ setActiveSection }: { setActiveSection: (id: st
             <SkillsOrbit skills={skills} activeCategory={activeCategory} inView={orbitInView} />
 
             {/* Legend */}
-            <div className="absolute bottom-4 left-4 right-4 flex flex-wrap gap-2 justify-center">
+            <div className="absolute bottom-3 sm:bottom-4 left-3 right-3 sm:left-4 sm:right-4 flex flex-wrap gap-1.5 sm:gap-2 justify-center">
               {Object.entries(SKILL_CATEGORIES).map(([key, cat]) => (
                 <button
                   key={key}
                   onClick={() => setActiveCategory(key === activeCategory ? 'all' : key as CategoryKey)}
-                  className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full glass font-mono text-xs transition-all duration-200 border ${
+                  className={`flex items-center gap-1.5 px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full glass font-mono text-[10px] sm:text-xs transition-all duration-200 border ${
                     activeCategory === key
                       ? 'text-white border-white/30'
                       : 'text-text-muted border-surface-border hover:text-text-secondary'
@@ -96,9 +96,9 @@ export default function Skills({ setActiveSection }: { setActiveSection: (id: st
           {/* Skill list */}
           <div className="order-1 lg:order-2 space-y-3">
             {/* Category filter tabs */}
-            <div className="flex flex-wrap gap-2 mb-6">
+            <div className="flex flex-wrap gap-1.5 sm:gap-2 mb-4 sm:mb-6">
               <button
-                className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all duration-200 glass border ${
+                className={`px-3 sm:px-4 py-1 sm:py-1.5 rounded-full text-xs sm:text-sm font-medium transition-all duration-200 glass border ${
                   activeCategory === 'all' ? 'text-accent-blue border-accent-blue/40 bg-accent-blue/10' : 'text-text-muted border-surface-border'
                 }`}
                 onClick={() => setActiveCategory('all')}
@@ -108,7 +108,7 @@ export default function Skills({ setActiveSection }: { setActiveSection: (id: st
               {Object.entries(SKILL_CATEGORIES).map(([key, cat]) => (
                 <button
                   key={key}
-                  className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all duration-200 glass border`}
+                  className={`px-3 sm:px-4 py-1 sm:py-1.5 rounded-full text-xs sm:text-sm font-medium transition-all duration-200 glass border`}
                   style={activeCategory === key ? {
                     color: cat.color,
                     borderColor: `${cat.color}50`,
@@ -124,7 +124,7 @@ export default function Skills({ setActiveSection }: { setActiveSection: (id: st
             <AnimatePresence mode="wait">
               <motion.div
                 key={activeCategory}
-                className="space-y-2.5 max-h-[380px] overflow-y-auto pr-2 scrollbar-thin"
+                className="space-y-2 sm:space-y-2.5 max-h-[380px] overflow-y-auto pr-1 sm:pr-2 scrollbar-thin"
                 variants={staggerContainer(0.04)}
                 initial="hidden"
                 animate="visible"
@@ -135,28 +135,28 @@ export default function Skills({ setActiveSection }: { setActiveSection: (id: st
                     <motion.div
                       key={skill.name}
                       variants={fadeInUp}
-                      className="glass rounded-xl p-3.5 border-surface-border hover:bg-white/[0.06] transition-all duration-200 group"
+                      className="glass rounded-xl p-3 sm:p-3.5 border-surface-border hover:bg-white/[0.06] transition-all duration-200 group"
                     >
-                      <div className="flex items-center justify-between mb-2">
-                        <div className="flex items-center gap-3">
+                      <div className="flex items-center justify-between mb-2 gap-2">
+                        <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
                           {skill.icon.startsWith('http') ? (
                             <img
                               src={skill.icon}
                               alt={skill.name}
-                              className="w-5 h-5 object-contain flex-shrink-0"
+                              className="w-4 h-4 sm:w-5 sm:h-5 object-contain flex-shrink-0"
                             />
                           ) : (
-                            <span className="text-base w-6 text-center">{skill.icon}</span>
+                            <span className="text-sm sm:text-base w-5 sm:w-6 text-center shrink-0">{skill.icon}</span>
                           )}
-                          <span className="text-text-primary font-medium text-sm">{skill.name}</span>
+                          <span className="text-text-primary font-medium text-xs sm:text-sm truncate">{skill.name}</span>
                           <span
-                            className="px-2 py-0.5 rounded-full font-mono text-xs"
+                            className="hidden sm:inline-block px-2 py-0.5 rounded-full font-mono text-[10px] sm:text-xs shrink-0"
                             style={{ background: `${category?.color}15`, color: category?.color }}
                           >
                             {category?.label}
                           </span>
                         </div>
-                        <span className="font-mono text-xs text-text-muted group-hover:text-text-secondary transition-colors">
+                        <span className="font-mono text-xs text-text-muted group-hover:text-text-secondary transition-colors shrink-0">
                           {skill.level}%
                         </span>
                       </div>

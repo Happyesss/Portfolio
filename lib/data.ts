@@ -9,7 +9,7 @@ export const personalInfo = {
   location: 'Noida, India',
   github: 'https://github.com/Happyesss',
   linkedin: 'https://www.linkedin.com/in/shashank-kumar-rathour-9a49b32a5/',
-  twitter: 'https://twitter.com',
+  twitter: 'https://x.com/_happyesss',
   website: 'https://github.com/Happyesss',
   bio: "Software Development Engineer with expertise in building scalable, user-centric applications. Passionate about System Design, Microservices, and creating products that impact millions of users.",
   bioExtended: "From pioneering the world's first pay-as-you-go project management tool to building AI-driven apps used by thousands, I bridge deep technical execution with product thinking. I believe great software is as much about the experience as the code.",

@@ -52,6 +52,7 @@ export const metadata: Metadata = {
     title: 'Shashank Kumar Rathour | Software Development Engineer',
     description:
       'Software Development Engineer building scalable products and innovative solutions that impact millions of users.',
+    creator: '@_happyesss',
   },
   robots: {
     index: true,

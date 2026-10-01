@@ -145,8 +145,8 @@ function ContributionGraph({
         </div>
       </div>
 
-      <div className="flex justify-center overflow-hidden pb-1">
-        <div className="scale-75 sm:scale-85 md:scale-90 lg:scale-100 origin-top">
+      <div className="w-full overflow-x-auto pb-2 pt-1 scrollbar-thin">
+        <div className="min-w-[700px] sm:min-w-[760px] mx-auto">
           <div className="flex pl-9 gap-1 mb-2 text-[10px] font-mono text-text-muted">
             {monthLabels.map((label, index) => (
               <div key={`${label}-${index}`} className="w-3.5">
@@ -342,26 +342,26 @@ export default function GitHubStats({ setActiveSection }: { setActiveSection: (i
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
-          <div className="flex flex-wrap items-center justify-between gap-4">
-            <div className="flex items-center gap-4">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div className="flex items-center gap-3.5 sm:gap-4">
               <img
                 src={data.avatarUrl}
                 alt={`${data.username} avatar`}
-                className="w-14 h-14 rounded-2xl border border-surface-border object-cover"
+                className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl border border-surface-border object-cover"
               />
               <div>
-                <h3 className="text-text-primary font-semibold text-lg">{data.name}</h3>
-                <p className="text-text-secondary text-sm font-mono">@{data.username}</p>
-                {data.bio ? <p className="text-text-muted text-xs mt-1">{data.bio}</p> : null}
+                <h3 className="text-text-primary font-semibold text-base sm:text-lg">{data.name}</h3>
+                <p className="text-text-secondary text-xs sm:text-sm font-mono">@{data.username}</p>
+                {data.bio ? <p className="text-text-muted text-[11px] sm:text-xs mt-0.5 sm:mt-1">{data.bio}</p> : null}
               </div>
             </div>
 
-            <div className="flex flex-col items-end gap-2">
-              <div className="flex items-center gap-2">
+            <div className="flex flex-col items-start sm:items-end gap-2 w-full sm:w-auto">
+              <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
                 <button
                   onClick={handleRefresh}
                   disabled={refreshing || loading}
-                  className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl border border-surface-border text-text-secondary hover:text-accent-teal hover:border-accent-teal/40 transition-colors text-xs font-mono disabled:opacity-50"
+                  className="flex-1 sm:flex-none inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl border border-surface-border text-text-secondary hover:text-accent-teal hover:border-accent-teal/40 transition-colors text-xs font-mono disabled:opacity-50"
                   title="Refresh live GitHub data"
                 >
                   <svg className={`w-3.5 h-3.5 ${refreshing || loading ? 'animate-spin' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -374,10 +374,10 @@ export default function GitHubStats({ setActiveSection }: { setActiveSection: (i
                   href={data.profileUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-surface-border text-text-primary hover:text-accent-teal hover:border-accent-teal/40 transition-colors text-sm"
+                  className="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 px-3.5 sm:px-4 py-2 rounded-xl border border-surface-border text-text-primary hover:text-accent-teal hover:border-accent-teal/40 transition-colors text-xs sm:text-sm"
                 >
                   Open Profile
-                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                   </svg>
                 </a>

@@ -219,6 +219,8 @@ export default function CustomCursor() {
     drag: { scale: 1.45, opacity: 0.4 },
   };
 
+  if (isTouchDevice) return null;
+
   return (
     <>
       {/* Ambient glow follower */}
