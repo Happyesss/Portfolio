@@ -41,6 +41,20 @@ interface GitHubLiveData {
   lastUpdated: string;
 }
 
+const COLOR_BY_LANGUAGE: Record<string, string> = {
+  TypeScript: '#4facfe',
+  JavaScript: '#facc15',
+  Python: '#a855f7',
+  Java: '#f77f00',
+  Go: '#00f5d4',
+  Rust: '#f97316',
+  HTML: '#fb7185',
+  CSS: '#38bdf8',
+  Shell: '#4ade80',
+  C: '#555555',
+  'C++': '#f34b7d',
+};
+
 function AnimatedCounter({ value, label, color }: { value: number; label: string; color: string }) {
   const [count, setCount] = useState(0);
   const { ref, inView } = useInView({ triggerOnce: true, threshold: 0.3 });
@@ -209,65 +223,90 @@ export default function GitHubStats({ setActiveSection }: { setActiveSection: (i
 
   const fetchStats = async () => {
     try {
-      const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? '';
-      // Force bypass of client HTTP cache to get latest live data
-      const response = await fetch(
-        `${basePath}/api/github/stats?username=${encodeURIComponent(githubStats.username)}&t=${Date.now()}`,
-        { cache: 'no-store' },
-      );
+      const username = encodeURIComponent(githubStats.username);
 
-      if (response.ok) {
-        const data = (await response.json()) as GitHubLiveData;
-        setLiveData(data);
-        setHasError(false);
-        return;
+      const [userRes, reposRes, contribRes] = await Promise.allSettled([
+        fetch(`https://api.github.com/users/${username}`),
+        fetch(`https://api.github.com/users/${username}/repos?type=owner&sort=updated&per_page=100`),
+        fetch(`https://github-contributions-api.jogruber.de/v4/${username}?y=last`),
+      ]);
+
+      let user: any = null;
+      if (userRes.status === 'fulfilled' && userRes.value.ok) {
+        user = await userRes.value.json();
       }
-      throw new Error(`API returned ${response.status}`);
-    } catch {
-      // Secondary fallback: Direct browser request to public GitHub API
-      try {
-        const [userRes, reposRes] = await Promise.all([
-          fetch(`https://api.github.com/users/${encodeURIComponent(githubStats.username)}`),
-          fetch(`https://api.github.com/users/${encodeURIComponent(githubStats.username)}/repos?type=owner&sort=updated&per_page=100`),
-        ]);
 
-        if (userRes.ok) {
-          const user = await userRes.json();
-          const repos = reposRes.ok ? await reposRes.json() : [];
-          const totalStars = Array.isArray(repos)
-            ? repos.reduce((sum: number, r: { stargazers_count?: number }) => sum + (r.stargazers_count || 0), 0)
-            : 0;
-          const totalForks = Array.isArray(repos)
-            ? repos.reduce((sum: number, r: { forks_count?: number }) => sum + (r.forks_count || 0), 0)
-            : 0;
+      let repos: any[] = [];
+      if (reposRes.status === 'fulfilled' && reposRes.value.ok) {
+        const repoData = await reposRes.value.json();
+        if (Array.isArray(repoData)) repos = repoData;
+      }
 
-          setLiveData({
-            username: user.login,
-            name: user.name ?? user.login,
-            avatarUrl: user.avatar_url,
-            profileUrl: user.html_url,
-            bio: user.bio ?? '',
-            location: user.location ?? '',
-            stats: {
-              totalRepos: user.public_repos,
-              totalStars,
-              totalForks,
-              totalPRs: githubStats.totalPRs,
-              totalCommits: githubStats.totalCommits,
-              totalContributions: githubStats.contributions,
-              followers: user.followers,
-              following: user.following,
-            },
-            topLanguages: githubStats.topLanguages,
-            contributionDays: [],
-            lastUpdated: new Date().toISOString(),
-          });
-          setHasError(false);
-          return;
+      let contributionDays: GitHubContributionDay[] = [];
+      let totalContributions = 0;
+      if (contribRes.status === 'fulfilled' && contribRes.value.ok) {
+        const contribData = await contribRes.value.json();
+        if (contribData?.contributions && Array.isArray(contribData.contributions)) {
+          contributionDays = contribData.contributions.map((c: any) => ({
+            date: c.date,
+            count: c.count,
+          }));
         }
-      } catch (directError) {
-        console.warn('Direct GitHub fetch also failed:', directError);
+        if (contribData?.total) {
+          totalContributions = Object.values(contribData.total as Record<string, number>).reduce((a, b) => a + b, 0);
+        } else if (contributionDays.length > 0) {
+          totalContributions = contributionDays.reduce((sum, d) => sum + d.count, 0);
+        }
       }
+
+      if (!user && repos.length === 0) {
+        throw new Error('Unable to fetch live GitHub stats (rate limited or offline)');
+      }
+
+      const totalStars = repos.reduce((sum: number, r: { stargazers_count?: number }) => sum + (r.stargazers_count || 0), 0);
+      const totalForks = repos.reduce((sum: number, r: { forks_count?: number }) => sum + (r.forks_count || 0), 0);
+
+      // Calculate language distribution
+      const languageCounts = new Map<string, number>();
+      for (const repo of repos) {
+        if (!repo.language) continue;
+        languageCounts.set(repo.language, (languageCounts.get(repo.language) ?? 0) + 1);
+      }
+      const rankedLanguages = [...languageCounts.entries()].sort((a, b) => b[1] - a[1]);
+      const topLanguageEntries = rankedLanguages.slice(0, 5);
+      const topLanguageTotal = topLanguageEntries.reduce((sum, [, count]) => sum + count, 0) || 1;
+      const topLanguages: GitHubLanguage[] = topLanguageEntries.length > 0
+        ? topLanguageEntries.map(([name, count], index) => ({
+            name,
+            percentage: Math.round((count / topLanguageTotal) * 100),
+            color: COLOR_BY_LANGUAGE[name] ?? ['#4facfe', '#00f5d4', '#a855f7', '#f77f00', '#8892a4'][index % 5],
+          }))
+        : githubStats.topLanguages;
+
+      setLiveData({
+        username: user?.login ?? githubStats.username,
+        name: user?.name ?? user?.login ?? githubStats.username,
+        avatarUrl: user?.avatar_url ?? `https://github.com/${githubStats.username}.png`,
+        profileUrl: user?.html_url ?? `https://github.com/${githubStats.username}`,
+        bio: user?.bio ?? '',
+        location: user?.location ?? '',
+        stats: {
+          totalRepos: user?.public_repos ?? repos.length,
+          totalStars,
+          totalForks,
+          totalPRs: githubStats.totalPRs,
+          totalCommits: totalContributions > 0 ? totalContributions : githubStats.totalCommits,
+          totalContributions: totalContributions > 0 ? totalContributions : githubStats.contributions,
+          followers: user?.followers ?? 0,
+          following: user?.following ?? 0,
+        },
+        topLanguages,
+        contributionDays,
+        lastUpdated: new Date().toISOString(),
+      });
+      setHasError(false);
+    } catch (err) {
+      console.warn('GitHub stats fetch failed, falling back to static data:', err);
       setHasError(true);
     } finally {
       setLoading(false);
