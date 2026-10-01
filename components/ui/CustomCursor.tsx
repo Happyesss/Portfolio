@@ -260,9 +260,9 @@ export default function CustomCursor() {
             width: '100%',
             height: '100%',
             borderRadius: '14px 14px 18px 18px',
-            background: 'linear-gradient(180deg, rgba(34,38,52,0.98) 0%, rgba(12,15,24,0.98) 100%)',
+            background: 'linear-gradient(180deg, rgba(28,28,30,0.98) 0%, rgba(10,10,10,0.98) 100%)',
             border: '1px solid rgba(255,255,255,0.22)',
-            boxShadow: 'inset 0 1px 2px rgba(255,255,255,0.28), inset 0 -6px 10px rgba(0,0,0,0.35)',
+            boxShadow: 'inset 0 1px 2px rgba(255,255,255,0.28), inset 0 -6px 10px rgba(0,0,0,0.5)',
             overflow: 'hidden',
           }}
         >
@@ -302,7 +302,7 @@ export default function CustomCursor() {
               width: 10,
               height: 12,
               borderRadius: '7px',
-              background: 'linear-gradient(180deg, rgba(50,55,70,0.98) 0%, rgba(30,34,48,0.98) 100%)',
+              background: 'linear-gradient(180deg, rgba(40,40,42,0.98) 0%, rgba(20,20,22,0.98) 100%)',
               border: '1px solid rgba(255,255,255,0.14)',
               boxShadow: 'inset 0 1px 1px rgba(255,255,255,0.2)',
             }}
@@ -329,7 +329,7 @@ export default function CustomCursor() {
               width: 10,
               height: 12,
               borderRadius: '7px',
-              background: 'linear-gradient(180deg, rgba(50,55,70,0.98) 0%, rgba(30,34,48,0.98) 100%)',
+              background: 'linear-gradient(180deg, rgba(40,40,42,0.98) 0%, rgba(20,20,22,0.98) 100%)',
               border: '1px solid rgba(255,255,255,0.14)',
               boxShadow: 'inset 0 1px 1px rgba(255,255,255,0.2)',
             }}

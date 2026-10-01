@@ -61,7 +61,7 @@ export default function About({ setActiveSection }: { setActiveSection: (id: str
             className="relative"
           >
             {/* Profile visual - full cover portrait without floating labels */}
-            <div className="relative aspect-[3/4] sm:aspect-[4/5] max-w-md mx-auto rounded-3xl overflow-hidden glass border border-surface-border shadow-2xl group">
+            <div className="relative w-full aspect-[3/4] sm:aspect-[4/5] min-h-[380px] sm:min-h-[460px] max-w-md mx-auto rounded-3xl overflow-hidden glass border border-surface-border shadow-2xl group">
               {/* Ambient backdrop glow */}
               <div className="absolute -inset-1 bg-gradient-to-tr from-accent-blue/20 via-accent-purple/15 to-accent-teal/20 rounded-3xl blur-xl opacity-60 group-hover:opacity-100 transition-opacity duration-700 -z-10 pointer-events-none" />
 
@@ -76,7 +76,7 @@ export default function About({ setActiveSection }: { setActiveSection: (id: str
               />
 
               {/* Gradient overlay for bottom text contrast */}
-              <div className="absolute inset-0 bg-gradient-to-t from-background-primary/95 via-background-primary/25 to-transparent pointer-events-none" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/25 to-transparent pointer-events-none" />
 
               {/* Name & Location overlay badge */}
               <div className="absolute bottom-0 inset-x-0 p-6 z-10">

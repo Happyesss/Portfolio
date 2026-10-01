@@ -33,7 +33,7 @@ function ProjectModal({ project, onClose }: { project: Project; onClose: () => v
       >
         {/* Backdrop */}
         <motion.div
-          className="absolute inset-0 bg-bg-primary/90 backdrop-blur-xl"
+          className="absolute inset-0 bg-black/90 backdrop-blur-xl"
           onClick={onClose}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -41,8 +41,8 @@ function ProjectModal({ project, onClose }: { project: Project; onClose: () => v
 
         {/* Modal */}
         <motion.div
-          className="relative glass-bright rounded-2xl sm:rounded-3xl w-full max-w-xl sm:max-w-2xl max-h-[85vh] overflow-hidden flex flex-col shadow-2xl"
-          style={{ borderColor: `${project.color}30`, boxShadow: `0 0 60px ${project.color}15` }}
+          className="relative bg-[#080808] border border-white/[0.1] rounded-2xl sm:rounded-3xl w-full max-w-xl sm:max-w-2xl max-h-[85vh] overflow-hidden flex flex-col shadow-2xl"
+          style={{ borderColor: `${project.color}35`, boxShadow: `0 0 60px ${project.color}15` }}
           initial={{ scale: 0.9, opacity: 0, y: 30 }}
           animate={{ scale: 1, opacity: 1, y: 0 }}
           exit={{ scale: 0.92, opacity: 0, y: 15 }}
@@ -142,7 +142,7 @@ function ProjectModal({ project, onClose }: { project: Project; onClose: () => v
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex-1 py-2.5 rounded-xl text-center font-semibold text-xs sm:text-sm transition-all duration-300 hover:opacity-95"
-                  style={{ background: project.color, color: '#070711' }}
+                  style={{ background: project.color, color: '#000000' }}
                 >
                   Live Demo →
                 </a>
@@ -170,7 +170,7 @@ function ProjectCard({ project, onClick }: { project: Project; onClick: () => vo
 
   return (
     <motion.div
-      className="project-card group relative isolate flex flex-col justify-between overflow-hidden rounded-2xl border border-white/[0.08] bg-gradient-to-b from-[#151726]/90 via-[#0d0f1a]/95 to-[#080911]/95 backdrop-blur-2xl shadow-lg hover:shadow-xl hover:border-white/20 transition-all duration-400 cursor-pointer text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-blue/60"
+      className="project-card group relative isolate flex flex-col justify-between overflow-hidden rounded-2xl border border-white/[0.08] bg-gradient-to-b from-[#0e0e10]/95 via-[#070708]/98 to-[#000000]/98 backdrop-blur-2xl shadow-lg hover:shadow-xl hover:border-white/20 transition-all duration-400 cursor-pointer text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-blue/60"
       onClick={onClick}
       role="button"
       tabIndex={0}

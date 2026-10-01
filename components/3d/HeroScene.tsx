@@ -53,7 +53,7 @@ function DynamicLighting({ mouseX, mouseY }: { mouseX?: number; mouseY?: number 
 
   return (
     <>
-      <ambientLight intensity={0.15} color="#1a2040" />
+      <ambientLight intensity={0.15} color="#0a0a0f" />
       <pointLight ref={light1} position={[5, 5, 3]} color="#4facfe" intensity={1.5} distance={20} />
       <pointLight ref={light2} position={[-5, -3, 2]} color="#a855f7" intensity={0.8} distance={15} />
       <pointLight position={[0, -2, 5]} color="#f77f00" intensity={0.4} distance={12} />

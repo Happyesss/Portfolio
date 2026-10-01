@@ -60,7 +60,7 @@ export default function LoadingScreen({ isLoaded }: LoadingScreenProps) {
       {!exit && (
         <motion.div
           className="fixed inset-0 z-[9999] flex flex-col items-center justify-center overflow-hidden"
-          style={{ background: '#030509' }}
+          style={{ background: '#000000' }}
           exit={{ opacity: 0, scale: 1.04 }}
           transition={{ duration: 0.9, ease: [0.77, 0, 0.175, 1] }}
         >

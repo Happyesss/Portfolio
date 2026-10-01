@@ -210,7 +210,7 @@ function Scene({ skills, activeCategory }: { skills: Skill[]; activeCategory: Ca
 
   return (
     <>
-      <color attach="background" args={['#070711']} />
+      <color attach="background" args={['#000000']} />
       <ambientLight intensity={0.4} color="#ffffff" />
       <pointLight position={[4, 4, 4]} color="#4facfe" intensity={1.8} />
       <pointLight position={[-4, -2.5, 2]} color="#a855f7" intensity={1.2} />

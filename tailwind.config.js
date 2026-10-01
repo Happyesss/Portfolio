@@ -9,9 +9,9 @@ module.exports = {
     extend: {
       colors: {
         bg: {
-          primary: '#070711',
-          secondary: '#0d0d1a',
-          tertiary: '#12122a',
+          primary: '#000000',
+          secondary: '#050505',
+          tertiary: '#0a0a0a',
         },
         accent: {
           blue: '#4facfe',
@@ -22,14 +22,14 @@ module.exports = {
           purple: '#a855f7',
         },
         surface: {
-          glass: 'rgba(255,255,255,0.04)',
-          'glass-hover': 'rgba(255,255,255,0.08)',
-          border: 'rgba(255,255,255,0.08)',
+          glass: 'rgba(255,255,255,0.025)',
+          'glass-hover': 'rgba(255,255,255,0.05)',
+          border: 'rgba(255,255,255,0.07)',
         },
         text: {
-          primary: '#e8eaf6',
-          secondary: '#9ba8c4',
-          muted: '#4a5270',
+          primary: '#f5f5f7',
+          secondary: '#a1a1aa',
+          muted: '#52525b',
         },
         silver: '#8892a4',
       },

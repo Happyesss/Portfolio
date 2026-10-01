@@ -1,22 +1,22 @@
 // Color palette
 export const COLORS = {
-  bgPrimary: '#070711',
-  bgSecondary: '#0d0d1a',
-  bgTertiary: '#12122a',
+  bgPrimary: '#000000',
+  bgSecondary: '#050505',
+  bgTertiary: '#0a0a0a',
   accentBlue: '#4facfe',
   accentOrange: '#f77f00',
   accentTeal: '#00f5d4',
   accentPurple: '#a855f7',
   silver: '#8892a4',
   metallicLight: '#c0c8d8',
-  textPrimary: '#e8eaf6',
-  textSecondary: '#9ba8c4',
-  textMuted: '#4a5270',
+  textPrimary: '#f5f5f7',
+  textSecondary: '#a1a1aa',
+  textMuted: '#52525b',
 } as const;
 
 // Three.js colors (hex numbers)
 export const THREE_COLORS = {
-  bgPrimary: 0x070711,
+  bgPrimary: 0x000000,
   accentBlue: 0x4facfe,
   accentOrange: 0xf77f00,
   accentTeal: 0x00f5d4,

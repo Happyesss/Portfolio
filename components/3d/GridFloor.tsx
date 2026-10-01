@@ -14,10 +14,10 @@ export default function GridFloor({ size = 40, divisions = 30 }: GridFloorProps)
   const glowRef = useRef<THREE.Mesh>(null);
 
   const grid = useMemo(() => {
-    const helper = new THREE.GridHelper(size, divisions, 0x0d1a2a, 0x0d1a2a);
+    const helper = new THREE.GridHelper(size, divisions, 0x18181b, 0x18181b);
     const mat = helper.material as THREE.LineBasicMaterial;
-    mat.color.set(0x1a3a5c);
-    mat.opacity = 0.35;
+    mat.color.set(0x27272a);
+    mat.opacity = 0.28;
     mat.transparent = true;
     return helper;
   }, [size, divisions]);
@@ -27,9 +27,9 @@ export default function GridFloor({ size = 40, divisions = 30 }: GridFloorProps)
   const glowMaterial = useMemo(
     () =>
       new THREE.MeshBasicMaterial({
-        color: 0x0a1a2f,
+        color: 0x000000,
         transparent: true,
-        opacity: 0.4,
+        opacity: 0.5,
         side: THREE.DoubleSide,
       }),
     []
