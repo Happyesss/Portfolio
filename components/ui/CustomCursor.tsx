@@ -1,8 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { motion } from 'framer-motion';
-import { useMousePosition } from '@/hooks/useMousePosition';
+import { motion, useMotionValue, useSpring } from 'framer-motion';
 
 type CursorState = 'default' | 'hover' | 'click' | 'text' | 'drag';
 type ClickType = 'left' | 'right' | null;
@@ -12,22 +11,65 @@ const MOUSE_HEIGHT = 38;
 const GLOW_SIZE = 72;
 
 export default function CustomCursor() {
-  const { x, y } = useMousePosition(true);
   const [cursorState, setCursorState] = useState<CursorState>('default');
   const [isVisible, setIsVisible] = useState(false);
   const [isMoving, setIsMoving] = useState(false);
   const [activeClick, setActiveClick] = useState<ClickType>(null);
   const [scrollPulse, setScrollPulse] = useState(false);
+  const [isTouchDevice, setIsTouchDevice] = useState(false);
+
+  // High-performance Framer Motion values: updates GPU transform directly without React re-renders
+  const mouseX = useMotionValue(-100);
+  const mouseY = useMotionValue(-100);
+
+  // Fast, responsive spring tracking for the mouse body (no lag)
+  const cursorX = useSpring(mouseX, { stiffness: 750, damping: 38, mass: 0.15 });
+  const cursorY = useSpring(mouseY, { stiffness: 750, damping: 38, mass: 0.15 });
+
+  // Smooth ambient glow spring
+  const glowX = useSpring(mouseX, { stiffness: 250, damping: 26, mass: 0.4 });
+  const glowY = useSpring(mouseY, { stiffness: 250, damping: 26, mass: 0.4 });
+
   const moveTimeoutRef = useRef<number | null>(null);
   const clickTimeoutRef = useRef<number | null>(null);
   const scrollTimeoutRef = useRef<number | null>(null);
   const isPointerDownRef = useRef(false);
+  const isVisibleRef = useRef(false);
 
   useEffect(() => {
-    const handleMouseEnter = () => setIsVisible(true);
-    const handleMouseLeave = () => setIsVisible(false);
+    // Check for touch-only devices
+    if (typeof window !== 'undefined') {
+      const isTouch = window.matchMedia('(hover: none) and (pointer: coarse)').matches;
+      if (isTouch) {
+        setIsTouchDevice(true);
+        return;
+      }
+    }
 
-    const handleMouseMove = (e: MouseEvent) => {
+    const setVisible = (visible: boolean) => {
+      isVisibleRef.current = visible;
+      setIsVisible(visible);
+      if (visible) {
+        document.documentElement.classList.add('has-custom-cursor');
+      } else {
+        document.documentElement.classList.remove('has-custom-cursor');
+      }
+    };
+
+    const handlePointerMove = (e: PointerEvent | MouseEvent) => {
+      // Ignore touch pointers on hybrid laptops
+      if ('pointerType' in e && e.pointerType === 'touch') {
+        return;
+      }
+
+      // Ensure cursor is visible on the first move (solves Brave / reload issues where mouseenter doesn't fire)
+      if (!isVisibleRef.current) {
+        setVisible(true);
+      }
+
+      mouseX.set(e.clientX);
+      mouseY.set(e.clientY);
+
       setIsMoving(true);
       if (moveTimeoutRef.current) {
         window.clearTimeout(moveTimeoutRef.current);
@@ -36,24 +78,30 @@ export default function CustomCursor() {
 
       if (isPointerDownRef.current) return;
 
-      const target = e.target as HTMLElement;
+      const target = e.target as HTMLElement | null;
+      if (!target) return;
+
       if (
         target.tagName === 'A' ||
         target.tagName === 'BUTTON' ||
         target.closest('a') ||
         target.closest('button') ||
         target.getAttribute('role') === 'button' ||
-        target.classList.contains('hoverable')
+        target.classList?.contains('hoverable') ||
+        target.classList?.contains('cursor-pointer') ||
+        (typeof window !== 'undefined' && window.getComputedStyle(target).cursor === 'pointer')
       ) {
         setCursorState('hover');
       } else if (
         target.tagName === 'INPUT' ||
         target.tagName === 'TEXTAREA' ||
+        target.isContentEditable ||
         target.tagName === 'P' ||
         target.tagName === 'SPAN' ||
         target.tagName === 'H1' ||
         target.tagName === 'H2' ||
-        target.tagName === 'H3'
+        target.tagName === 'H3' ||
+        target.tagName === 'H4'
       ) {
         setCursorState('text');
       } else {
@@ -61,8 +109,10 @@ export default function CustomCursor() {
       }
     };
 
-    const handleMouseDown = (e: MouseEvent) => {
+    const handlePointerDown = (e: PointerEvent | MouseEvent) => {
+      if ('pointerType' in e && e.pointerType === 'touch') return;
       isPointerDownRef.current = true;
+      if (!isVisibleRef.current) setVisible(true);
       setCursorState('click');
 
       if (e.button === 0) {
@@ -77,10 +127,21 @@ export default function CustomCursor() {
       clickTimeoutRef.current = window.setTimeout(() => setActiveClick(null), 160);
     };
 
-    const handleMouseUp = () => {
+    const handlePointerUp = () => {
       isPointerDownRef.current = false;
       setCursorState('default');
       setActiveClick(null);
+    };
+
+    const handlePointerLeave = (e: MouseEvent) => {
+      // Only hide if the pointer actually leaves the browser viewport
+      if (!e.relatedTarget || e.clientY <= 0 || e.clientX <= 0 || e.clientX >= window.innerWidth || e.clientY >= window.innerHeight) {
+        setVisible(false);
+      }
+    };
+
+    const handlePointerEnter = () => {
+      setVisible(true);
     };
 
     const handleWheel = () => {
@@ -91,31 +152,41 @@ export default function CustomCursor() {
       scrollTimeoutRef.current = window.setTimeout(() => setScrollPulse(false), 140);
     };
 
-    document.addEventListener('mouseenter', handleMouseEnter);
-    document.addEventListener('mouseleave', handleMouseLeave);
-    document.addEventListener('mousemove', handleMouseMove);
-    document.addEventListener('mousedown', handleMouseDown);
-    document.addEventListener('mouseup', handleMouseUp);
-    document.addEventListener('wheel', handleWheel, { passive: true });
+    const handleWindowBlur = () => {
+      setVisible(false);
+    };
+
+    const handleWindowFocus = () => {
+      setVisible(true);
+    };
+
+    // Attach both pointer and mouse events for maximum cross-browser compatibility (Brave, Chrome, Firefox, Safari)
+    window.addEventListener('pointermove', handlePointerMove, { passive: true });
+    window.addEventListener('pointerdown', handlePointerDown);
+    window.addEventListener('pointerup', handlePointerUp);
+    document.addEventListener('mouseleave', handlePointerLeave);
+    document.addEventListener('mouseenter', handlePointerEnter);
+    window.addEventListener('blur', handleWindowBlur);
+    window.addEventListener('focus', handleWindowFocus);
+    window.addEventListener('wheel', handleWheel, { passive: true });
 
     return () => {
-      document.removeEventListener('mouseenter', handleMouseEnter);
-      document.removeEventListener('mouseleave', handleMouseLeave);
-      document.removeEventListener('mousemove', handleMouseMove);
-      document.removeEventListener('mousedown', handleMouseDown);
-      document.removeEventListener('mouseup', handleMouseUp);
-      document.removeEventListener('wheel', handleWheel);
-      if (moveTimeoutRef.current) {
-        window.clearTimeout(moveTimeoutRef.current);
-      }
-      if (clickTimeoutRef.current) {
-        window.clearTimeout(clickTimeoutRef.current);
-      }
-      if (scrollTimeoutRef.current) {
-        window.clearTimeout(scrollTimeoutRef.current);
-      }
+      window.removeEventListener('pointermove', handlePointerMove);
+      window.removeEventListener('pointerdown', handlePointerDown);
+      window.removeEventListener('pointerup', handlePointerUp);
+      document.removeEventListener('mouseleave', handlePointerLeave);
+      document.removeEventListener('mouseenter', handlePointerEnter);
+      window.removeEventListener('blur', handleWindowBlur);
+      window.removeEventListener('focus', handleWindowFocus);
+      window.removeEventListener('wheel', handleWheel);
+      document.documentElement.classList.remove('has-custom-cursor');
+      if (moveTimeoutRef.current) window.clearTimeout(moveTimeoutRef.current);
+      if (clickTimeoutRef.current) window.clearTimeout(clickTimeoutRef.current);
+      if (scrollTimeoutRef.current) window.clearTimeout(scrollTimeoutRef.current);
     };
-  }, []);
+  }, [mouseX, mouseY]);
+
+  if (isTouchDevice) return null;
 
   const mouseBodyVariants = {
     default: {
@@ -148,31 +219,37 @@ export default function CustomCursor() {
     drag: { scale: 1.45, opacity: 0.4 },
   };
 
-  if (!isVisible) return null;
-
   return (
     <>
+      {/* Ambient glow follower */}
       <motion.div
         className="fixed top-0 left-0 z-[9997] pointer-events-none rounded-full"
         style={{
-          x: x - GLOW_SIZE / 2,
-          y: y - GLOW_SIZE / 2,
+          x: glowX,
+          y: glowY,
+          translateX: -GLOW_SIZE / 2,
+          translateY: -GLOW_SIZE / 2,
           width: GLOW_SIZE,
           height: GLOW_SIZE,
           background: 'radial-gradient(circle, rgba(79,172,254,0.35) 0%, transparent 70%)',
           filter: 'blur(10px)',
+          opacity: isVisible ? (glowVariants[cursorState]?.opacity ?? 0.22) : 0,
         }}
         animate={glowVariants[cursorState]}
-        transition={{ type: 'spring', stiffness: 120, damping: 20, mass: 0.6 }}
+        transition={{ type: 'spring', stiffness: 140, damping: 22, mass: 0.5 }}
       />
 
+      {/* Main Mouse Body */}
       <motion.div
         className="fixed top-0 left-0 z-[9999] pointer-events-none"
         style={{
-          x: x - MOUSE_WIDTH / 2,
-          y: y - MOUSE_HEIGHT / 2,
+          x: cursorX,
+          y: cursorY,
+          translateX: -MOUSE_WIDTH / 2,
+          translateY: -MOUSE_HEIGHT / 2,
           width: MOUSE_WIDTH,
           height: MOUSE_HEIGHT,
+          opacity: isVisible ? 1 : 0,
         }}
         animate={mouseBodyVariants[cursorState]}
         transition={{ type: 'spring', stiffness: 500, damping: 30, mass: 0.4 }}
@@ -189,6 +266,7 @@ export default function CustomCursor() {
             overflow: 'hidden',
           }}
         >
+          {/* Top highlight glare */}
           <div
             style={{
               position: 'absolute',
@@ -202,6 +280,7 @@ export default function CustomCursor() {
             }}
           />
 
+          {/* Center seam */}
           <div
             style={{
               position: 'absolute',
@@ -214,6 +293,7 @@ export default function CustomCursor() {
             }}
           />
 
+          {/* Left mouse button */}
           <div
             style={{
               position: 'absolute',
@@ -240,6 +320,7 @@ export default function CustomCursor() {
             />
           </div>
 
+          {/* Right mouse button */}
           <div
             style={{
               position: 'absolute',
@@ -266,6 +347,7 @@ export default function CustomCursor() {
             />
           </div>
 
+          {/* Scroll wheel */}
           <motion.div
             style={{
               position: 'absolute',
@@ -287,6 +369,7 @@ export default function CustomCursor() {
             transition={{ duration: 0.12 }}
           />
 
+          {/* Red optical sensor dot */}
           <motion.div
             style={{
               position: 'absolute',

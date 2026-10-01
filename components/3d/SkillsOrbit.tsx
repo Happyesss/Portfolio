@@ -13,6 +13,7 @@ type Skill = (typeof allSkills)[number];
 interface SkillsOrbitProps {
   skills?: Skill[];
   activeCategory?: CategoryKey | 'all';
+  inView?: boolean;
 }
 
 interface RingConfig {
@@ -67,14 +68,15 @@ function SunCore() {
           emissiveIntensity={0.5}
         />
       </mesh>
+      {/* Radiant sun glow aura */}
       <mesh>
-        <sphereGeometry args={[0.88, 32, 32]} />
+        <sphereGeometry args={[0.74, 32, 32]} />
         <meshBasicMaterial
           color="#ff9f2a"
           transparent
-          opacity={0.12}
+          opacity={0.2}
           blending={THREE.AdditiveBlending}
-          side={THREE.BackSide}
+          depthWrite={false}
         />
       </mesh>
     </group>
@@ -243,12 +245,13 @@ function Scene({ skills, activeCategory }: { skills: Skill[]; activeCategory: Ca
   );
 }
 
-export default function SkillsOrbit({ skills = allSkills, activeCategory = 'all' }: SkillsOrbitProps) {
+export default function SkillsOrbit({ skills = allSkills, activeCategory = 'all', inView = true }: SkillsOrbitProps) {
   return (
     <Canvas
       camera={{ position: [0, 1.35, 5.2], fov: 55 }}
+      frameloop={inView ? 'always' : 'never'}
       dpr={[1, 1.5]}
-      gl={{ antialias: true, alpha: true, pixelRatio: Math.min(window.devicePixelRatio, 2) }}
+      gl={{ antialias: true, alpha: true, powerPreference: 'high-performance' }}
       aria-hidden="true"
     >
       <OrbitControls enableZoom={false} enablePan={false} autoRotate autoRotateSpeed={0.5} />

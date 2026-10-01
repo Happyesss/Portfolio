@@ -3,11 +3,17 @@
 import { useState } from 'react';
 import dynamic from 'next/dynamic';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useInView } from 'react-intersection-observer';
 import { useSectionInView } from '@/hooks/useScrollProgress';
 import { skills } from '@/lib/data';
 import { SKILL_CATEGORIES } from '@/lib/constants';
 import { SectionHeader } from '@/components/ui/GlassCard';
 import { staggerContainer, fadeInUp } from '@/lib/animations';
+
+// Preload SkillsOrbit immediately in the browser
+if (typeof window !== 'undefined') {
+  import('@/components/3d/SkillsOrbit');
+}
 
 const SkillsOrbit = dynamic(() => import('@/components/3d/SkillsOrbit'), {
   ssr: false,
@@ -22,6 +28,11 @@ type CategoryKey = keyof typeof SKILL_CATEGORIES;
 
 export default function Skills({ setActiveSection }: { setActiveSection: (id: string) => void }) {
   const ref = useSectionInView('skills', setActiveSection);
+  const { ref: orbitInViewRef, inView: orbitInView } = useInView({
+    threshold: 0,
+    rootMargin: '400px 0px 400px 0px',
+    initialInView: true,
+  });
   const [activeCategory, setActiveCategory] = useState<CategoryKey | 'all'>('all');
 
   const filtered = activeCategory === 'all'
@@ -42,13 +53,10 @@ export default function Skills({ setActiveSection }: { setActiveSection: (id: st
         />
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          {/* 3D Orbit visualization */}
-          <motion.div
+          {/* 3D Orbit visualization - rendered immediately from starting */}
+          <div
+            ref={orbitInViewRef}
             className="relative h-[460px] rounded-3xl overflow-hidden glass border-surface-border order-2 lg:order-1"
-            initial={{ opacity: 0, scale: 0.9 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           >
             <div className="absolute inset-0 pointer-events-none">
               <div className="absolute -top-16 right-8 w-56 h-56 bg-accent-blue/10 blur-[90px]" />
@@ -60,7 +68,7 @@ export default function Skills({ setActiveSection }: { setActiveSection: (id: st
               <span className="uppercase tracking-wider">Orbit View</span>
             </div>
 
-            <SkillsOrbit skills={skills} activeCategory={activeCategory} />
+            <SkillsOrbit skills={skills} activeCategory={activeCategory} inView={orbitInView} />
 
             {/* Legend */}
             <div className="absolute bottom-4 left-4 right-4 flex flex-wrap gap-2 justify-center">
@@ -83,7 +91,7 @@ export default function Skills({ setActiveSection }: { setActiveSection: (id: st
                 </button>
               ))}
             </div>
-          </motion.div>
+          </div>
 
           {/* Skill list */}
           <div className="order-1 lg:order-2 space-y-3">

@@ -60,67 +60,37 @@ export default function About({ setActiveSection }: { setActiveSection: (id: str
             viewport={{ once: true }}
             className="relative"
           >
-            {/* Profile visual */}
-            <div className="relative aspect-square max-w-md mx-auto">
-              {/* Background shapes */}
-              <div className="absolute inset-4 rounded-3xl bg-gradient-to-br from-accent-blue/10 via-accent-purple/10 to-accent-teal/10" />
-              <div className="absolute inset-0 rounded-3xl border border-surface-border" />
+            {/* Profile visual - full cover portrait without floating labels */}
+            <div className="relative aspect-[3/4] sm:aspect-[4/5] max-w-md mx-auto rounded-3xl overflow-hidden glass border border-surface-border shadow-2xl group">
+              {/* Ambient backdrop glow */}
+              <div className="absolute -inset-1 bg-gradient-to-tr from-accent-blue/20 via-accent-purple/15 to-accent-teal/20 rounded-3xl blur-xl opacity-60 group-hover:opacity-100 transition-opacity duration-700 -z-10 pointer-events-none" />
 
-              {/* Avatar placeholder */}
-              <div className="absolute inset-8 rounded-2xl glass flex items-center justify-center">
-                <div className="text-center">
-                  <div className="w-32 h-32 rounded-full bg-gradient-to-br from-accent-blue/30 to-accent-teal/20 border-2 border-accent-blue/40 flex items-center justify-center mx-auto mb-4 overflow-hidden">
-                    <Image
-                      src={profileImage}
-                      alt="Shashank Kumar Rathour"
-                      className="w-full h-full object-cover"
-                      priority
-                    />
-                  </div>
-                  <p className="font-display font-semibold text-text-primary">{personalInfo.name}</p>
-                  <p className="text-text-muted text-sm mt-1">{personalInfo.location}</p>
+              {/* Cover profile image */}
+              <Image
+                src={profileImage}
+                alt={personalInfo.name}
+                fill
+                sizes="(max-width: 768px) 90vw, 420px"
+                className="object-cover object-center transition-transform duration-700 ease-out group-hover:scale-105"
+                priority
+              />
+
+              {/* Gradient overlay for bottom text contrast */}
+              <div className="absolute inset-0 bg-gradient-to-t from-background-primary/95 via-background-primary/25 to-transparent pointer-events-none" />
+
+              {/* Name & Location overlay badge */}
+              <div className="absolute bottom-0 inset-x-0 p-6 z-10">
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full glass border border-surface-border/80 text-text-muted text-xs font-mono mb-2">
+                  <span className="w-2 h-2 rounded-full bg-accent-teal animate-pulse" />
+                  {personalInfo.location}
                 </div>
+                <h3 className="font-display font-bold text-2xl text-text-primary tracking-tight">
+                  {personalInfo.name}
+                </h3>
+                <p className="text-text-secondary text-sm font-mono mt-0.5">
+                  Software Development Engineer
+                </p>
               </div>
-
-              {/* Floating badges */}
-              <motion.div
-                className="absolute -right-6 top-12 glass rounded-xl px-3 py-2 border-glow-blue"
-                animate={{ y: [0, -8, 0] }}
-                transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
-              >
-                <div className="flex items-center gap-2">
-                  <span className="text-lg">⚛</span>
-                  <div>
-                    <div className="text-text-primary font-mono text-xs font-semibold">React / Next.js</div>
-                    <div className="text-accent-blue font-mono text-xs">Expert</div>
-                  </div>
-                </div>
-              </motion.div>
-
-              <motion.div
-                className="absolute -left-6 bottom-16 glass rounded-xl px-3 py-2 border border-accent-orange/30"
-                animate={{ y: [0, 8, 0] }}
-                transition={{ duration: 3.5, repeat: Infinity, ease: 'easeInOut', delay: 0.5 }}
-              >
-                <div className="flex items-center gap-2">
-                  <span className="text-lg">🧠</span>
-                  <div>
-                    <div className="text-text-primary font-mono text-xs font-semibold">System Design</div>
-                    <div className="text-accent-orange font-mono text-xs">Expert</div>
-                  </div>
-                </div>
-              </motion.div>
-
-              <motion.div
-                className="absolute right-0 bottom-8 glass rounded-xl px-3 py-2 border border-accent-teal/30"
-                animate={{ y: [0, -6, 0] }}
-                transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
-              >
-                <div className="flex items-center gap-2">
-                  <span className="text-green-400">●</span>
-                  <span className="text-text-primary font-mono text-xs">Open to work</span>
-                </div>
-              </motion.div>
             </div>
           </motion.div>
 

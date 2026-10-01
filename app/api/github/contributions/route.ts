@@ -1,9 +1,9 @@
 import { NextResponse } from 'next/server';
 
-export const dynamic = 'force-static';
-export const revalidate = false;
+export const dynamic = 'force-dynamic';
+export const revalidate = 60;
 
-const GITHUB_USERNAME = 'Happyesss';
+const DEFAULT_USERNAME = 'Happyesss';
 
 interface ContributionDay {
   date: string;
@@ -50,42 +50,103 @@ function parseContributionDays(markup: string): ContributionDay[] {
 }
 
 function parseTotalContributions(markup: string): number | null {
-  const headingMatch = markup.match(/([\d,]+)\s+contributions?\s+in\s+the\s+last\s+year/i);
+  const headingMatch = markup.match(/([\d,]+)\s+contributions/i);
   if (!headingMatch) return null;
   return Number.parseInt(headingMatch[1].replace(/,/g, ''), 10);
 }
 
-export async function GET() {
-  const username = GITHUB_USERNAME;
+interface ContributionsCacheEntry {
+  data: any;
+  timestamp: number;
+}
+const contributionsCache = new Map<string, ContributionsCacheEntry>();
+const CACHE_TTL_MS = 5 * 60 * 1000; // 5 minutes
 
-  const contributionsUrl = `https://github.com/users/${encodeURIComponent(username)}/contributions`;
-  const response = await fetch(contributionsUrl, {
-    headers: { Accept: 'text/html' },
-    next: { revalidate: 3600 },
-  });
+export async function GET(request: Request) {
+  const { searchParams } = new URL(request.url);
+  const username = searchParams.get('username') || DEFAULT_USERNAME;
+  const now = Date.now();
 
-  if (!response.ok) {
-    return NextResponse.json(
-      { error: `Unable to fetch contributions for ${username}` },
-      { status: response.status },
-    );
+  const cached = contributionsCache.get(username);
+  if (cached && now - cached.timestamp < CACHE_TTL_MS) {
+    return NextResponse.json(cached.data, {
+      headers: {
+        'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=300',
+        'X-Cache': 'HIT',
+      },
+    });
   }
 
-  const markup = await response.text();
-  const days = parseContributionDays(markup);
-  const totalFromHeading = parseTotalContributions(markup);
-  const totalContributions = totalFromHeading ?? days.reduce((sum, day) => sum + day.count, 0);
+  const contributionsUrl = `https://github.com/users/${encodeURIComponent(username)}/contributions`;
+
+  try {
+    const response = await fetch(contributionsUrl, {
+      headers: {
+        Accept: 'text/html',
+        'User-Agent': 'Mozilla/5.0 (compatible; PortfolioGitHubContributions/1.0)',
+      },
+      next: { revalidate: 60 },
+    });
+
+    if (response.ok) {
+      const markup = await response.text();
+      const days = parseContributionDays(markup);
+      const totalFromHeading = parseTotalContributions(markup);
+      const totalContributions = totalFromHeading ?? days.reduce((sum, day) => sum + day.count, 0);
+
+      if (days.length > 0) {
+        const payload = {
+          username,
+          totalContributions,
+          days,
+        };
+        contributionsCache.set(username, { data: payload, timestamp: now });
+        return NextResponse.json(payload, {
+          headers: {
+            'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=300',
+            'X-Cache': 'MISS',
+          },
+        });
+      }
+    }
+  } catch (err) {
+    console.warn('Direct contributions fetch error, trying fallback:', err);
+  }
+
+  // Fallback API
+  try {
+    const fallbackRes = await fetch(`https://github-contributions-api.jogruber.de/v4/${encodeURIComponent(username)}?y=last`, {
+      next: { revalidate: 300 },
+    });
+    if (fallbackRes.ok) {
+      const data = await fallbackRes.json() as { total?: Record<string, number>; contributions?: Array<{ date: string; count: number }> };
+      const days = (data.contributions ?? []).map((c) => ({ date: c.date, count: c.count }));
+      const totalContributions = Object.values(data.total ?? {}).reduce((acc, v) => acc + v, 0) || days.reduce((sum, d) => sum + d.count, 0);
+
+      const payload = {
+        username,
+        totalContributions,
+        days,
+      };
+      contributionsCache.set(username, { data: payload, timestamp: now });
+
+      return NextResponse.json(payload, {
+        headers: {
+          'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=300',
+          'X-Cache': 'MISS',
+        },
+      });
+    }
+  } catch (fallbackErr) {
+    console.warn('Fallback contributions API failed:', fallbackErr);
+  }
 
   return NextResponse.json(
     {
       username,
-      totalContributions,
-      days,
+      totalContributions: 0,
+      days: [],
     },
-    {
-      headers: {
-        'Cache-Control': 's-maxage=3600, stale-while-revalidate=86400',
-      },
-    },
+    { status: 200 },
   );
 }

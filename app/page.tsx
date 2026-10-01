@@ -31,7 +31,7 @@ export default function Home() {
     const timer = setTimeout(() => {
       setIsLoaded(true);
       sessionStorage.setItem('portfolio_loaded', '1');
-    }, 2000);
+    }, 1000);
     return () => clearTimeout(timer);
   }, []);
 

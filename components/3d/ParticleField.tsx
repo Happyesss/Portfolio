@@ -10,9 +10,8 @@ interface ParticleFieldProps {
   mouseY?: number;
 }
 
-export default function ParticleField({ count = 3000, mouseX = 0, mouseY = 0 }: ParticleFieldProps) {
+export default function ParticleField({ count = 1600, mouseX, mouseY }: ParticleFieldProps) {
   const mesh = useRef<THREE.Points>(null);
-  const originalPositions = useRef<Float32Array>(new Float32Array(0));
 
   const { positions, colors, sizes } = useMemo(() => {
     const positions = new Float32Array(count * 3);
@@ -30,7 +29,7 @@ export default function ParticleField({ count = 3000, mouseX = 0, mouseY = 0 }: 
     for (let i = 0; i < count; i++) {
       const i3 = i * 3;
 
-      // Distribute in a sphere
+      // Distribute in a spherical cloud
       const radius = Math.random() * 20 + 5;
       const theta = Math.random() * Math.PI * 2;
       const phi = Math.acos(Math.random() * 2 - 1);
@@ -44,10 +43,9 @@ export default function ParticleField({ count = 3000, mouseX = 0, mouseY = 0 }: 
       colors[i3 + 1] = color.g;
       colors[i3 + 2] = color.b;
 
-      sizes[i] = Math.random() * 3 + 0.5;
+      sizes[i] = Math.random() * 2.5 + 0.5;
     }
 
-    originalPositions.current = positions.slice();
     return { positions, colors, sizes };
   }, [count]);
 
@@ -77,25 +75,13 @@ export default function ParticleField({ count = 3000, mouseX = 0, mouseY = 0 }: 
     if (!mesh.current) return;
 
     const time = state.clock.elapsedTime * 0.12;
-    const positions = mesh.current.geometry.attributes.position;
-    const orig = originalPositions.current;
+    const mx = mouseX !== undefined ? mouseX : state.pointer.x;
+    const my = mouseY !== undefined ? mouseY : state.pointer.y;
 
-    for (let i = 0; i < count; i++) {
-      const i3 = i * 3;
-      const ox = orig[i3];
-      const oy = orig[i3 + 1];
-      const oz = orig[i3 + 2];
-
-      // Subtle drift animation
-      positions.array[i3] = ox + Math.sin(time + i * 0.01) * 0.15;
-      positions.array[i3 + 1] = oy + Math.cos(time + i * 0.012) * 0.15;
-      positions.array[i3 + 2] = oz + Math.sin(time * 0.7 + i * 0.008) * 0.12;
-    }
-    positions.needsUpdate = true;
-
-    // Slow rotation + mouse parallax
-    mesh.current.rotation.y = time * 0.04 + mouseX * 0.2;
-    mesh.current.rotation.x = mouseY * 0.1;
+    // Hardware-accelerated GPU transformation (zero CPU buffer re-upload overhead)
+    mesh.current.rotation.y = time * 0.04 + mx * 0.2;
+    mesh.current.rotation.x = Math.sin(time * 0.4) * 0.04 + my * 0.1;
+    mesh.current.rotation.z = Math.cos(time * 0.3) * 0.02;
   });
 
   return <primitive object={new THREE.Points(geometry, material)} ref={mesh} />;

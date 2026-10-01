@@ -204,35 +204,85 @@ export default function GitHubStats({ setActiveSection }: { setActiveSection: (i
   const ref = useSectionInView('github', setActiveSection);
   const [liveData, setLiveData] = useState<GitHubLiveData | null>(null);
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
   const [hasError, setHasError] = useState(false);
 
-  useEffect(() => {
-    let isMounted = true;
+  const fetchStats = async () => {
+    try {
+      const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? '';
+      // Force bypass of client HTTP cache to get latest live data
+      const response = await fetch(
+        `${basePath}/api/github/stats?username=${encodeURIComponent(githubStats.username)}&t=${Date.now()}`,
+        { cache: 'no-store' },
+      );
 
-    const loadGitHubStats = async () => {
-      try {
-        const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? '';
-        const response = await fetch(`${basePath}/api/github/stats?username=${encodeURIComponent(githubStats.username)}`);
-        if (!response.ok) {
-          throw new Error(`GitHub stats fetch failed: ${response.status}`);
-        }
-
-        const data = await response.json() as GitHubLiveData;
-        if (!isMounted) return;
+      if (response.ok) {
+        const data = (await response.json()) as GitHubLiveData;
         setLiveData(data);
-      } catch (error) {
-        console.error('Unable to load GitHub stats', error);
-        if (isMounted) setHasError(true);
-      } finally {
-        if (isMounted) setLoading(false);
+        setHasError(false);
+        return;
       }
-    };
+      throw new Error(`API returned ${response.status}`);
+    } catch {
+      // Secondary fallback: Direct browser request to public GitHub API
+      try {
+        const [userRes, reposRes] = await Promise.all([
+          fetch(`https://api.github.com/users/${encodeURIComponent(githubStats.username)}`),
+          fetch(`https://api.github.com/users/${encodeURIComponent(githubStats.username)}/repos?type=owner&sort=updated&per_page=100`),
+        ]);
 
-    loadGitHubStats();
-    return () => {
-      isMounted = false;
-    };
+        if (userRes.ok) {
+          const user = await userRes.json();
+          const repos = reposRes.ok ? await reposRes.json() : [];
+          const totalStars = Array.isArray(repos)
+            ? repos.reduce((sum: number, r: { stargazers_count?: number }) => sum + (r.stargazers_count || 0), 0)
+            : 0;
+          const totalForks = Array.isArray(repos)
+            ? repos.reduce((sum: number, r: { forks_count?: number }) => sum + (r.forks_count || 0), 0)
+            : 0;
+
+          setLiveData({
+            username: user.login,
+            name: user.name ?? user.login,
+            avatarUrl: user.avatar_url,
+            profileUrl: user.html_url,
+            bio: user.bio ?? '',
+            location: user.location ?? '',
+            stats: {
+              totalRepos: user.public_repos,
+              totalStars,
+              totalForks,
+              totalPRs: githubStats.totalPRs,
+              totalCommits: githubStats.totalCommits,
+              totalContributions: githubStats.contributions,
+              followers: user.followers,
+              following: user.following,
+            },
+            topLanguages: githubStats.topLanguages,
+            contributionDays: [],
+            lastUpdated: new Date().toISOString(),
+          });
+          setHasError(false);
+          return;
+        }
+      } catch (directError) {
+        console.warn('Direct GitHub fetch also failed:', directError);
+      }
+      setHasError(true);
+    } finally {
+      setLoading(false);
+      setRefreshing(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchStats();
   }, []);
+
+  const handleRefresh = async () => {
+    setRefreshing(true);
+    await fetchStats();
+  };
 
   const fallbackData: GitHubLiveData = useMemo(
     () => ({
@@ -306,21 +356,39 @@ export default function GitHubStats({ setActiveSection }: { setActiveSection: (i
               </div>
             </div>
 
-            <div className="text-right">
-              <a
-                href={data.profileUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-surface-border text-text-primary hover:text-accent-teal hover:border-accent-teal/40 transition-colors text-sm"
-              >
-                Open Profile
-                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                </svg>
-              </a>
-              <p className="text-text-muted text-[11px] font-mono mt-2">
-                {loading ? 'Syncing live stats...' : hasError ? 'Using cached fallback data' : `Synced ${formattedSyncTime}`}
-              </p>
+            <div className="flex flex-col items-end gap-2">
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={handleRefresh}
+                  disabled={refreshing || loading}
+                  className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl border border-surface-border text-text-secondary hover:text-accent-teal hover:border-accent-teal/40 transition-colors text-xs font-mono disabled:opacity-50"
+                  title="Refresh live GitHub data"
+                >
+                  <svg className={`w-3.5 h-3.5 ${refreshing || loading ? 'animate-spin' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                  </svg>
+                  {refreshing ? 'Syncing...' : 'Sync Now'}
+                </button>
+
+                <a
+                  href={data.profileUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-surface-border text-text-primary hover:text-accent-teal hover:border-accent-teal/40 transition-colors text-sm"
+                >
+                  Open Profile
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                  </svg>
+                </a>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <span className={`w-2 h-2 rounded-full ${loading || refreshing ? 'bg-yellow-400 animate-pulse' : hasError ? 'bg-orange-400' : 'bg-emerald-400'}`} />
+                <p className="text-text-muted text-[11px] font-mono">
+                  {loading ? 'Syncing live stats...' : hasError ? 'Using cached fallback data' : `Live • Synced ${formattedSyncTime}`}
+                </p>
+              </div>
             </div>
           </div>
         </motion.div>

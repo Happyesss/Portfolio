@@ -1,12 +1,11 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { motion } from 'framer-motion';
-import { useMousePosition } from '@/hooks/useMousePosition';
+import { useInView } from 'react-intersection-observer';
 import { useSectionInView } from '@/hooks/useScrollProgress';
-import { personalInfo, codeSnippets } from '@/lib/data';
-import { staggerContainer, fadeInUp, letterReveal } from '@/lib/animations';
+import { personalInfo } from '@/lib/data';
+import { staggerContainer, letterReveal } from '@/lib/animations';
 
 const HeroScene = dynamic(() => import('@/components/3d/HeroScene'), {
   ssr: false,
@@ -16,84 +15,30 @@ const HeroScene = dynamic(() => import('@/components/3d/HeroScene'), {
 const TITLE_WORDS = personalInfo.name.split(' ');
 
 export default function Hero({ setActiveSection }: { setActiveSection: (id: string) => void }) {
-  const ref = useSectionInView('hero', setActiveSection);
-  const { normalizedX, normalizedY } = useMousePosition(true);
-  const [codeIndex, setCodeIndex] = useState(0);
-  const [displayedCode, setDisplayedCode] = useState('');
-  const [isTyping, setIsTyping] = useState(true);
+  const sectionRef = useSectionInView('hero', setActiveSection);
+  const { ref: inViewRef, inView } = useInView({ threshold: 0.05, initialInView: true });
 
-  // Rotate code snippets
-  useEffect(() => {
-    const snippet = codeSnippets[codeIndex];
-    let i = 0;
-    setDisplayedCode('');
-    setIsTyping(true);
-
-    const typeInterval = setInterval(() => {
-      if (i < snippet.length) {
-        setDisplayedCode(snippet.slice(0, ++i));
-      } else {
-        clearInterval(typeInterval);
-        setIsTyping(false);
-        const pause = setTimeout(() => {
-          setCodeIndex((prev) => (prev + 1) % codeSnippets.length);
-        }, 3000);
-        return () => clearTimeout(pause);
-      }
-    }, 28);
-
-    return () => clearInterval(typeInterval);
-  }, [codeIndex]);
+  const setRefs = (el: HTMLDivElement | null) => {
+    (sectionRef as React.MutableRefObject<HTMLDivElement | null>).current = el;
+    inViewRef(el);
+  };
 
   return (
     <div
-      ref={ref}
+      ref={setRefs}
       className="relative min-h-screen flex items-center justify-center overflow-hidden"
     >
       {/* 3D scene background */}
       <div className="absolute inset-0 z-0">
-        <HeroScene mouseX={normalizedX} mouseY={normalizedY} />
+        <HeroScene inView={inView} />
       </div>
 
       {/* Vignette overlay */}
       <div className="absolute inset-0 z-1 bg-gradient-radial from-transparent via-bg-primary/20 to-bg-primary/70 pointer-events-none" />
       <div className="absolute bottom-0 left-0 right-0 h-48 bg-gradient-to-t from-bg-primary to-transparent z-1 pointer-events-none" />
 
-      {/* Code snippet background */}
-      <motion.div
-        className="absolute top-12 right-8 w-72 z-10 pointer-events-none hidden lg:block"
-        initial={{ opacity: 0, x: 40 }}
-        animate={{ opacity: 0.5, x: 0 }}
-        transition={{ duration: 1.2, delay: 1.5 }}
-      >
-        <div className="glass rounded-xl p-4 border-surface-border">
-          <div className="flex items-center gap-2 mb-3">
-            <div className="w-3 h-3 rounded-full bg-red-500/60" />
-            <div className="w-3 h-3 rounded-full bg-yellow-500/60" />
-            <div className="w-3 h-3 rounded-full bg-green-500/60" />
-            <span className="ml-2 text-text-muted font-mono text-xs">workspace.ts</span>
-          </div>
-          <pre className="font-mono text-xs text-accent-blue/70 leading-relaxed overflow-hidden whitespace-pre-wrap">
-            {displayedCode}
-            {isTyping && <span className="animate-cursor-blink text-accent-blue">|</span>}
-          </pre>
-        </div>
-      </motion.div>
-
-      {/* Floating status badge */}
-      <motion.div
-        className="absolute top-36 left-8 z-10 hidden lg:flex items-center gap-2 glass rounded-full px-4 py-2"
-        initial={{ opacity: 0, x: -40 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 1, delay: 1.8 }}
-      >
-        <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
-        <span className="font-mono text-xs text-text-secondary">Available for work</span>
-      </motion.div>
-
       {/* Main content */}
       <div className="relative z-10 text-center max-w-5xl mx-auto px-6">
-
         {/* Main name */}
         <div className="overflow-hidden mb-4">
           <motion.div
@@ -194,25 +139,6 @@ export default function Hero({ setActiveSection }: { setActiveSection: (id: stri
           </motion.div>
         </motion.div>
       </div>
-
-      {/* Stats pills */}
-      <motion.div
-        className="absolute bottom-16 right-8 hidden xl:flex flex-col gap-3 z-10"
-        initial={{ opacity: 0, x: 40 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 1, delay: 2 }}
-      >
-        {[
-          { value: '4+', label: 'Years Exp.' },
-          { value: '4M+', label: 'Views' },
-          { value: '30K+', label: 'Users' },
-        ].map((stat) => (
-          <div key={stat.label} className="glass rounded-xl px-4 py-2 text-right">
-            <div className="font-display font-bold text-lg gradient-text-blue">{stat.value}</div>
-            <div className="text-text-muted font-mono text-xs">{stat.label}</div>
-          </div>
-        ))}
-      </motion.div>
     </div>
   );
 }

@@ -25,47 +25,65 @@ export function useMousePosition(smooth = true): MousePosition {
   const rafRef = useRef<number>(0);
   const targetRef = useRef({ x: 0, y: 0 });
   const currentRef = useRef({ x: 0, y: 0 });
+  const isRunning = useRef(false);
 
-  const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
+  const startLoop = useCallback(() => {
+    if (isRunning.current) return;
+    isRunning.current = true;
 
-  const animate = useCallback(() => {
-    if (smooth) {
-      currentRef.current.x = lerp(currentRef.current.x, targetRef.current.x, 0.12);
-      currentRef.current.y = lerp(currentRef.current.y, targetRef.current.y, 0.12);
-    } else {
-      currentRef.current.x = targetRef.current.x;
-      currentRef.current.y = targetRef.current.y;
-    }
+    const loop = () => {
+      const dx = targetRef.current.x - currentRef.current.x;
+      const dy = targetRef.current.y - currentRef.current.y;
 
-    const vx = currentRef.current.x - lastPosition.current.x;
-    const vy = currentRef.current.y - lastPosition.current.y;
-    lastPosition.current = { x: currentRef.current.x, y: currentRef.current.y };
+      if (smooth) {
+        currentRef.current.x += dx * 0.15;
+        currentRef.current.y += dy * 0.15;
+      } else {
+        currentRef.current.x = targetRef.current.x;
+        currentRef.current.y = targetRef.current.y;
+      }
 
-    setPosition({
-      x: currentRef.current.x,
-      y: currentRef.current.y,
-      normalizedX: (currentRef.current.x / window.innerWidth) * 2 - 1,
-      normalizedY: -((currentRef.current.y / window.innerHeight) * 2 - 1),
-      velocityX: vx,
-      velocityY: vy,
-    });
+      const vx = currentRef.current.x - lastPosition.current.x;
+      const vy = currentRef.current.y - lastPosition.current.y;
+      lastPosition.current = { x: currentRef.current.x, y: currentRef.current.y };
 
-    rafRef.current = requestAnimationFrame(animate);
+      const winW = typeof window !== 'undefined' ? window.innerWidth : 1;
+      const winH = typeof window !== 'undefined' ? window.innerHeight : 1;
+
+      setPosition({
+        x: currentRef.current.x,
+        y: currentRef.current.y,
+        normalizedX: (currentRef.current.x / winW) * 2 - 1,
+        normalizedY: -((currentRef.current.y / winH) * 2 - 1),
+        velocityX: vx,
+        velocityY: vy,
+      });
+
+      // Only continue the animation loop while moving
+      if (Math.abs(dx) > 0.1 || Math.abs(dy) > 0.1) {
+        rafRef.current = requestAnimationFrame(loop);
+      } else {
+        isRunning.current = false;
+      }
+    };
+
+    rafRef.current = requestAnimationFrame(loop);
   }, [smooth]);
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
       targetRef.current = { x: e.clientX, y: e.clientY };
+      startLoop();
     };
 
     window.addEventListener('mousemove', handleMouseMove, { passive: true });
-    rafRef.current = requestAnimationFrame(animate);
 
     return () => {
       window.removeEventListener('mousemove', handleMouseMove);
       cancelAnimationFrame(rafRef.current);
+      isRunning.current = false;
     };
-  }, [animate]);
+  }, [startLoop]);
 
   return position;
 }

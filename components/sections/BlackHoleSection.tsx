@@ -531,9 +531,27 @@ export default function BlackHoleSection() {
   const [phase, setPhase] = useState<'ambient' | 'consuming' | 'flash' | 'portal'>('ambient');
   const triggeredRef     = useRef(false);
 
-  const { ref: inViewRef, inView } = useInView({ threshold: 0.7, triggerOnce: true });
+  const [inView, setInView] = useState(false);
+  const [triggerInView, setTriggerInView] = useState(false);
+  const inViewRef = useRef<HTMLElement | null>(null);
 
-  useBlackHoleCanvas(canvasRef, true, false);
+  useEffect(() => {
+    if (!inViewRef.current) return;
+    const obs = new IntersectionObserver(
+      (entries) => {
+        const entry = entries[0];
+        setInView(entry.isIntersecting);
+        if (entry.isIntersecting && entry.intersectionRatio >= 0.6) {
+          setTriggerInView(true);
+        }
+      },
+      { threshold: [0, 0.05, 0.6] }
+    );
+    obs.observe(inViewRef.current);
+    return () => obs.disconnect();
+  }, []);
+
+  useBlackHoleCanvas(canvasRef, inView && (phase === 'ambient' || phase === 'consuming' || phase === 'flash'), false);
   useBlackHoleCanvas(overlayCanvasRef, phase === 'consuming' || phase === 'flash', phase === 'consuming');
 
   const trigger = useCallback(() => {
@@ -547,11 +565,11 @@ export default function BlackHoleSection() {
 
   // Auto-trigger when section scrolls into view
   useEffect(() => {
-    if (inView && !triggeredRef.current) {
+    if (triggerInView && !triggeredRef.current) {
       const t = setTimeout(trigger, 1800);
       return () => clearTimeout(t);
     }
-  }, [inView, trigger]);
+  }, [triggerInView, trigger]);
 
   // White dots spiraling into the black hole
   useEffect(() => {

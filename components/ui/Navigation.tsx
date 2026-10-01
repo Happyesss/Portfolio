@@ -114,16 +114,6 @@ export default function Navigation({ activeSection }: NavigationProps) {
             ))}
           </div>
 
-          <div className="w-px h-5 bg-white/10 hidden lg:block" aria-hidden="true" />
-
-          {/* CTA */}
-          <button
-            onClick={() => scrollTo('contact')}
-            className="hidden lg:block px-4 py-1.5 rounded-full text-sm font-semibold bg-accent-blue/20 text-accent-blue border border-accent-blue/30 hover:bg-accent-blue/30 transition-all duration-300"
-          >
-            Hire Me
-          </button>
-
           {/* Mobile menu toggle */}
           <button
             className="lg:hidden p-1.5 rounded-full text-text-secondary hover:text-text-primary transition-colors"

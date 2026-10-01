@@ -46,12 +46,14 @@ body {
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  cursor: none;
 }
 
-/* Hide default cursor when custom cursor is active */
+/* Hide default cursor only when custom cursor is active and confirmed */
 @media (pointer: fine) {
-  *, *::before, *::after {
+  html.has-custom-cursor,
+  html.has-custom-cursor *,
+  html.has-custom-cursor *::before,
+  html.has-custom-cursor *::after {
     cursor: none !important;
   }
 }
@@ -280,6 +282,10 @@ canvas {
   filter: blur(80px);
   pointer-events: none;
   z-index: 0;
+  will-change: transform;
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+  contain: strict;
 }
 
 /* Responsive text scaling */
